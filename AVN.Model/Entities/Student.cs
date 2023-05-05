@@ -27,41 +27,42 @@ public class Student : BaseEntity
 
     [Required]
     [DisplayName("Форма обучения")]
+    [MaxLength(100)]
     public string StudingForm { get; set; }
 
-    [MaxLength(100)]
     [Required]
     [DisplayName("Линия обучения")]
+    [MaxLength(100)]
     public string EducationalLine { get; set; }
 
-    [MaxLength(100)]
     [Required]
     [DisplayName("Номер зачетной книжки")]
+    [MaxLength(100)]
     public string GradeBookNumber { get; set; }
 
-    [MaxLength(20)]
     [Required]
     [DisplayName("Пол")]
+    [MaxLength(20)]
     public string Gender { get; set; }
 
-    [MaxLength(100)]
     [Required]
     [DisplayName("Гражданство")]
+    [MaxLength(100)]
     public string Citizenship { get; set; }
 
-    [MaxLength(300)]
     [Required]
     [DisplayName("Адрес")]
+    [MaxLength(300)]
     public string Address { get; set; }
 
-    [MaxLength(30)]
     [Required]
     [DisplayName("Номер телефона")]
+    [MaxLength(30)]
     public string PhoneNumber { get; set; }
 
-    [MaxLength(1000)]
     [Required]
     [DisplayName("Приказы")]
+    [MaxLength(1000)]
     public string Orders { get; set; }
 
 }
