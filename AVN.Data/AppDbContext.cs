@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using AVN.Model.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace AVN.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext
     {
         public DbSet<Student> Students { get; set; }
 
