@@ -3,5 +3,7 @@
     public interface IDbInitializer
     {
         void Initialize();
+
+        void SeedStudent();
     }
 }

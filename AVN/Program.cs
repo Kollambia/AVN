@@ -14,7 +14,8 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer("Def
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddDefaultTokenProviders()
-                .AddEntityFrameworkStores<AppDbContext>();
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultUI();
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
@@ -56,5 +57,6 @@ void SeedDatabase()
     {
         var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
         dbInitializer.Initialize();
+        dbInitializer.SeedStudent();
     }
 }
