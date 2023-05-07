@@ -129,7 +129,8 @@ namespace AVN.Areas.Identity.Pages.Account
                         pageHandler: null,
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
-
+                    
+                    // Пока не будет реализовано рассллка имейла, этот код будет хуярить приложение
                     //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                     //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
@@ -139,8 +140,18 @@ namespace AVN.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        //С этим условием администратор не будет выходить из своего аккаунта при регистрации нового 
+                        // пользователя
+                        if (User.IsInRole(RoleConst.AdminRole))
+                        {
+                            TempData["Success"] = user.UserName + "has been registered";
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            return LocalRedirect(returnUrl);
+                        }
                     }
                 }
                 foreach (var error in result.Errors)
