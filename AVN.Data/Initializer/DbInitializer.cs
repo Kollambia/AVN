@@ -72,19 +72,34 @@ namespace AVN.Model.Initializer
             {
                 new Student
                 {
-                    FullName = "Ermek Abilov",
+                    FullName = "Мамабетов Мамбет Мамбеталиев",
                     Group = "T-1",
                     Status = "Обучается",
                     DateOfBirth = DateTime.Parse("1999-01-01"),
                     StudingForm = "Очная",
-                    EducationalLine = "Бюжетная",
+                    EducationalLine = "Бюджет",
                     GradeBookNumber = "123456",
                     Gender = "Муж.",
-                    Citizenship = "Кыргызстан",
+                    Citizenship = "Гражданин Кыргызстана",
                     Address = "Токтогула",
                     PhoneNumber = "996701010102",
                     Orders = "Перевести на второй курс"
 
+                }, 
+                new Student()
+                {
+                    FullName = "Иванов Иван Иванович",
+                    Group = "T-1",
+                    Status = "Обучается",
+                    DateOfBirth = DateTime.Parse("1999-02-02"),
+                    StudingForm = "Очная",
+                    EducationalLine = "Бюджет",
+                    GradeBookNumber = "112233",
+                    Gender = "Муж.",
+                    Citizenship = "Гражданин России",
+                    Address = "Московская",
+                    PhoneNumber = "996777888777",
+                    Orders = "Перевести на второй курс"
                 }
             };
             
