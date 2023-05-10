@@ -27,4 +27,8 @@
     <ProjectReference Include="..\AVN.Model\AVN.Model.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AdditionalFiles Include="Views\Student\GetStudents.cshtml" />
+  </ItemGroup>
+
 </Project>

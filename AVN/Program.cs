@@ -1,4 +1,6 @@
+using AVN.Controllers;
 using AVN.Data;
+using AVN.Data.UnitOfWorks;
 using AVN.Model.Initializer;
 using AVN.Utility;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +20,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddDefaultUI();
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
 builder.Services.AddRazorPages();
 

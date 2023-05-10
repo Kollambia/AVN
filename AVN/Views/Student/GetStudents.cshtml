@@ -1,0 +1,33 @@
+﻿@model IEnumerable<AVN.Model.Entities.Student>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Список студентов</title>
+</head>
+<body>
+<h2>Список студентов</h2>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Гражданство</th>
+        <!-- добавьте другие столбцы, если нужно -->
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var student in Model)
+    {
+        <tr>
+            <td>@student.Id</td>
+            <td>@student.FullName</td>
+            <td>@student.Citizenship</td>
+            <!-- добавьте другие поля, если нужно -->
+        </tr>
+    }
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,14 +1,18 @@
-﻿using AVN.Model.Entities;
+﻿using System.Collections;
+using System.Linq;
+using System.Threading.Tasks;
+using AVN.Model.Entities;
 
-namespace AVN.Data.Repository;
-
-public interface IRepository<T> where T : BaseEntity
+namespace AVN.Data.Repository
 {
-    public T Create(T entity);
-    public T Update(T entity);
-    public IQueryable<T> GetAll();
-    public T GetById(T id);
-    public T Delete(T id);
-    public T DeleteById(T id);
-    public bool IsExists(T id);
+    public interface IRepository<T> where T : BaseEntity
+    {
+        Task<T> CreateAsync(T entity);
+        Task<T> UpdateAsync(T entity);
+        IQueryable GetAll(); 
+        Task<T> GetByIdAsync(int id); 
+        Task<T> DeleteAsync(T entity);
+        Task<T> DeleteByIdAsync(int id); 
+        Task<bool> IsExistsAsync(int id);
+    }
 }

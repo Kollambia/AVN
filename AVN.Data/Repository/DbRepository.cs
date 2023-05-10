@@ -1,77 +1,65 @@
 ﻿using AVN.Model.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace AVN.Data.Repository;
-
-public class DbRepository<T> : IRepository<T> where T : BaseEntity
+namespace AVN.Data.Repository
 {
-    private readonly AppDbContext _context;
+    public class DbRepository<T> : IRepository<T> where T : BaseEntity
+    {
+        private readonly AppDbContext _context;
 
-    public DbRepository(AppDbContext context)
-    {
-        _context = context;
-    }
-    public T Create(T entity)
-    {
-        var createEntity = _context.Set<T>().Add(entity);
-        _context.SaveChanges();
-        return createEntity.Entity;
-    }
-
-    public T Update(T entity)
-    {
-        var a = _context.Set<T>().Update(entity);
-        _context.SaveChanges();
-        return a.Entity;
-    }
-
-    public IQueryable<T> GetAll()
-    {
-        if (_context.Set<T>() == null)
+        public DbRepository(AppDbContext context)
         {
-            return null;
+            _context = context;
         }
 
-        var list = _context.Set<T>();
-
-        return list;
-    }
-
-    public T GetById(T id)
-    {
-        if (_context.Set<T>() == null)
+        public async Task<T> CreateAsync(T entity)
         {
-            return null;
+            var createEntity = await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return createEntity.Entity;
         }
 
-        var entityId = _context.Set<T>()
-            .AsNoTracking()
-            .FirstOrDefault(en => en.Id.Equals(id));
-        return entityId;
-    }
+        public async Task<T> UpdateAsync(T entity)
+        {
+            var updatedEntity = _context.Set<T>().Update(entity);
+            await _context.SaveChangesAsync();
+            return updatedEntity.Entity;
+        }
 
-    public T Delete(T id)
-    {
-        var deleteEntity = _context.Set<T>()
-            .Find(id);
-        _context.SaveChanges();
+        public IQueryable GetAll()
+        {
+            return _context.Set<T>();
+        }
 
-        return deleteEntity;
-    }
+        public async Task<T> GetByIdAsync(int id)
+        {
+            return await _context.Set<T>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(en => en.Id.Equals(id));
+        }
 
-    public T DeleteById(T id)
-    {
-        var entity = GetById(id);
+        public async Task<T> DeleteAsync(T entity)
+        {
+            var deleteEntity = _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync();
+            return deleteEntity.Entity;
+        }
 
-        _context.Set<T>().Remove((T)entity);
+        public async Task<T> DeleteByIdAsync(int id)
+        {
+            var entity = await GetByIdAsync(id);
 
-        _context.SaveChanges();
+            _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync();
 
-        return entity;
-    }
+            return entity;
+        }
 
-    public bool IsExists(T id)
-    {
-        return _context.Set<T>().Any(entity => entity.Id.Equals(id));
+        public async Task<bool> IsExistsAsync(int id)
+        {
+            return await _context.Set<T>().AnyAsync(entity => entity.Id.Equals(id));
+        }
     }
 }
