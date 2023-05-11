@@ -6,8 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Model.Initializer
 {
-    public class 
-        DbInitializer : IDbInitializer
+    public class DbInitializer : IDbInitializer
     {
         private readonly AppDbContext _db;
         private readonly UserManager<IdentityUser> _userManager;
@@ -73,7 +72,7 @@ namespace AVN.Model.Initializer
                 new Student
                 {
                     FullName = "Мамабетов Мамбет Мамбеталиев",
-                    Group = "T-1",
+                        // Group = "T-1",
                     Status = "Обучается",
                     DateOfBirth = DateTime.Parse("1999-01-01"),
                     StudingForm = "Очная",
@@ -89,7 +88,7 @@ namespace AVN.Model.Initializer
                 new Student()
                 {
                     FullName = "Иванов Иван Иванович",
-                    Group = "T-1",
+                    // Group = "T-1",
                     Status = "Обучается",
                     DateOfBirth = DateTime.Parse("1999-02-02"),
                     StudingForm = "Очная",

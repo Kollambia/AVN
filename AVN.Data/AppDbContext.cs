@@ -8,6 +8,8 @@ namespace AVN.Data
     public class AppDbContext : IdentityDbContext
     {
         public DbSet<Student> Students { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Group> Groups { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> context) : base(context)
@@ -25,5 +27,6 @@ namespace AVN.Data
 
             optionsBuilder.UseSqlServer(connectionStrings);
         }
+        
     }
 }
