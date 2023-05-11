@@ -4,7 +4,7 @@
 
 namespace AVN.Data.Migrations
 {
-    public partial class AddDepartmentAndGroup : Migration
+    public partial class newEntities : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -20,16 +20,16 @@ namespace AVN.Data.Migrations
                 defaultValue: 0);
 
             migrationBuilder.CreateTable(
-                name: "Departments",
+                name: "Faculties",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DepartmentName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FacultyName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Departments", x => x.Id);
+                    table.PrimaryKey("PK_Faculties", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -39,15 +39,15 @@ namespace AVN.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GroupName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: false)
+                    FacultyId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Groups", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Groups_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
-                        principalTable: "Departments",
+                        name: "FK_Groups_Faculties_FacultyId",
+                        column: x => x.FacultyId,
+                        principalTable: "Faculties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -58,9 +58,9 @@ namespace AVN.Data.Migrations
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groups_DepartmentId",
+                name: "IX_Groups_FacultyId",
                 table: "Groups",
-                column: "DepartmentId");
+                column: "FacultyId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Students_Groups_GroupId",
@@ -81,7 +81,7 @@ namespace AVN.Data.Migrations
                 name: "Groups");
 
             migrationBuilder.DropTable(
-                name: "Departments");
+                name: "Faculties");
 
             migrationBuilder.DropIndex(
                 name: "IX_Students_GroupId",
