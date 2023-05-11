@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using AVN.Model.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace AVN.Data
 {
@@ -10,6 +11,7 @@ namespace AVN.Data
         public DbSet<Student> Students { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<Group> Groups { get; set; }
+        public DbSet<Department> Departments { get; set; } 
         public DbSet<AppUser> AppUsers { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> context) : base(context)
@@ -27,6 +29,5 @@ namespace AVN.Data
 
             optionsBuilder.UseSqlServer(connectionStrings);
         }
-        
     }
 }
