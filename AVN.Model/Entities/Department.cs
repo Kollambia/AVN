@@ -1,8 +1,8 @@
 ﻿namespace AVN.Model.Entities;
 
-public class Department : BaseEntity
+public class Faculty : BaseEntity
 {
-    public string DepartmentName { get; set; }
+    public string FacultyName { get; set; }
 
     public ICollection<Group> Groups { get; set; }
 }

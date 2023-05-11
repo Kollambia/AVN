@@ -8,7 +8,7 @@ namespace AVN.Data
     public class AppDbContext : IdentityDbContext
     {
         public DbSet<Student> Students { get; set; }
-        public DbSet<Department> Departments { get; set; }
+        public DbSet<Faculty> Faculties { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
 
