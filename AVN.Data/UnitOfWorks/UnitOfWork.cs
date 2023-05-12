@@ -46,7 +46,7 @@ public class UnitOfWork : IUnitOfWork
         }
     }
     
-    public IRepository<Department> GroupRepositort
+    public IRepository<Department> GroupRepository
     {
         get
         {
@@ -55,7 +55,7 @@ public class UnitOfWork : IUnitOfWork
             return _departmentRepository;
         }
     }
-    
+
     public async Task<int> SaveChangesAsync()
     {
         return await _context.SaveChangesAsync();
