@@ -5,9 +5,9 @@ namespace AVN.Controllers;
 
 public class FacultyController : Controller
 {
-    private readonly UnitOfWork _unitOfWork;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public FacultyController(UnitOfWork unitOfWork)
+    public FacultyController(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
