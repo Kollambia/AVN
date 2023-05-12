@@ -7,6 +7,9 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly AppDbContext _context;
     private IRepository<Student> _studentRepository;
+    private IRepository<Faculty> _facultyRepository;
+    private IRepository<Department> _departmentRepository;
+    private IRepository<Group> _groupRepository;
 
     public UnitOfWork(AppDbContext context)
     {
@@ -20,6 +23,36 @@ public class UnitOfWork : IUnitOfWork
             if (_studentRepository == null)
                 _studentRepository = new DbRepository<Student>(_context);
             return _studentRepository;
+        }
+    }
+    
+    public IRepository<Faculty> FacultyRepository
+    {
+        get
+        {
+            if (_facultyRepository == null)
+                _facultyRepository = new DbRepository<Faculty>(_context);
+            return _facultyRepository;
+        }
+    }
+    
+    public IRepository<Department> DepartmentRepository
+    {
+        get
+        {
+            if (_departmentRepository == null)
+                _departmentRepository = new DbRepository<Department>(_context);
+            return _departmentRepository;
+        }
+    }
+    
+    public IRepository<Department> GroupRepositort
+    {
+        get
+        {
+            if (_departmentRepository == null)
+                _departmentRepository = new DbRepository<Department>(_context);
+            return _departmentRepository;
         }
     }
     
