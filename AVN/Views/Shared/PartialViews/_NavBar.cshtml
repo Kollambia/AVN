@@ -1,0 +1,53 @@
+﻿
+<ul class="navbar-nav flex-grow-1">
+    <li class="nav-item">
+        <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            <i class="far fa-newspaper"></i> Новости
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user-edit"></i> Анкета
+        </a>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fab fa-accessible-icon"></i> Учебный процесс
+        </a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" asp-controller="ClientSystem" asp-action="Index"><i class="fas fa-hammer"></i> Практика</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" asp-controller="ClientSystem" asp-action="Index"><i class="fas fa-address-card"></i> Учебная карточка</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" asp-controller="ClientSystem" asp-action="Index"><i class="far fa-paper-plane"></i> Электронная заявка</a>
+        </div>
+    </li>
+
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-exclamation-circle"></i> Справочник
+        </a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" asp-controller="ClientSystem" asp-action="Index"><i class="fas fa-archway"></i> Факультеты</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" asp-controller="ClientSystem" asp-action="Index"><i class="fas fa-book-open"></i> Кафедры</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" asp-controller="ClientSystem" asp-action="Index"><i class="fas fa-layer-group"></i> Группы</a>
+        </div>
+    </li>
+
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-chart-line"></i> Статистика
+        </a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" asp-controller="Statistic" asp-action="GetResitrationStatistics"><i class="fas fa-qrcode"></i> Регистрации QR</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" asp-controller="Statistic" asp-action="GetPaymentStatistics"> <i class="fas fa-hand-holding-usd"></i> Переводы</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" asp-controller="Statistic" asp-action="GetServiceStatistics"> <i class="fas fa-layer-group"></i> Провайдеры платежных систем</a>
+
+        </div>
+    </li>
+
+</ul>

@@ -1,17 +1,32 @@
-﻿@using AVN.Utility
+﻿@using Microsoft.AspNetCore.Identity
+@using AVN.Utility
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@inject SignInManager<IdentityUser> SignInManager
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - AVN</title>
+
+    @* --- Общий стиль --- *@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css">
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    @* --- Уведомление --- *@
+    <link rel="stylesheet" href="/lib/toastr/toastr.min.css" />
+
+    @* --- Стиль таблицы --- *@
+    <link rel="stylesheet" href="~/lib/bootstrap-table/dist/bootstrap-table.min.css">
+
+@*    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/AVN.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AVN.styles.css" asp-append-version="true" />*@
 </head>
 <body>
-    <header>
+@*    <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AVN</a>
@@ -40,10 +55,32 @@
                             </li>    
                         }
                         <a href="/Student/GetStudents">Список студентов</a>
+                        <a href="/Faculty/GetFaculties">Факультеты</a>
 
                     </ul>
                 </div>
                 <partial name ="_LoginPartial" />
+            </div>
+        </nav>
+    </header>*@
+    <header>
+        <nav class="navbar navbar-expand-md navbar-toggleable-md navbar-dark bg-dark border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                   <img src="~/img/logo-halyk-test.png" width="90" height="30" class="d-inline-block align-top" alt="">
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse">
+
+                    @await Html.PartialAsync("_LoginPartial")
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        @await Html.PartialAsync("PartialViews/_NavBar")
+                    }
+                </div>
             </div>
         </nav>
     </header>
@@ -55,12 +92,37 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - AVN - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <a>&copy;  AVN 2023 | Admin Panel | version 1.0</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+@*    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>*@
+
+    @* --- Jquery --- *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+
+    @* --- Bootstrap --- *@
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @* --- Общий скрипт --- *@
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @* --- Cкрипт диаграммы --- *@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script>
+
+
+
+
+    @* --- Скрипт таблицы --- *@
+    <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/bootstrap-table-locale-all.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="~/lib/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

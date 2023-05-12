@@ -7,6 +7,7 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly AppDbContext _context;
     private IRepository<Student> _studentRepository;
+    private IRepository<Faculty> _facultyRepository;
 
     public UnitOfWork(AppDbContext context)
     {
@@ -22,7 +23,16 @@ public class UnitOfWork : IUnitOfWork
             return _studentRepository;
         }
     }
-    
+    public IRepository<Faculty> FacultyRepository
+    {
+        get
+        {
+            if (_facultyRepository == null)
+                _facultyRepository = new DbRepository<Faculty>(_context);
+            return _facultyRepository;
+        }
+    }
+
     public async Task<int> SaveChangesAsync()
     {
         return await _context.SaveChangesAsync();

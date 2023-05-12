@@ -1,0 +1,36 @@
+﻿@model IEnumerable<AVN.Model.Entities.Faculty>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Факультеты</title>
+</head>
+<body>
+    <h2>Список факультетов</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Факультет</th>
+                <th>Гражданство</th>
+                <!-- добавьте другие столбцы, если нужно -->
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                @foreach (var faculty in Model)
+                {
+                    <tr>
+                        <td>@faculty.Id</td>
+                        <td>@faculty.FacultyName</td>
+                        <!-- добавьте другие поля, если нужно -->
+                    </tr>
+                }
+            }
+            
+        </tbody>
+    </table>
+</body>
+</html>
