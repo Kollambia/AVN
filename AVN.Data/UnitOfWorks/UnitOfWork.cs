@@ -46,13 +46,13 @@ public class UnitOfWork : IUnitOfWork
         }
     }
     
-    public IRepository<Department> GroupRepository
+    public IRepository<Group> GroupRepository
     {
         get
         {
-            if (_departmentRepository == null)
-                _departmentRepository = new DbRepository<Department>(_context);
-            return _departmentRepository;
+            if (_groupRepository == null)
+                _groupRepository = new DbRepository<Group>(_context);
+            return _groupRepository;
         }
     }
 
