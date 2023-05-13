@@ -10,6 +10,8 @@ public class UnitOfWork : IUnitOfWork
     private IRepository<Faculty> _facultyRepository;
     private IRepository<Department> _departmentRepository;
     private IRepository<Group> _groupRepository;
+    private IRepository<Employee> _employeeRepository;
+    private IRepository<Direction> _directionRepository;
 
     public UnitOfWork(AppDbContext context)
     {
@@ -55,7 +57,24 @@ public class UnitOfWork : IUnitOfWork
             return _groupRepository;
         }
     }
-
+    public IRepository<Employee> EmployeeRepository
+    {
+        get
+        {
+            if (_employeeRepository == null)
+                _employeeRepository = new DbRepository<Employee>(_context);
+            return _employeeRepository;
+        }
+    }
+    public IRepository<Direction> DirectionRepository
+    {
+        get
+        {
+            if (_directionRepository == null)
+                _directionRepository = new DbRepository<Direction>(_context);
+            return _directionRepository;
+        }
+    }
     public async Task<int> SaveChangesAsync()
     {
         return await _context.SaveChangesAsync();

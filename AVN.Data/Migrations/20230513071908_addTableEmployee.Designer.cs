@@ -4,6 +4,7 @@ using AVN.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AVN.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230513071908_addTableEmployee")]
+    partial class addTableEmployee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,10 +36,6 @@ namespace AVN.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DepartmentShortName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("FacultyId")
                         .HasColumnType("int");
 
@@ -46,39 +44,6 @@ namespace AVN.Data.Migrations
                     b.HasIndex("FacultyId");
 
                     b.ToTable("Departments");
-                });
-
-            modelBuilder.Entity("AVN.Model.Entities.Direction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DirectionName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DirectionNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DirectionShortName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.ToTable("Directions");
                 });
 
             modelBuilder.Entity("AVN.Model.Entities.Employee", b =>
@@ -155,9 +120,6 @@ namespace AVN.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FacultyShortName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Faculties");
@@ -171,7 +133,7 @@ namespace AVN.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("DirectionId")
+                    b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
                     b.Property<string>("GroupName")
@@ -180,7 +142,7 @@ namespace AVN.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DirectionId");
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Groups");
                 });
@@ -479,17 +441,6 @@ namespace AVN.Data.Migrations
                     b.Navigation("Faculty");
                 });
 
-            modelBuilder.Entity("AVN.Model.Entities.Direction", b =>
-                {
-                    b.HasOne("AVN.Model.Entities.Department", "Department")
-                        .WithMany("Directions")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Department");
-                });
-
             modelBuilder.Entity("AVN.Model.Entities.Employee", b =>
                 {
                     b.HasOne("AVN.Model.Entities.Department", "Department")
@@ -503,13 +454,13 @@ namespace AVN.Data.Migrations
 
             modelBuilder.Entity("AVN.Model.Entities.Group", b =>
                 {
-                    b.HasOne("AVN.Model.Entities.Direction", "Direction")
+                    b.HasOne("AVN.Model.Entities.Department", "Department")
                         .WithMany("Groups")
-                        .HasForeignKey("DirectionId")
+                        .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Direction");
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("AVN.Model.Entities.Student", b =>
@@ -576,13 +527,8 @@ namespace AVN.Data.Migrations
 
             modelBuilder.Entity("AVN.Model.Entities.Department", b =>
                 {
-                    b.Navigation("Directions");
-
                     b.Navigation("Employees");
-                });
 
-            modelBuilder.Entity("AVN.Model.Entities.Direction", b =>
-                {
                     b.Navigation("Groups");
                 });
 

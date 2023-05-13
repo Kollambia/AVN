@@ -10,11 +10,6 @@ public class Student : BaseEntity
     [MaxLength(100)]
     public string FullName { get; set; }
 
-    // [Required]
-    // [DisplayName("Группа")]
-    // [MaxLength(50)]
-    // public string Group { get; set; }
-
     [Required]
     [DisplayName("Статус")]
     [MaxLength(500)]

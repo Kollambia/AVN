@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AVN.Data", "AVN.Data\AVN.Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AVN.Model", "AVN.Model\AVN.Model.csproj", "{17BF603C-81D0-4267-899F-493AB4D1F1EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVN.Utility", "AVN.Utility\AVN.Utility.csproj", "{01334EDD-B1F6-4C86-B1F8-857BB4FCDCB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AVN.Utility", "AVN.Utility\AVN.Utility.csproj", "{01334EDD-B1F6-4C86-B1F8-857BB4FCDCB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVN.Common", "AVN.Common\AVN.Common.csproj", "{4FB33434-205F-4227-9406-C175D2A7B049}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{01334EDD-B1F6-4C86-B1F8-857BB4FCDCB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01334EDD-B1F6-4C86-B1F8-857BB4FCDCB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01334EDD-B1F6-4C86-B1F8-857BB4FCDCB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FB33434-205F-4227-9406-C175D2A7B049}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FB33434-205F-4227-9406-C175D2A7B049}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FB33434-205F-4227-9406-C175D2A7B049}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FB33434-205F-4227-9406-C175D2A7B049}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

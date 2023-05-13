@@ -9,5 +9,7 @@ public interface IUnitOfWork : IDisposable
     IRepository<Faculty> FacultyRepository { get;  }
     IRepository<Department> DepartmentRepository { get;  }
     IRepository<Group> GroupRepository { get; }
+    IRepository<Employee> EmployeeRepository { get; }
+    IRepository<Direction> DirectionRepository { get; }
     Task<int> SaveChangesAsync();
 }

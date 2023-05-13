@@ -11,9 +11,8 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Факультет</th>
-                <th>Гражданство</th>
+                <th>Фио декана</th>
                 <!-- добавьте другие столбцы, если нужно -->
             </tr>
         </thead>
@@ -23,8 +22,8 @@
                 @foreach (var faculty in Model)
                 {
                     <tr>
-                        <td>@faculty.Id</td>
                         <td>@faculty.FacultyName</td>
+                        <td>@faculty.DeanName</td>
                         <!-- добавьте другие поля, если нужно -->
                     </tr>
                 }

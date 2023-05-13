@@ -4,6 +4,7 @@ using AVN.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AVN.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230513075011_addTableDirection")]
+    partial class addTableDirection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,9 +69,6 @@ namespace AVN.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DirectionNumber")
-                        .HasColumnType("int");
-
                     b.Property<string>("DirectionShortName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -78,7 +77,7 @@ namespace AVN.Data.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Directions");
+                    b.ToTable("Direction");
                 });
 
             modelBuilder.Entity("AVN.Model.Entities.Employee", b =>
