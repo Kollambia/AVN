@@ -4,6 +4,5 @@
     {
         void Initialize();
 
-        void SeedStudent();
     }
 }
