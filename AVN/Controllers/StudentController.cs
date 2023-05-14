@@ -18,7 +18,7 @@ public class StudentController : Controller
     [HttpGet]
     public async Task<IActionResult> GetStudents()
     {
-        var students = _unitOfWork.StudentRepository.GetAll();
+        var students = _unitOfWork.StudentRepository.GetAllAsync();
         return View();
     }
 }

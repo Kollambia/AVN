@@ -28,7 +28,7 @@ namespace AVN.Data.Repository
             return updatedEntity.Entity;
         }
 
-        public IQueryable GetAll()
+        public async Task<IQueryable> GetAllAsync()
         {
             return _context.Set<T>();
         }
