@@ -61,6 +61,5 @@ void SeedDatabase()
     {
         var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
         dbInitializer.Initialize();
-        dbInitializer.SeedStudent();
     }
 }
