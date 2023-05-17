@@ -15,7 +15,7 @@ public class FacultyController : Controller
     [HttpGet]
     public async Task<IActionResult> GetFaculties()
     {
-        var faculty = await _unitOfWork.FacultyRepository.GetAll();
+        //var faculty = await _unitOfWork.FacultyRepository.GetAll();
         return View();
     }
 

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using AVN.Common.Enums;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace AVN.Model.Entities;
@@ -12,8 +13,7 @@ public class Student : BaseEntity
 
     [Required]
     [DisplayName("Статус")]
-    [MaxLength(500)]
-    public string Status { get; set; }
+    public StudentStatus Status { get; set; }
 
     [Required]
     [DisplayName("Дата рождения")]
@@ -23,12 +23,17 @@ public class Student : BaseEntity
     [Required]
     [DisplayName("Форма обучения")]
     [MaxLength(100)]
-    public string StudingForm { get; set; }
+    public FormOfEducation StudingForm { get; set; }
 
     [Required]
     [DisplayName("Линия обучения")]
     [MaxLength(100)]
-    public string EducationalLine { get; set; }
+    public EducationalLine EducationalLine { get; set; }
+
+    [Required]
+    [DisplayName("Академическая степень")]
+    [MaxLength(100)]
+    public AcademicDegree AcademicDegree { get; set; }
 
     [Required]
     [DisplayName("Номер зачетной книжки")]
@@ -38,7 +43,7 @@ public class Student : BaseEntity
     [Required]
     [DisplayName("Пол")]
     [MaxLength(20)]
-    public string Gender { get; set; }
+    public Gender Gender { get; set; }
 
     [Required]
     [DisplayName("Гражданство")]
