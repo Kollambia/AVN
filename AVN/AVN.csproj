@@ -28,10 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="Views\Student\GetStudents.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <Folder Include="Views\Student\" />
     <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
