@@ -1,11 +1,6 @@
 ﻿using AVN.Common.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace AVN.Model.Entities
 {
@@ -22,6 +17,10 @@ namespace AVN.Model.Entities
         [Required]
         [DisplayName("Количество часов")]
         public string CreditHours { get; set; }
+
+        [Required]
+        [DisplayName("Курс")]
+        public Course Course { get; set; }
 
         public int DepartmentId { get; set; }
         public Department Department { get; set; }

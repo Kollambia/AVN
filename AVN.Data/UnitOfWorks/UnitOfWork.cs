@@ -14,6 +14,8 @@ public class UnitOfWork : IUnitOfWork
     private IRepository<Direction> _directionRepository;
     private IRepository<Subject> _subjectRepository;
     private IRepository<SubjectEmployee> _subjectEmployeeRepository;
+    private IRepository<StudentPayment> _studentPaymentRepository;
+    private IRepository<StudentPaymentDetail> _studentPaymentDetailRepository;
 
     public UnitOfWork(AppDbContext context)
     {
@@ -93,6 +95,24 @@ public class UnitOfWork : IUnitOfWork
             if (_subjectEmployeeRepository == null)
                 _subjectEmployeeRepository = new DbRepository<SubjectEmployee>(_context);
             return _subjectEmployeeRepository;
+        }
+    }
+    public IRepository<StudentPayment> StudentPaymentRepository
+    {
+        get
+        {
+            if (_studentPaymentRepository == null)
+                _studentPaymentRepository = new DbRepository<StudentPayment>(_context);
+            return _studentPaymentRepository;
+        }
+    }
+    public IRepository<StudentPaymentDetail> StudentPaymentDetailRepository
+    {
+        get
+        {
+            if (_studentPaymentDetailRepository == null)
+                _studentPaymentDetailRepository = new DbRepository<StudentPaymentDetail>(_context);
+            return _studentPaymentDetailRepository;
         }
     }
     public async Task<int> SaveChangesAsync()

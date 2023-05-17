@@ -13,5 +13,7 @@ public interface IUnitOfWork : IDisposable
     IRepository<Direction> DirectionRepository { get; }
     IRepository<Subject> SubjectRepository { get; }
     IRepository<SubjectEmployee> SubjectEmployeeRepository { get; }
+    IRepository<StudentPayment> StudentPaymentRepository { get; }
+    IRepository<StudentPaymentDetail> StudentPaymentDetailRepository { get; }
     Task<int> SaveChangesAsync();
 }

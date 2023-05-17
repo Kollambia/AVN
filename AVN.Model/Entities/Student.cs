@@ -68,4 +68,6 @@ public class Student : BaseEntity
     public int GroupId { get; set; }
     public Group Group { get; set; }
 
+    public ICollection<StudentPayment> StudentPayments { get; set; }
+
 }
