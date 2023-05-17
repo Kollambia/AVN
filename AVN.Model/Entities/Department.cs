@@ -8,5 +8,6 @@ public class Department : BaseEntity
     public Faculty Faculty { get; set; }
     public ICollection<Employee> Employees { get; set; }
     public ICollection<Direction> Directions { get; set; }
+    public ICollection<Subject> Subjects { get; set; }
 }
 

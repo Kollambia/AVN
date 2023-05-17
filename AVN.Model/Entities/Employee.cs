@@ -52,6 +52,7 @@ namespace AVN.Model.Entities
         public int DepartmentId { get; set; }
         public Department Department { get; set; }
 
+        public ICollection<SubjectEmployee> SubjectEmployees { get; set; }
 
         public string GetFullName()
         {

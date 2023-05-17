@@ -11,5 +11,7 @@ public interface IUnitOfWork : IDisposable
     IRepository<Group> GroupRepository { get; }
     IRepository<Employee> EmployeeRepository { get; }
     IRepository<Direction> DirectionRepository { get; }
+    IRepository<Subject> SubjectRepository { get; }
+    IRepository<SubjectEmployee> SubjectEmployeeRepository { get; }
     Task<int> SaveChangesAsync();
 }

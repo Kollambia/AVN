@@ -14,6 +14,8 @@ namespace AVN.Data
         public DbSet<Employee> Employees { get; set; } 
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Direction> Directions { get; set; }
+        public DbSet<Subject> Subjects { get; set; }
+        public DbSet<SubjectEmployee> SubjectEmployees { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> context) : base(context)
         {
