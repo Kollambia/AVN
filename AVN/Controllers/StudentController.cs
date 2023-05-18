@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using AVN.Data.UnitOfWorks;
+﻿using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AVN.Web.Controllers
 {

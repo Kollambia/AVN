@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using AVN.Common.Enums;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AVN.Common.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace AVN.Model.Entities
 {
