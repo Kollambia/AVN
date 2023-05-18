@@ -23,5 +23,7 @@ namespace AVN.Model.Entities
 
         public int StudentId { get; set; }
         public Student Student { get; set; }
+
+        public ICollection<StudentPaymentDetail> PaymentDetails { get; set; }
     }
 }
