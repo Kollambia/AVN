@@ -15,5 +15,6 @@ public interface IUnitOfWork : IDisposable
     IRepository<SubjectEmployee> SubjectEmployeeRepository { get; }
     IRepository<StudentPayment> StudentPaymentRepository { get; }
     IRepository<StudentPaymentDetail> StudentPaymentDetailRepository { get; }
+    IRepository<Order> OrderRepository { get; }
     Task<int> SaveChangesAsync();
 }

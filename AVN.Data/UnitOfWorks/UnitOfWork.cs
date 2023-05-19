@@ -1,4 +1,5 @@
-﻿using AVN.Data.Repository;
+﻿using System.Runtime.CompilerServices;
+using AVN.Data.Repository;
 using AVN.Model.Entities;
 
 namespace AVN.Data.UnitOfWorks;
@@ -16,6 +17,7 @@ public class UnitOfWork : IUnitOfWork
     private IRepository<SubjectEmployee> _subjectEmployeeRepository;
     private IRepository<StudentPayment> _studentPaymentRepository;
     private IRepository<StudentPaymentDetail> _studentPaymentDetailRepository;
+    private IRepository<Order> _orderRepository;
 
     public UnitOfWork(AppDbContext context)
     {
@@ -113,6 +115,16 @@ public class UnitOfWork : IUnitOfWork
             if (_studentPaymentDetailRepository == null)
                 _studentPaymentDetailRepository = new DbRepository<StudentPaymentDetail>(_context);
             return _studentPaymentDetailRepository;
+        }
+    }
+
+    public IRepository<Order> OrderRepository
+    {
+        get
+        {
+            if(_orderRepository == null)
+                _orderRepository = new DbRepository<Order>(_context);
+            return _orderRepository;
         }
     }
     public async Task<int> SaveChangesAsync()

@@ -1,7 +1,6 @@
 ﻿using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 public class StudentPaymentDetailsController : Controller
 {
