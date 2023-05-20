@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AVN.Business\AVN.Business.csproj" />
     <ProjectReference Include="..\AVN.Data\AVN.Data.csproj" />
     <ProjectReference Include="..\AVN.Model\AVN.Model.csproj" />
   </ItemGroup>
