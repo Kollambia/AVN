@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AVN.Data.Migrations
 {
-    public partial class tesd4 : Migration
+    public partial class AddOrderEntity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AVN.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230520084436_tesd4")]
-    partial class tesd4
+    [Migration("20230520112929_AddOrderEntity")]
+    partial class AddOrderEntity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
