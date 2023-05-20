@@ -1,16 +1,22 @@
-﻿using AVN.Data.UnitOfWorks;
+﻿using System.Runtime.CompilerServices;
+using AVN.Business;
+using AVN.Data;
+using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Framework;
 
 namespace AVN.Web.Controllers
 {
     public class OrderController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly AppDbContext _context;
 
-        public OrderController(IUnitOfWork unitOfWork)
+        public OrderController(IUnitOfWork unitOfWork, AppDbContext context)
         {
             _unitOfWork = unitOfWork;
+            _context = context;
         }
 
         public async Task<IActionResult> Index()
@@ -31,7 +37,17 @@ namespace AVN.Web.Controllers
             {
                 await _unitOfWork.OrderRepository.CreateAsync(order);
                 await _unitOfWork.SaveChangesAsync();
+
+                var studentOrderService = new OrderService(_context);
+                studentOrderService.AddOrder(order);
+
+                if (studentOrderService.AddOrder(order))
+                {
+                    // возвращаться сообщение
+                }
+
                 return RedirectToAction(nameof(Index));
+
             }
 
             return View(order);

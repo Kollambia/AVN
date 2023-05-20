@@ -1,7 +1,5 @@
 ﻿using AVN.Model.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AVN.Data.Repository
 {
@@ -74,6 +72,5 @@ namespace AVN.Data.Repository
         {
             return await _context.Set<T>().AnyAsync(entity => entity.Id.Equals(id));
         }
-
     }
 }
