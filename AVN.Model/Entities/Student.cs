@@ -60,14 +60,10 @@ public class Student : BaseEntity
     [MaxLength(30)]
     public string PhoneNumber { get; set; }
 
-    [Required]
-    [DisplayName("Приказы")]
-    [MaxLength(1000)]
-    public string Orders { get; set; }
-    
     public int GroupId { get; set; }
     public Group Group { get; set; }
 
     public ICollection<StudentPayment> StudentPayments { get; set; }
+    public ICollection<Order> Orders { get; set; }
 
 }
