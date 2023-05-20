@@ -10,6 +10,7 @@ namespace AVN.Automapper
         public GeneralProfile() 
         {
             CreateMap<Faculty, FacultyVM>().ReverseMap();
+            CreateMap<Department, DepartmentVM>().ReverseMap();
         }
     }
 }

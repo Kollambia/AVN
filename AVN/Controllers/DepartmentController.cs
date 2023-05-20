@@ -1,28 +1,34 @@
-﻿using AVN.Data.UnitOfWorks;
+﻿using AVN.Automapper;
+using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
+using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AVN.Web.Controllers
 {
     public class DepartmentController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
 
-        public DepartmentController(IUnitOfWork unitOfWork)
+        public DepartmentController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
         }
 
         // GET: Department
         public async Task<IActionResult> Index()
         {
-            return View(await _unitOfWork.DepartmentRepository.GetAllAsync());
+            var departments = await unitOfWork.DepartmentRepository.GetAllAsync("Faculty");
+            var mappedDepartments = mapper.Map<Department, DepartmentVM>(departments);
+            return View(mappedDepartments);
         }
 
         // GET: Department/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            var department = await _unitOfWork.DepartmentRepository.GetByIdAsync(id);
+            var department = await unitOfWork.DepartmentRepository.GetByIdAsync(id);
 
             if (department == null)
             {
@@ -45,8 +51,8 @@ namespace AVN.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _unitOfWork.DepartmentRepository.CreateAsync(department);
-                await _unitOfWork.SaveChangesAsync();
+                await unitOfWork.DepartmentRepository.CreateAsync(department);
+                await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(department);
@@ -55,7 +61,7 @@ namespace AVN.Web.Controllers
         // GET: Department/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var department = await _unitOfWork.DepartmentRepository.GetByIdAsync(id);
+            var department = await unitOfWork.DepartmentRepository.GetByIdAsync(id);
             if (department == null)
             {
                 return NotFound();
@@ -75,8 +81,8 @@ namespace AVN.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                await _unitOfWork.DepartmentRepository.UpdateAsync(department);
-                await _unitOfWork.SaveChangesAsync();
+                await unitOfWork.DepartmentRepository.UpdateAsync(department);
+                await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(department);
@@ -85,7 +91,7 @@ namespace AVN.Web.Controllers
         // GET: Department/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var department = await _unitOfWork.DepartmentRepository.GetByIdAsync(id);
+            var department = await unitOfWork.DepartmentRepository.GetByIdAsync(id);
             if (department == null)
             {
                 return NotFound();
@@ -99,9 +105,9 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var department = await _unitOfWork.DepartmentRepository.GetByIdAsync(id);
-            await _unitOfWork.DepartmentRepository.DeleteAsync(department);
-            await _unitOfWork.SaveChangesAsync();
+            var department = await unitOfWork.DepartmentRepository.GetByIdAsync(id);
+            await unitOfWork.DepartmentRepository.DeleteAsync(department);
+            await unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

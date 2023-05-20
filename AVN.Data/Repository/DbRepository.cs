@@ -34,6 +34,17 @@ namespace AVN.Data.Repository
                 .AsNoTracking()
                 .ToListAsync();
         }
+        public async Task<IEnumerable<T>> GetAllAsync(params string[] includes)
+        {
+            var query = _context.Set<T>().AsQueryable();
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.ToListAsync();
+        }
 
         public async Task<T> GetByIdAsync(int id)
         {

@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using AVN.Data.Repository;
 using AVN.Model.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Data.UnitOfWorks;
 
