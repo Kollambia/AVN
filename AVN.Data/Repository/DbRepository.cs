@@ -28,9 +28,11 @@ namespace AVN.Data.Repository
             return updatedEntity.Entity;
         }
 
-        public async Task<IQueryable> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return _context.Set<T>();
+            return await _context.Set<T>()
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(int id)
@@ -61,5 +63,6 @@ namespace AVN.Data.Repository
         {
             return await _context.Set<T>().AnyAsync(entity => entity.Id.Equals(id));
         }
+
     }
 }

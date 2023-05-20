@@ -1,3 +1,4 @@
+using AVN.Automapper;
 using AVN.Controllers;
 using AVN.Data;
 using AVN.Data.UnitOfWorks;
@@ -6,6 +7,7 @@ using AVN.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,14 +21,14 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultUI();
 
+
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-
 builder.Services.AddRazorPages();
-
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<GeneralProfile>());
+builder.Services.AddScoped<IMapper, EntityMapper>();
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

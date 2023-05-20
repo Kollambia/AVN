@@ -9,7 +9,7 @@ namespace AVN.Data.Repository
     {
         Task<T> CreateAsync(T entity);
         Task<T> UpdateAsync(T entity);
-        Task<IQueryable> GetAllAsync(); 
+        Task<IEnumerable<T>> GetAllAsync(); 
         Task<T> GetByIdAsync(int id); 
         Task<T> DeleteAsync(T entity);
         Task<T> DeleteByIdAsync(int id); 
