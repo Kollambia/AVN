@@ -1,7 +1,7 @@
 ﻿@model AVN.Models.FacultyVM
 
 @{
-    ViewBag.Title = "Регистрация";
+    ViewBag.Title = "Редактирование";
 }
 
 @using (Html.BeginForm())
@@ -9,7 +9,7 @@
     <div class="container py-3">
         <div class="row">
             <div class="col-md-12">
-                <h2 class="text-center mb-2">Регистрация факультета</h2>
+                <h2 class="text-center mb-2">Редактирование факультета</h2>
                 <hr class="mb-4">
 
                 <div class="row justify-content-center">
@@ -17,7 +17,7 @@
                         <span class="anchor" id="formPayment"></span>
                         <div class="card card-outline-secondary">
                             <div class="card-body">
-                                <h3 class="text-center">Форма регистрации</h3>
+                                <h3 class="text-center">Форма редактирования</h3>
                                 <hr>
                                 <form autocomplete="off" class="form" role="form">
                                     @Html.AntiForgeryToken()
@@ -43,7 +43,7 @@
                                             <a href="/Faculty/Index" class="btn btn-secondary btn-lg btn-block" type="button">Отмена</a>
                                         </div>
                                         <div class="col-md-6">
-                                            <button class="btn btn-success btn-lg btn-block" type="submit">Добавить</button>
+                                            <button class="btn btn-success btn-lg btn-block" type="submit">Сохранить</button>
                                         </div>
                                     </div>
                                 </form>

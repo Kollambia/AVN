@@ -76,32 +76,7 @@
                                             </td>
                                             <td>
                                                 <span> @Html.ActionLink("", "Edit", "Faculty", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
-                                                <span><a class="fa fa-trash delete-modal"></a></span>
-                                                <div class="modal fade" id="modal-content" tabindex="-1" aria-labelledby="modal-label" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="modal-label">Форма удаления</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">×</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <p> Вы действительно хотите все данные?</p>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <div class="form-group row">
-                                                                    <div class="col-md-6">
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        @Html.ActionLink("Удалить", "Faculty", "", routeValues: new {id = @item.Id.ToString() }, new { @class = "btn btn-danger" })
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <span> @Html.ActionLink("", "Delete", "Faculty", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
                                             </td>
                                         </tr>
                                     }
@@ -118,8 +93,6 @@
 
 
 @section Scripts {
-
-    <script>
-
-    </script>
+   <script>
+  </script>
 }

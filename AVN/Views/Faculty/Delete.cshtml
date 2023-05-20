@@ -1,0 +1,16 @@
+﻿@model AVN.Models.FacultyVM
+<div class="container">
+    <h1>Подтверждение удаления</h1>
+    <p>Вы уверены, что хотите удалить этот элемент?</p>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">@Model.FacultyName</p>
+            <p class="card-text">@Model.FacultyShortName</p>
+            <p class="card-text">@Model.DeanName</p>
+            <form method="post" action="/Faculty/DeleteConfirmed/@Model.Id">
+                <button type="submit" class="btn btn-danger">Удалить</button>
+                <a href="/Faculty/Index" class="btn btn-secondary">Отмена</a>
+            </form>
+        </div>
+    </div>
+</div>

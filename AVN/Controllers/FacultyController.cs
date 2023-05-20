@@ -67,13 +67,14 @@ namespace AVN.Web.Controllers
             {
                 return NotFound();
             }
-            return View(faculty);
+            var mappedFaculty = mapper.Map<Faculty, FacultyVM>(faculty);
+            return View(mappedFaculty);
         }
 
         // POST: Faculty/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FacultyName,FacultyShortName,DeanName")] Faculty faculty)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FacultyName,FacultyShortName,DeanName")] FacultyVM faculty)
         {
             if (id != faculty.Id)
             {
@@ -82,7 +83,8 @@ namespace AVN.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                await unitOfWork.FacultyRepository.UpdateAsync(faculty);
+                var mappedFaculty = mapper.Map<FacultyVM, Faculty>(faculty);
+                await unitOfWork.FacultyRepository.UpdateAsync(mappedFaculty);
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -97,13 +99,11 @@ namespace AVN.Web.Controllers
             {
                 return NotFound();
             }
-
-            return View(faculty);
+            var mappedFaculty = mapper.Map<Faculty, FacultyVM>(faculty);
+            return View(mappedFaculty);
         }
 
         // POST: Faculty/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var faculty = await unitOfWork.FacultyRepository.GetByIdAsync(id);
