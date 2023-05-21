@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AVN.Models.ModelVM
+namespace AVN.Models
 {
-    public class GroupVM: BasicVM
+    public class GroupVM : BasicVM
     {
         [Required(ErrorMessage = "Поле не заполнено")]
         [DisplayName("Название")]

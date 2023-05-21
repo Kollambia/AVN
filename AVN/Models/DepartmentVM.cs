@@ -4,7 +4,7 @@ using AVN.Model.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace AVN.Models.ModelVM
+namespace AVN.Models
 {
     public class DepartmentVM : BasicVM
     {

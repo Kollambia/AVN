@@ -1,7 +1,7 @@
 ﻿using AVN.Automapper;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
-using AVN.Models.ModelVM;
+using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
