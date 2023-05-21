@@ -3,6 +3,7 @@ using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AVN.Web.Controllers
 {
@@ -21,8 +22,7 @@ namespace AVN.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var departments = await unitOfWork.DepartmentRepository.GetAllAsync("Faculty");
-            var mappedDepartments = mapper.Map<Department, DepartmentVM>(departments);
-            return View(mappedDepartments);
+            return View(departments);
         }
 
         // GET: Department/Details/5
@@ -39,22 +39,25 @@ namespace AVN.Web.Controllers
         }
 
         // GET: Department/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            ViewBag.Faculties = await unitOfWork.FacultyRepository.GetAllAsync();
             return View();
         }
 
         // POST: Department/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DepartmentName,DepartmentShortName,FacultyId")] Department department)
+        public async Task<IActionResult> Create([Bind("DepartmentName,DepartmentShortName,FacultyId")] DepartmentVM department)
         {
             if (ModelState.IsValid)
             {
-                await unitOfWork.DepartmentRepository.CreateAsync(department);
+                var mappedDepartment = mapper.Map<DepartmentVM,Department> (department);
+                await unitOfWork.DepartmentRepository.CreateAsync(mappedDepartment);
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Faculties = await unitOfWork.FacultyRepository.GetAllAsync();
             return View(department);
         }
 
@@ -66,13 +69,15 @@ namespace AVN.Web.Controllers
             {
                 return NotFound();
             }
-            return View(department);
+            var mappedDepartment = mapper.Map<Department, DepartmentVM> (department);
+            ViewBag.Faculties = await unitOfWork.FacultyRepository.GetAllAsync();
+            return View(mappedDepartment);
         }
 
         // POST: Department/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DepartmentName,DepartmentShortName,FacultyId")] Department department)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DepartmentName,DepartmentShortName,FacultyId")] DepartmentVM department)
         {
             if (id != department.Id)
             {
@@ -81,10 +86,12 @@ namespace AVN.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                await unitOfWork.DepartmentRepository.UpdateAsync(department);
+                var mappedDepartment = mapper.Map<DepartmentVM, Department> (department);
+                await unitOfWork.DepartmentRepository.UpdateAsync(mappedDepartment);
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Faculties = await unitOfWork.FacultyRepository.GetAllAsync();
             return View(department);
         }
 
@@ -101,8 +108,6 @@ namespace AVN.Web.Controllers
         }
 
         // POST: Department/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var department = await unitOfWork.DepartmentRepository.GetByIdAsync(id);

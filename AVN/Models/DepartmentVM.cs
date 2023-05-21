@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using AVN.Model.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AVN.Models
 {
@@ -15,9 +17,8 @@ namespace AVN.Models
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Поле должно содержать от 3 до 50 символов.")]
         public string? DepartmentShortName { get; set; }
 
-        public int FacultyId { get; set; }
-        public Faculty Faculty { get; set; }
-
-        public List<Faculty> Faculties { get; set; }
+        [Required(ErrorMessage = "Выберите факультет"), ForeignKey("Faculty")]
+        [DisplayName("Факультет")]
+        public Nullable<int> FacultyId { get; set; }
     }
 }

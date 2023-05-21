@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AVN.Models.DepartmentVM>
+﻿@model IEnumerable<AVN.Model.Entities.Department>
 
 @{
     ViewData["Title"] = "Кафедры";
@@ -8,7 +8,7 @@
 <hr class="mb-4">
 
 <div id="toolbar">
-    <a asp-controller="Faculty" asp-action="Create">
+    <a asp-controller="Department" asp-action="Create">
         <input type="button" class="btn btn-success" value="Добавить" />
     </a>
 </div>
@@ -75,8 +75,8 @@
                                                 @Html.DisplayFor(modelItem => item.Faculty.FacultyName)
                                             </td>
                                             <td>
-                                                <span> @Html.ActionLink("", "Edit", "Faculty", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
-                                                <span> @Html.ActionLink("", "Delete", "Faculty", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
+                                                <span> @Html.ActionLink("", "Edit", "Department", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
+                                                <span> @Html.ActionLink("", "Delete", "Department", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
                                             </td>
                                         </tr>
                                     }

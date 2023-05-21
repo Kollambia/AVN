@@ -1,5 +1,15 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model AVN.Model.Entities.Department
+<div class="container">
+    <h1>Подтверждение удаления</h1>
+    <p>Вы уверены, что хотите удалить этот элемент?</p>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">@Model.DepartmentName</p>
+            <p class="card-text">@Model.DepartmentShortName</p>
+            <form method="post" action="/Department/DeleteConfirmed/@Model.Id">
+                <button type="submit" class="btn btn-danger">Удалить</button>
+                <a href="/Department/Index" class="btn btn-secondary">Отмена</a>
+            </form>
+        </div>
+    </div>
+</div>
