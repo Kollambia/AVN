@@ -1,0 +1,18 @@
+﻿@model AVN.Model.Entities.Direction
+<div class="container">
+    <h1>Подтверждение удаления</h1>
+    <p>Вы уверены, что хотите удалить этот элемент?</p>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">@Model.DirectionName</p>
+            <p class="card-text">@Model.DirectionShortName</p>
+            <p class="card-text">@Model.DirectionNumber</p>
+            <p class="card-text">@Model.CreditCost</p>
+            <p class="card-text">@Model.Description</p>
+            <form method="post" action="/Direction/DeleteConfirmed/@Model.Id">
+                <button type="submit" class="btn btn-danger">Удалить</button>
+                <a href="/Direction/Index" class="btn btn-secondary">Отмена</a>
+            </form>
+        </div>
+    </div>
+</div>

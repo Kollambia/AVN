@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AVN.Model.Entities.Department>
+﻿@model IEnumerable<AVN.Models.DepartmentVM>
 
 @{
     ViewData["Title"] = "Кафедры";
@@ -47,14 +47,14 @@
 
                                 <thead>
                                     <tr>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="FacultyName">
-                                            Название
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="DepartmentName">
+                                            @Html.DisplayNameFor(x => x.DepartmentName)
                                         </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="FacultyShortName">
-                                            Корот. название
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="DepartmentShortName">
+                                            @Html.DisplayNameFor(x => x.DepartmentShortName)
                                         </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="DeanName">
-                                            Факультет
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="FacultyId">
+                                            @Html.DisplayNameFor(x => x.FacultyId)
                                         </th>
                                         <th>
                                             Действие

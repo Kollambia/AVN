@@ -23,17 +23,17 @@
                                     @Html.AntiForgeryToken()
                                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                                     <div class="form-group">
-                                        <label>Название</label>
+                                        <label>@Html.DisplayNameFor(model => model.FacultyName)</label>
                                         @Html.EditorFor(x => x.FacultyName, new { htmlAttributes = new { @class = "form-control" }})
                                         @Html.ValidationMessageFor(x => x.FacultyName, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group">
-                                        <label>Корот. название</label>
+                                        <label>@Html.DisplayNameFor(model => model.FacultyShortName)</label>
                                         @Html.EditorFor(x => x.FacultyShortName, new { htmlAttributes = new { @class = "form-control" }})
                                         @Html.ValidationMessageFor(x => x.FacultyShortName, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group">
-                                        <label>ФИО Декана</label>
+                                        <label>@Html.DisplayNameFor(model => model.DeanName)</label>
                                         @Html.EditorFor(x => x.DeanName, new { htmlAttributes = new { @class = "form-control" }})
                                         @Html.ValidationMessageFor(x => x.DeanName, "", new { @class = "text-danger" })
                                     </div>

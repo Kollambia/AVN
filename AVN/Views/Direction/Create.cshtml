@@ -1,0 +1,74 @@
+﻿@model AVN.Models.DirectionVM
+
+@{
+    ViewBag.Title = "Регистрация";
+}
+
+@using (Html.BeginForm())
+{
+    <div class="container py-3">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="text-center mb-2">Регистрация направления</h2>
+                <hr class="mb-4">
+
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <span class="anchor" id="formPayment"></span>
+                        <div class="card card-outline-secondary">
+                            <div class="card-body">
+                                <h3 class="text-center">Форма регистрации</h3>
+                                <hr>
+                                <form autocomplete="off" class="form" role="form">
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <div class="form-group">
+                                        <label>@Html.DisplayNameFor(x => x.DirectionName)</label>
+                                        @Html.EditorFor(x => x.DirectionName, new { htmlAttributes = new { @class = "form-control" }})
+                                        @Html.ValidationMessageFor(x => x.DirectionName, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.DisplayNameFor(x => x.DirectionShortName)</label>
+                                        @Html.EditorFor(x => x.DirectionShortName, new { htmlAttributes = new { @class = "form-control" }})
+                                        @Html.ValidationMessageFor(x => x.DirectionShortName, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.DisplayNameFor(x => x.DepartmentId)</label>
+                                        @Html.DropDownListFor(x => x.DepartmentId, new SelectList(ViewBag.Departments, "Id", "DepartmentName"), "---", new {@class = "form-control"})
+                                        @Html.ValidationMessageFor(x => x.DepartmentId, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.DisplayNameFor(x => x.DirectionNumber)</label>
+                                        @Html.EditorFor(x => x.DirectionNumber, new { htmlAttributes = new { @class = "form-control" }})
+                                        @Html.ValidationMessageFor(x => x.DirectionNumber, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.DisplayNameFor(x => x.CreditCost)</label>
+                                        @Html.TextBoxFor(x => x.CreditCost, new { @class = "form-control", style = "width: 150px;" })
+                                        @Html.ValidationMessageFor(x => x.CreditCost, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.DisplayNameFor(x => x.Description)</label>
+                                        @Html.TextAreaFor(x => x.Description, new { @class = "form-control", rows = "8"})
+                                        @Html.ValidationMessageFor(x => x.Description, "", new { @class = "text-danger" })
+                                    </div>
+                                    <hr>
+                                    <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <a href="/Direction/Index" class="btn btn-secondary btn-lg btn-block" type="button">Отмена</a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button class="btn btn-success btn-lg btn-block" type="submit">Добавить</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div><!-- /form card cc payment -->
+                    </div>
+                </div><!--/row-->
+            </div><!--/col-->
+        </div><!--/row-->
+    </div>
+
+    <!--/container-->
+}

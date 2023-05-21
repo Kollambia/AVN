@@ -32,7 +32,6 @@
 
   <ItemGroup>
     <Folder Include="Models\EnumVM\" />
-    <Folder Include="Views\Direction\" />
     <Folder Include="Views\Student\" />
     <Folder Include="wwwroot\img\" />
   </ItemGroup>
