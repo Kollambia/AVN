@@ -12,6 +12,7 @@ namespace AVN.Automapper
             CreateMap<Faculty, FacultyVM>().ReverseMap();
             CreateMap<Department, DepartmentVM>().ReverseMap();
             CreateMap<Direction, DirectionVM>().ReverseMap();
+            CreateMap<Group, GroupVM>().ReverseMap();
         }
     }
 }
