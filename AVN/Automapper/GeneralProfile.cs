@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using AVN.Common.Enums;
 using AVN.Model.Entities;
-using AVN.Models;
+using AVN.Models.ModelVM;
 
 namespace AVN.Automapper
 {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
-namespace AVN.Models
+namespace AVN.Models.ModelVM
 {
     public class FacultyVM : BasicVM
     {
