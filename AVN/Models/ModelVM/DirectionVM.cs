@@ -30,7 +30,7 @@ namespace AVN.Models.ModelVM
         [Range(0.01, double.MaxValue, ErrorMessage = "Стоимость кредита должна быть больше нуля.")]
         public decimal? CreditCost { get; set; }
 
-        [Required(ErrorMessage = "Выберите кафедру"), ForeignKey("Direction")]
+        [Required(ErrorMessage = "Выберите кафедру"), ForeignKey("Department")]
         [DisplayName("Кафедра")]
         public int? DepartmentId { get; set; }
         public Department? Department { get; set; }
