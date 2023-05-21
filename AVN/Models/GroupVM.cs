@@ -13,10 +13,6 @@ namespace AVN.Models
         [StringLength(100, MinimumLength = 3, ErrorMessage = "Поле должно содержать от 3 до 100 символов.")]
         public string? GroupName { get; set; }
 
-        [Required(ErrorMessage = "Выберите курс"), ForeignKey("Direction")]
-        [DisplayName("Курс")]
-        public Course? Course { get; set; }
-
         [Required(ErrorMessage = "Выберите направление"), ForeignKey("Direction")]
         [DisplayName("Направление")]
         public int? DirectionId { get; set; }

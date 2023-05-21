@@ -1,4 +1,5 @@
 ﻿using AVN.Automapper;
+using AVN.Common.Enums;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
@@ -47,12 +48,13 @@ namespace AVN.Web.Controllers
         // POST: Group/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GroupName,Course,DirectionId")] GroupVM group)
+        public async Task<IActionResult> Create([Bind("GroupName,DirectionId")] GroupVM group)
         {
             if (ModelState.IsValid)
             {
                 var mappedGroup = mapper.Map<GroupVM, Group>(group);
                 mappedGroup.DateCreate= DateTime.Now;
+                mappedGroup.Course = Course.First;
                 await unitOfWork.GroupRepository.CreateAsync(mappedGroup);
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -77,22 +79,26 @@ namespace AVN.Web.Controllers
         // POST: Group/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,GroupName,Course,DirectionId")] GroupVM group)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,GroupName,DirectionId")] GroupVM group)
         {
-            if (id != group.Id)
+            var updatedGroup = await unitOfWork.GroupRepository.GetByIdAsync(id);
+
+            if (updatedGroup == null)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
-            {
-                var mappedGroup = mapper.Map<GroupVM, Group>(group);
-                await unitOfWork.GroupRepository.UpdateAsync(mappedGroup);
+            {              
+                updatedGroup.GroupName = group.GroupName;
+                updatedGroup.DirectionId = (int)group.DirectionId;
+                await unitOfWork.GroupRepository.UpdateAsync(updatedGroup);
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Directions = await unitOfWork.DirectionRepository.GetAllAsync();
             return View(group);
+
         }
 
         // GET: Group/Delete/5

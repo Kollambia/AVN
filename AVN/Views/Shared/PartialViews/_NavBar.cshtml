@@ -55,6 +55,16 @@
     {
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-user-graduate"></i> Абитуриент
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" asp-controller="Group" asp-action="Index"><i class="fas fa-users"></i> Группа</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" asp-controller="Student" asp-action="Index"> <i class="fas fa-user-alt"></i> Студент</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Создать пользователя
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">

@@ -53,9 +53,6 @@
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="DirectionId">
                                             @Html.DisplayNameFor(x => x.DirectionId)
                                         </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="Course">
-                                            @Html.DisplayNameFor(x => x.Course)
-                                        </th>
                                         <th>
                                             Действие
                                         </th>
@@ -70,9 +67,6 @@
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.Direction.DirectionName)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Course)
                                             </td>
                                             <td>
                                                 <span> @Html.ActionLink("", "Edit", "Group", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
