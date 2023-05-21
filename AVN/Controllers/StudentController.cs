@@ -1,4 +1,5 @@
-﻿using AVN.Data.UnitOfWorks;
+﻿using AVN.Automapper;
+using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,23 +7,25 @@ namespace AVN.Web.Controllers
 {
     public class StudentController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
 
-        public StudentController(IUnitOfWork unitOfWork)
+        public StudentController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
         }
 
         // GET: Student
         public async Task<IActionResult> Index()
         {
-            return View(await _unitOfWork.StudentRepository.GetAllAsync());
+            return View(await unitOfWork.StudentRepository.GetAllAsync());
         }
 
         // GET: Student/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            var student = await _unitOfWork.StudentRepository.GetByIdAsync(id);
+            var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
 
             if (student == null)
             {
@@ -48,8 +51,8 @@ namespace AVN.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _unitOfWork.StudentRepository.CreateAsync(student);
-                await _unitOfWork.SaveChangesAsync();
+                await unitOfWork.StudentRepository.CreateAsync(student);
+                await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(student);
@@ -58,7 +61,7 @@ namespace AVN.Web.Controllers
         // GET: Student/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var student = await _unitOfWork.StudentRepository.GetByIdAsync(id);
+            var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
             if (student == null)
             {
                 return NotFound();
@@ -78,8 +81,8 @@ namespace AVN.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                await _unitOfWork.StudentRepository.UpdateAsync(student);
-                await _unitOfWork.SaveChangesAsync();
+                await unitOfWork.StudentRepository.UpdateAsync(student);
+                await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(student);
@@ -88,7 +91,7 @@ namespace AVN.Web.Controllers
         // GET: Student/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var student = await _unitOfWork.StudentRepository.GetByIdAsync(id);
+            var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
             if (student == null)
             {
                 return NotFound();
@@ -102,9 +105,9 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var student = await _unitOfWork.StudentRepository.GetByIdAsync(id);
-            await _unitOfWork.StudentRepository.DeleteAsync(student);
-            await _unitOfWork.SaveChangesAsync();
+            var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
+            await unitOfWork.StudentRepository.DeleteAsync(student);
+            await unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }
