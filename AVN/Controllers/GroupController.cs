@@ -1,28 +1,33 @@
-﻿using AVN.Data.UnitOfWorks;
+﻿using AVN.Automapper;
+using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
+using AVN.Models.ModelVM;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AVN.Web.Controllers
 {
     public class GroupController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public GroupController(IUnitOfWork unitOfWork)
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
+        public GroupController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
         }
 
         // GET: Group
         public async Task<IActionResult> Index()
         {
-            return View(await _unitOfWork.GroupRepository.GetAllAsync());
+            var groups = await unitOfWork.GroupRepository.GetAllAsync("Direction");
+            var mappedGroups = mapper.Map<Group, GroupVM>(groups);
+            return View(mappedGroups);
         }
 
         // GET: Group/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            var group = await _unitOfWork.GroupRepository.GetByIdAsync(id);
+            var group = await unitOfWork.GroupRepository.GetByIdAsync(id);
 
             if (group == null)
             {
@@ -33,40 +38,46 @@ namespace AVN.Web.Controllers
         }
 
         // GET: Group/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            ViewBag.Directions = await unitOfWork.DirectionRepository.GetAllAsync();
             return View();
         }
 
         // POST: Group/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,GroupName,Course,DateCreate,DirectionId")] Group group)
+        public async Task<IActionResult> Create([Bind("GroupName,Course,DirectionId")] GroupVM group)
         {
             if (ModelState.IsValid)
             {
-                await _unitOfWork.GroupRepository.CreateAsync(group);
-                await _unitOfWork.SaveChangesAsync();
+                var mappedGroup = mapper.Map<GroupVM, Group>(group);
+                mappedGroup.DateCreate= DateTime.Now;
+                await unitOfWork.GroupRepository.CreateAsync(mappedGroup);
+                await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Directions = await unitOfWork.DirectionRepository.GetAllAsync();
             return View(group);
         }
 
         // GET: Group/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var group = await _unitOfWork.GroupRepository.GetByIdAsync(id);
+            var group = await unitOfWork.GroupRepository.GetByIdAsync(id);
             if (group == null)
             {
                 return NotFound();
             }
-            return View(group);
+            var mappedGroup = mapper.Map<Group, GroupVM>(group);
+            ViewBag.Directions = await unitOfWork.DirectionRepository.GetAllAsync();
+            return View(mappedGroup);
         }
 
         // POST: Group/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,GroupName,Course,DateCreate,DirectionId")] Group group)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,GroupName,Course,DirectionId")] GroupVM group)
         {
             if (id != group.Id)
             {
@@ -75,17 +86,19 @@ namespace AVN.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                await _unitOfWork.GroupRepository.UpdateAsync(group);
-                await _unitOfWork.SaveChangesAsync();
+                var mappedGroup = mapper.Map<GroupVM, Group>(group);
+                await unitOfWork.GroupRepository.UpdateAsync(mappedGroup);
+                await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Directions = await unitOfWork.DirectionRepository.GetAllAsync();
             return View(group);
         }
 
         // GET: Group/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var group = await _unitOfWork.GroupRepository.GetByIdAsync(id);
+            var group = await unitOfWork.GroupRepository.GetByIdAsync(id);
             if (group == null)
             {
                 return NotFound();
@@ -95,13 +108,11 @@ namespace AVN.Web.Controllers
         }
 
         // POST: Group/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var group = await _unitOfWork.GroupRepository.GetByIdAsync(id);
-            await _unitOfWork.GroupRepository.DeleteAsync(group);
-            await _unitOfWork.SaveChangesAsync();
+            var group = await unitOfWork.GroupRepository.GetByIdAsync(id);
+            await unitOfWork.GroupRepository.DeleteAsync(group);
+            await unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }
