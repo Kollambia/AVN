@@ -1,4 +1,5 @@
-﻿using AVN.Model.Entities;
+﻿using System.Linq.Expressions;
+using AVN.Model.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Data.Repository
@@ -71,6 +72,11 @@ namespace AVN.Data.Repository
         public async Task<bool> IsExistsAsync(int id)
         {
             return await _context.Set<T>().AnyAsync(entity => entity.Id.Equals(id));
+        }
+
+        public async Task<IEnumerable<T>> FindByConditionAsync(Expression<Func<T, bool>> expression)
+        {
+            return await _context.Set<T>().Where(expression).ToListAsync();
         }
     }
 }

@@ -2,6 +2,7 @@
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Web.Controllers
 {
@@ -109,6 +110,14 @@ namespace AVN.Web.Controllers
             await unitOfWork.StudentRepository.DeleteAsync(student);
             await unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Contract(int id)
+        {
+            // Получить информацию о контрактах студента из базы данных
+            var contracts = unitOfWork.StudentPaymentRepository.FindByConditionAsync(sp => sp.StudentId == id);
+
+            return View(contracts);
         }
     }
 }

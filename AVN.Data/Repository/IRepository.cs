@@ -16,5 +16,7 @@ namespace AVN.Data.Repository
         Task<T> DeleteAsync(T entity);
         Task<T> DeleteByIdAsync(int id); 
         Task<bool> IsExistsAsync(int id);
+
+        Task<IEnumerable<T>> FindByConditionAsync(Expression<Func<T, bool>> expression);
     }
 }
