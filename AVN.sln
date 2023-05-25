@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AVN.Common", "AVN.Common\AV
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AVN.Business", "AVN.Business\AVN.Business.csproj", "{61DF6B72-591D-4DA2-B7E6-DA8E93E7CD31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVN.ReportService", "AVN.ReportService\AVN.ReportService.csproj", "{DB622C0C-2C6F-4413-84F8-19E206DA10B8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,10 +45,6 @@ Global
 		{61DF6B72-591D-4DA2-B7E6-DA8E93E7CD31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61DF6B72-591D-4DA2-B7E6-DA8E93E7CD31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61DF6B72-591D-4DA2-B7E6-DA8E93E7CD31}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DB622C0C-2C6F-4413-84F8-19E206DA10B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DB622C0C-2C6F-4413-84F8-19E206DA10B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DB622C0C-2C6F-4413-84F8-19E206DA10B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DB622C0C-2C6F-4413-84F8-19E206DA10B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
