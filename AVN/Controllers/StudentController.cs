@@ -119,16 +119,20 @@ namespace AVN.Web.Controllers
         {
 
             var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
+            var group = await unitOfWork.GroupRepository.GetByIdAsync(student.GroupId);
+            var direction = await unitOfWork.DirectionRepository.GetByIdAsync(group.DirectionId);
+            var department = await unitOfWork.DepartmentRepository.GetByIdAsync(direction.DepartmentId);
+            var faculty = await unitOfWork.FacultyRepository.GetByIdAsync(department.);
             var contract = await unitOfWork.StudentPaymentRepository.FindByConditionAsync(s => s.StudentId == id);
 
             var latestContract = contract.OrderByDescending(c => c.AcademicYear).FirstOrDefault();
 
             var model = new PaymentInvoiceModel
             {
-                Faculty = student.Group?.Direction?.Department?.Faculty?.FacultyName ?? "Нет данных",
-                Department = student.Group?.Direction?.Department?.DepartmentName ?? "Нет данных",
-                Direction = student.Group?.Direction?.DirectionName ?? "Нет данных",
-                Group = student.Group?.GroupName ?? "Нет данных",
+                Faculty = faculty.FacultyName ?? "Нет данных",
+                Department = department.DepartmentName ?? "Нет данных",
+                Direction = direction.DirectionName ?? "Нет данных",
+                Group = group.GroupName ?? "Нет данных",
                 Course = student.Group?.Course.GetCourseInWriting() ?? "Нет данных",
                 FullName = student.FullName,
                 EducationForm = student.StudingForm.ToString(),

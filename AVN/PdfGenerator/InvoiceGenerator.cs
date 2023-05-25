@@ -21,16 +21,7 @@ namespace AVN.PdfGenerator
                     Chunk chunk = new Chunk("Счет на оплату\n\n", FontFactory.GetFont("Arial", 20, Font.BOLDITALIC));
                     pdfDoc.Add(new Paragraph(chunk));
 
-                    string invoiceDetails = $"Факультет: {model.Faculty}\n" +
-                                            $"Кафедра: {model.Department}\n" +
-                                            $"Направление: {model.Direction}\n" +
-                                            $"Группа: {model.Group}\n" +
-                                            $"Курс: {model.Course}\n" +
-                                            $"Имя студента: {model.FullName}\n" +
-                                            $"Степень: {model.AcademicDegree}\n" +
-                                            $"Номер счета на оплату: {model.PaymentAccountNumber}\n" +
-                                            $"Сумма платежа: {model.PaymentAmount}\n" +
-                                            $"Назначение платежа: {model.PaymentPurpose}";
+                    string invoiceDetails = $"Faculty: {model.Faculty}\nDepartment: {model.Department}\nDirection: {model.Direction}\nGroup: {model.Group}\nCourse: {model.Course}\nStudent: {model.FullName}\nDegree: {model.AcademicDegree}\nPayment Invoice Number: {model.PaymentAccountNumber}\nPayment Amount: {model.PaymentAmount}\nPayment Purpose: {model.PaymentPurpose}";
 
                     pdfDoc.Add(new Paragraph(invoiceDetails));
 
