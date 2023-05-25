@@ -9,6 +9,8 @@ namespace AVN.PdfGenerator
         public string GeneratePdf(PaymentInvoiceModel model)
         {
             string pdfPath = Path.Combine(Environment.CurrentDirectory, "PaymentInvoice.pdf");
+            string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "times.ttf");
+
             try
             {
 
@@ -18,12 +20,24 @@ namespace AVN.PdfGenerator
                     PdfWriter.GetInstance(pdfDoc, stream);
                     pdfDoc.Open();
 
-                    Chunk chunk = new Chunk("Счет на оплату\n\n", FontFactory.GetFont("Arial", 20, Font.BOLDITALIC));
+                    BaseFont baseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+                    Font font = new Font(baseFont, 12, Font.NORMAL);
+
+                    Chunk chunk = new Chunk("Счет на оплату\n\n", font);
                     pdfDoc.Add(new Paragraph(chunk));
 
-                    string invoiceDetails = $"Faculty: {model.Faculty}\nDepartment: {model.Department}\nDirection: {model.Direction}\nGroup: {model.Group}\nCourse: {model.Course}\nStudent: {model.FullName}\nDegree: {model.AcademicDegree}\nPayment Invoice Number: {model.PaymentAccountNumber}\nPayment Amount: {model.PaymentAmount}\nPayment Purpose: {model.PaymentPurpose}";
+                    string invoiceDetails = $"Факультет: {model.Faculty}\n" +
+                                            $"Кафедра: {model.Department}\n" +
+                                            $"Направление: {model.Direction}\n" +
+                                            $"Группа: {model.Group}\n" +
+                                            $"Курс: {model.Course}\n" +
+                                            $"Имя студента: {model.FullName}\n" +
+                                            $"Степень: {model.AcademicDegree}\n" +
+                                            $"Номер счета на оплату: {model.PaymentAccountNumber}\n" +
+                                            $"Сумма платежа: {model.PaymentAmount}\n" +
+                                            $"Назначение платежа: {model.PaymentPurpose}";
 
-                    pdfDoc.Add(new Paragraph(invoiceDetails));
+                    pdfDoc.Add(new Paragraph(invoiceDetails, font));
 
                     pdfDoc.Close();
                     stream.Close();

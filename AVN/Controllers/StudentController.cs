@@ -129,7 +129,7 @@ namespace AVN.Web.Controllers
 
             var model = new PaymentInvoiceModel
             {
-                Faculty = faculty.FacultyName ?? "Нет данных",
+                Faculty = "хуй",
                 Department = department.DepartmentName ?? "Нет данных",
                 Direction = direction.DirectionName ?? "Нет данных",
                 Group = group.GroupName ?? "Нет данных",
