@@ -122,7 +122,7 @@ namespace AVN.Web.Controllers
             var group = await unitOfWork.GroupRepository.GetByIdAsync(student.GroupId);
             var direction = await unitOfWork.DirectionRepository.GetByIdAsync(group.DirectionId);
             var department = await unitOfWork.DepartmentRepository.GetByIdAsync(direction.DepartmentId);
-            var faculty = await unitOfWork.FacultyRepository.GetByIdAsync(department.);
+            var faculty = await unitOfWork.FacultyRepository.GetByIdAsync(department.FacultyId);
             var contract = await unitOfWork.StudentPaymentRepository.FindByConditionAsync(s => s.StudentId == id);
 
             var latestContract = contract.OrderByDescending(c => c.AcademicYear).FirstOrDefault();
