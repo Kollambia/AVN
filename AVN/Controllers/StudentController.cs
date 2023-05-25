@@ -1,14 +1,10 @@
-﻿using System.Globalization;
-using AVN.Automapper;
+﻿using AVN.Automapper;
 using AVN.Common.Enums;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using AVN.PdfGenerator;
-using AVN.ReportService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol;
 
 namespace AVN.Web.Controllers
 {

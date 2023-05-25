@@ -18,11 +18,9 @@ namespace AVN.PdfGenerator
                     PdfWriter.GetInstance(pdfDoc, stream);
                     pdfDoc.Open();
 
-                    // Add text to the document
                     Chunk chunk = new Chunk("Счет на оплату\n\n", FontFactory.GetFont("Arial", 20, Font.BOLDITALIC));
                     pdfDoc.Add(new Paragraph(chunk));
 
-                    // Add payment information
                     string invoiceDetails = $"Факультет: {model.Faculty}\n" +
                                             $"Кафедра: {model.Department}\n" +
                                             $"Направление: {model.Direction}\n" +
