@@ -139,18 +139,27 @@ namespace AVN.Web.Controllers
         public async Task<IActionResult> GeneratePaymentInvoice(int id)
         {
 
-            var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
-            var group = await unitOfWork.GroupRepository.GetByIdAsync(student.GroupId);
-            var direction = await unitOfWork.DirectionRepository.GetByIdAsync(group.DirectionId);
-            var department = await unitOfWork.DepartmentRepository.GetByIdAsync(direction.DepartmentId);
-            var faculty = await unitOfWork.FacultyRepository.GetByIdAsync(department.FacultyId);
+            var studentTask = unitOfWork.StudentRepository.GetByIdAsync(id);
+            var groupTask = unitOfWork.GroupRepository.GetByIdAsync(studentTask.Result.GroupId);
+            var directionTask = unitOfWork.DirectionRepository.GetByIdAsync(groupTask.Result.DirectionId);
+            var departmentTask = unitOfWork.DepartmentRepository.GetByIdAsync(directionTask.Result.DepartmentId);
+            var facultyTask = unitOfWork.FacultyRepository.GetByIdAsync(departmentTask.Result.FacultyId);
+
+            await Task.WhenAll(studentTask, groupTask, directionTask, departmentTask, facultyTask);
+
+            var student = await studentTask;
+            var group = await groupTask;
+            var direction = await directionTask;
+            var department = await departmentTask;
+            var faculty = await facultyTask;
+
             var contract = await unitOfWork.StudentPaymentRepository.FindByConditionAsync(s => s.StudentId == id);
 
             var latestContract = contract.OrderByDescending(c => c.AcademicYear).FirstOrDefault();
 
             var model = new PaymentInvoiceModel
             {
-                Faculty = "хуй",
+                Faculty = faculty.FacultyName,
                 Department = department.DepartmentName ?? "Нет данных",
                 Direction = direction.DirectionName ?? "Нет данных",
                 Group = group.GroupName ?? "Нет данных",
