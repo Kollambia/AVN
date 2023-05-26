@@ -1,6 +1,4 @@
 ﻿using AVN.Common.Enums;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace AVN.Model.Entities;
 
@@ -17,11 +15,17 @@ public class Student : BaseEntity
     public Citizenship Citizenship { get; set; }
     public string Address { get; set; }
     public string PhoneNumber { get; set; }
-    public int GroupId { get; set; }
 
-    public Group Group { get; set; }
+    public int? GroupId { get; set; }
+    public virtual Group Group { get; set; }
 
-    public ICollection<StudentPayment> StudentPayments { get; set; }
-    public ICollection<Order> Orders { get; set; }
+    public virtual ICollection<StudentPayment> StudentPayments { get; set; }
+    public virtual ICollection<Order> Orders { get; set; }
+
+    public Student()
+    {
+        StudentPayments = new List<StudentPayment>();
+        Orders = new List<Order>();
+    }
 
 }

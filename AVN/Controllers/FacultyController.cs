@@ -116,7 +116,7 @@ namespace AVN.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFaculties()
         {
-            var faculties = (await unitOfWork.FacultyRepository.GetAllAsync()).ToList();
+            var faculties = await unitOfWork.FacultyRepository.GetAllAsync();
             return Json(faculties);
         }
     }

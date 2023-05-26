@@ -24,7 +24,11 @@ namespace AVN.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            StudentViaFilterVM studentViaFilterVM = new StudentViaFilterVM
+            {
+                studentVMs = new List<StudentVM>()
+            };
+            return View(studentViaFilterVM);
         }
 
         [HttpPost]
@@ -36,11 +40,9 @@ namespace AVN.Web.Controllers
                             x.Group?.DirectionId == filter?.DirectionId |
                             x.GroupId == filter?.GroupId);
 
-            var s = mapper.Map<Student, StudentVM>(students);
-
             StudentViaFilterVM filteredStudents = new()
             {
-                studentVMs = s
+                studentVMs = mapper.Map<Student, StudentVM>(students).ToList()
             };
 
             return View(filteredStudents);
@@ -140,10 +142,10 @@ namespace AVN.Web.Controllers
         {
 
             var studentTask = unitOfWork.StudentRepository.GetByIdAsync(id);
-            var groupTask = unitOfWork.GroupRepository.GetByIdAsync(studentTask.Result.GroupId);
-            var directionTask = unitOfWork.DirectionRepository.GetByIdAsync(groupTask.Result.DirectionId);
-            var departmentTask = unitOfWork.DepartmentRepository.GetByIdAsync(directionTask.Result.DepartmentId);
-            var facultyTask = unitOfWork.FacultyRepository.GetByIdAsync(departmentTask.Result.FacultyId);
+            var groupTask = unitOfWork.GroupRepository.GetByIdAsync((int)studentTask.Result.GroupId);
+            var directionTask = unitOfWork.DirectionRepository.GetByIdAsync((int)groupTask.Result.DirectionId);
+            var departmentTask = unitOfWork.DepartmentRepository.GetByIdAsync((int)directionTask.Result.DepartmentId);
+            var facultyTask = unitOfWork.FacultyRepository.GetByIdAsync((int)departmentTask.Result.FacultyId);
 
             await Task.WhenAll(studentTask, groupTask, directionTask, departmentTask, facultyTask);
 

@@ -3,69 +3,11 @@
     ViewData["Title"] = "Студенты";
 }
 
-@*temp*@
-
-<!-- Faculties Dropdown -->
-@*<select id="facultiesDropdown">
-    <option value="">Не выбрано</option>
-@foreach (Faculty f in ViewBag.Faculties)
-{
-        <option value="@f.Id">@f.FacultyName</option>
-    }
-</select>*@
-
-<!-- Departments Dropdown -->
-@*<select id="departmentsDropdown">
-    <option value="">Select Department</option>
-</select>*@
-
-
-<h2 class="text-center mb-2">Студенты</h2>
-<hr class="mb-4">
-@*@using (Html.BeginForm())
-{
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group row">
-                <form autocomplete="off" class="form" role="form">
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
-                       <label>@Html.DisplayNameFor(x => x.FacultyId)</label>
-                        @Html.DropDownListFor(x => x.FacultyId, new List<SelectListItem>(), "Не выбрано", new {@class = "form-control" , id = "facultiesDropdown" })
-                    </div>
-                    <div class="form-group">
-                        <label>@Html.DisplayNameFor(x => x.DepartmentId)</label>
-                        @Html.DropDownListFor(x => x.DepartmentId, new List<SelectListItem>(), "Не выбрано", new {@class = "form-control", id = "departmentsDropdown" })
-                    </div>
-                    <div class="form-group">
-                        <label>@Html.DisplayNameFor(x => x.DirectionId)</label>
-                        @Html.DropDownListFor(x => x.DirectionId, new List<SelectListItem>(), "Не выбрано", new {@class = "form-control", id = "directionsDropdown" })
-                    </div>
-                    <div class="form-group">
-                        <label>@Html.DisplayNameFor(x => x.GroupId)</label>
-                        @Html.DropDownListFor(x => x.GroupId, new List<SelectListItem>(), "Не выбрано", new {@class = "form-control", id = "groupsDropdown" })
-                    </div>
-                    <div class="col-md-4">
-                        <br>
-                        <div class="form-group">
-                            <button class="btn btn-success btn-block" type="submit"><span class="fa fa-filter"> Применить</span> </button>
-
-                        </div>
-                    </div>
-                </form>
-
-            </div>
-        </div>
-    </div>
-
-}*@
-
 @using (Html.BeginForm())
 {
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group row mb-4">
+        <div class="col-md-5">
+            <div class="form-group row mb-1">
                 @* Faculty *@
                 <div class="col-md-3">
                     <label class ="font-weight-bold">@Html.DisplayNameFor(x => x.FacultyId)</label>
@@ -75,7 +17,7 @@
                 </div>
             </div>
 
-            <div class="form-group row mb-4">
+            <div class="form-group row mb-1">
                 @* Department *@
                 <div class="col-md-3">
                     <label class="font-weight-bold">@Html.DisplayNameFor(x => x.DepartmentId)</label>
@@ -84,8 +26,9 @@
                     @Html.DropDownListFor(x => x.DepartmentId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "departmentsDropdown" })
                 </div>
             </div>
-
-            <div class="form-group row mb-4">
+        </div>
+        <div class="col-md-5">
+            <div class="form-group row mb-1">
                 @* Direction *@
                 <div class="col-md-3">
                     <label class="font-weight-bold">@Html.DisplayNameFor(x => x.DirectionId)</label>
@@ -95,7 +38,7 @@
                 </div>
             </div>
 
-            <div class="form-group row mb-4">
+            <div class="form-group row mb-1">
                 @* Group *@
                 <div class="col-md-3">
                     <label class="font-weight-bold">@Html.DisplayNameFor(x => x.GroupId)</label>
@@ -104,12 +47,10 @@
                     @Html.DropDownListFor(x => x.GroupId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "groupsDropdown" })
                 </div>
             </div>
+        </div>
 
-            <div class="form-group row">
-                <div class="col-md-12">
-                    <button class="btn btn-success btn-block" type="submit"><span class="fa fa-filter"></span> Применить</button>
-                </div>
-            </div>
+        <div class="col-md-2">
+             <button class="btn btn-success btn-block" type="submit"><span class="fa fa-filter"></span> Применить</button>
         </div>
     </div>
 }
@@ -117,7 +58,7 @@
 
 <hr>
 <div id="toolbar">
-    <a asp-controller="Group" asp-action="Create">
+    <a asp-controller="Student" asp-action="Create">
         <input type="button" class="btn btn-success" value="Добавить" />
     </a>
 </div>
@@ -156,19 +97,39 @@
 
                                 <thead>
                                     <tr>
- @*                                       <th scope="col" data-sortable="true" data-filter-control="input" data-field="GroupName">
-                                            @Html.DisplayNameFor(x => x.)
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="FullName">
+                                            @Html.DisplayNameFor(x => x.studentVMs.FirstOrDefault().FullName)
                                         </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="DirectionId">
-                                            @Html.DisplayNameFor(x => x.DirectionId)
-                                        </th>*@
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="GroupName">
+                                            @Html.DisplayNameFor(x => x.studentVMs.FirstOrDefault().Group.GroupName)
+                                        </th>
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="FacultyName">
+                                            @Html.DisplayNameFor(x => x.studentVMs.FirstOrDefault().Group.Direction.Department.Faculty.FacultyShortName)
+                                        </th>
                                         <th>
-                                            Действие
+                                            Расписание студента
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-
+                                    @foreach (var item in Model.studentVMs)
+                                    {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.FullName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Group.GroupName)
+                                                </td>
+                                                <td>
+                                                @Html.DisplayFor(modelItem => item.Group.Direction.Department.Faculty.FacultyShortName)
+                                                </td>
+                                                <td>
+                                                    <span> @Html.ActionLink("", "Edit", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
+                                                    <span> @Html.ActionLink("", "Delete", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
+                                                </td>
+                                            </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>
@@ -192,11 +153,10 @@
                     //$('#facultiesDropdown').empty();
 
                     // Add new options
-                    if (data.length > 0) {
-                        $.each(data, function (i, faculty) {
-                            $('#facultiesDropdown').append($('<option>').text(faculty.facultyName).val(faculty.id));
-                        });
-                    }
+                    $.each(data, function (i, faculty) {
+                        $('#facultiesDropdown').append($('<option>').text(faculty.facultyName).val(faculty.id));
+                    });
+                    
                 },
                 error: function (xhr, status, error) {
                     // Handle error if any

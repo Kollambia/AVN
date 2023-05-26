@@ -34,10 +34,10 @@ public class OrderService
 
         if (order.OrderType == OrderType.Enrollment || order.OrderType == OrderType.Translation)
         {
-            decimal contract = CalculateContract(order.StudentId);
+            decimal contract = CalculateContract((int)order.StudentId);
             _dbContext.StudentPayments.Add(new StudentPayment
             {
-                StudentId = order.StudentId,
+                StudentId = (int)order.StudentId,
                 Contract = contract,
                 Payed = 0,
                 Debt = contract,

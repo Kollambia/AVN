@@ -20,8 +20,8 @@ namespace AVN.Web.Controllers
         // GET: Department
         public async Task<IActionResult> Index()
         {
-            var departments = await unitOfWork.DepartmentRepository.GetAllAsync("Faculty");
-            var mappedDepartment = mapper.Map<Department, DepartmentVM>(departments);
+            var departments = await unitOfWork.DepartmentRepository.GetAllAsync();
+            var mappedDepartment = mapper.Map<Department, DepartmentVM>(departments).ToList();
             return View(mappedDepartment);
         }
 

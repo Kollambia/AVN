@@ -19,7 +19,7 @@ namespace AVN.Web.Controllers
         // GET: Direction
         public async Task<IActionResult> Index()
         {
-            var directions = await unitOfWork.DirectionRepository.GetAllAsync("Department");
+            var directions = await unitOfWork.DirectionRepository.GetAllAsync();
             var mappedDirections = mapper.Map<Direction, DirectionVM>(directions);
             return View(mappedDirections);
         }

@@ -22,9 +22,14 @@ namespace AVN.Model.Entities
         [DisplayName("Курс")]
         public Course Course { get; set; }
 
-        public int DepartmentId { get; set; }
-        public Department Department { get; set; }
+        public int? DepartmentId { get; set; }
+        public virtual Department Department { get; set; }
 
-        public ICollection<SubjectEmployee> SubjectEmployees { get; set; }
+        public virtual ICollection<SubjectEmployee> SubjectEmployees { get; set; }
+
+        public Subject() 
+        { 
+            SubjectEmployees= new List<SubjectEmployee>();
+        }
     }
 }

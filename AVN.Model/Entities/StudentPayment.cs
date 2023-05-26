@@ -21,9 +21,14 @@ namespace AVN.Model.Entities
         [DisplayName("Долг")]
         public decimal Debt { get; set; }
 
-        public int StudentId { get; set; }
-        public Student Student { get; set; }
+        public int? StudentId { get; set; }
+        public virtual Student Student { get; set; }
 
-        public ICollection<StudentPaymentDetail> PaymentDetails { get; set; }
+        public virtual ICollection<StudentPaymentDetail> PaymentDetails { get; set; }
+
+        public StudentPayment()
+        {
+            PaymentDetails= new List<StudentPaymentDetail>();
+        }
     }
 }

@@ -29,10 +29,9 @@ namespace AVN.Data.Repository
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await _context.Set<T>()
-                .AsNoTracking()
-                .ToListAsync();
+            return await _context.Set<T>().ToListAsync();
         }
+
         public async Task<IEnumerable<T>> GetAllAsync(params string[] includes)
         {
             var query = _context.Set<T>().AsQueryable();

@@ -49,10 +49,15 @@ namespace AVN.Model.Entities
         [MaxLength(30)]
         public string PhoneNumber { get; set; }
 
-        public int DepartmentId { get; set; }
-        public Department Department { get; set; }
+        public int? DepartmentId { get; set; }
+        public virtual Department Department { get; set; }
 
-        public ICollection<SubjectEmployee> SubjectEmployees { get; set; }
+        public virtual ICollection<SubjectEmployee> SubjectEmployees { get; set; }
+
+        public Employee()
+        {
+            SubjectEmployees = new List<SubjectEmployee>();
+        }
 
         public string GetFullName()
         {

@@ -32,7 +32,7 @@ namespace AVN.Data
                     .Build();
 
             string connectionStrings = config.GetConnectionString("DefaultConnection");
-
+            optionsBuilder.UseLazyLoadingProxies();
             optionsBuilder.UseSqlServer(connectionStrings);
         }
     }

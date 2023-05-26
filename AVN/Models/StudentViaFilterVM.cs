@@ -16,6 +16,6 @@ namespace AVN.Models
         [DisplayName("Группа")]
         public int? GroupId { get; set; }
 
-        public IEnumerable<StudentVM>? studentVMs { get; set;}
+        public List<StudentVM>? studentVMs { get; set;}
     }
 }

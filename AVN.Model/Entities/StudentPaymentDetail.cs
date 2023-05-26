@@ -26,7 +26,12 @@ namespace AVN.Model.Entities
         [DisplayName("Целевое назначение")]
         public string SpecialPurpose { get; set; }
 
-        public int StudentPaymentId { get; set; }
-        public StudentPayment StudentPayment { get; set; }
+        public int? StudentPaymentId { get; set; }
+        public virtual StudentPayment StudentPayment { get; set; }
+
+        public StudentPaymentDetail()
+        {
+            StudentPayment = new StudentPayment();
+        }
     }
 }
