@@ -3,6 +3,7 @@ using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Web.Controllers
 {
@@ -110,6 +111,13 @@ namespace AVN.Web.Controllers
             await unitOfWork.FacultyRepository.DeleteAsync(faculty);
             await unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetFaculties()
+        {
+            var faculties = (await unitOfWork.FacultyRepository.GetAllAsync()).ToList();
+            return Json(faculties);
         }
     }
 }

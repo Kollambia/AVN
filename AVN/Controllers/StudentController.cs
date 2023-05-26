@@ -5,6 +5,7 @@ using AVN.Model.Entities;
 using AVN.Models;
 using AVN.PdfGenerator;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Web.Controllers
 {
@@ -20,9 +21,23 @@ namespace AVN.Web.Controllers
         }
 
         // GET: Student
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public IActionResult Index()
         {
-            return View(await unitOfWork.StudentRepository.GetAllAsync());
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(StudentViaFilterVM filter)
+        {
+            //var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
+
+            //if (student == null)
+            //{
+            //    return NotFound();
+            //}
+
+            return View();
         }
 
         // GET: Student/Details/5
