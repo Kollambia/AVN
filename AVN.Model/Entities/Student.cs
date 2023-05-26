@@ -14,7 +14,7 @@ public class Student : BaseEntity
     public AcademicDegree AcademicDegree { get; set; }
     public string GradeBookNumber { get; set; }
     public Gender Gender { get; set; }
-    public string Citizenship { get; set; }
+    public Citizenship Citizenship { get; set; }
     public string Address { get; set; }
     public string PhoneNumber { get; set; }
     public int GroupId { get; set; }

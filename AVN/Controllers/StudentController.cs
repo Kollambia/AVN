@@ -30,14 +30,20 @@ namespace AVN.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(StudentViaFilterVM filter)
         {
-            //var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
+            var students = (await unitOfWork.StudentRepository.GetAllAsync("Group")).Where(x => 
+                            x.Group?.Direction?.Department?.FacultyId == filter?.FacultyId |
+                            x.Group?.Direction?.DepartmentId == filter?.DepartmentId |
+                            x.Group?.DirectionId == filter?.DirectionId |
+                            x.GroupId == filter?.GroupId);
 
-            //if (student == null)
-            //{
-            //    return NotFound();
-            //}
+            var s = mapper.Map<Student, StudentVM>(students);
 
-            return View();
+            StudentViaFilterVM filteredStudents = new()
+            {
+                studentVMs = s
+            };
+
+            return View(filteredStudents);
         }
 
         // GET: Student/Details/5
