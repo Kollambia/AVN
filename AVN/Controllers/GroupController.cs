@@ -121,5 +121,12 @@ namespace AVN.Web.Controllers
             await unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetGroupsByDirection(int directionId)
+        {
+            var groups = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x => x.DirectionId == directionId).ToList();
+            return Json(groups);
+        }
     }
 }

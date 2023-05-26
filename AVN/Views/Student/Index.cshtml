@@ -1,0 +1,314 @@
+﻿@model StudentViaFilterVM
+@{
+    ViewData["Title"] = "Студенты";
+}
+
+@*temp*@
+
+<!-- Faculties Dropdown -->
+@*<select id="facultiesDropdown">
+    <option value="">Не выбрано</option>
+@foreach (Faculty f in ViewBag.Faculties)
+{
+        <option value="@f.Id">@f.FacultyName</option>
+    }
+</select>*@
+
+<!-- Departments Dropdown -->
+@*<select id="departmentsDropdown">
+    <option value="">Select Department</option>
+</select>*@
+
+
+<h2 class="text-center mb-2">Студенты</h2>
+<hr class="mb-4">
+@*@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group row">
+                <form autocomplete="off" class="form" role="form">
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                       <label>@Html.DisplayNameFor(x => x.FacultyId)</label>
+                        @Html.DropDownListFor(x => x.FacultyId, new List<SelectListItem>(), "Не выбрано", new {@class = "form-control" , id = "facultiesDropdown" })
+                    </div>
+                    <div class="form-group">
+                        <label>@Html.DisplayNameFor(x => x.DepartmentId)</label>
+                        @Html.DropDownListFor(x => x.DepartmentId, new List<SelectListItem>(), "Не выбрано", new {@class = "form-control", id = "departmentsDropdown" })
+                    </div>
+                    <div class="form-group">
+                        <label>@Html.DisplayNameFor(x => x.DirectionId)</label>
+                        @Html.DropDownListFor(x => x.DirectionId, new List<SelectListItem>(), "Не выбрано", new {@class = "form-control", id = "directionsDropdown" })
+                    </div>
+                    <div class="form-group">
+                        <label>@Html.DisplayNameFor(x => x.GroupId)</label>
+                        @Html.DropDownListFor(x => x.GroupId, new List<SelectListItem>(), "Не выбрано", new {@class = "form-control", id = "groupsDropdown" })
+                    </div>
+                    <div class="col-md-4">
+                        <br>
+                        <div class="form-group">
+                            <button class="btn btn-success btn-block" type="submit"><span class="fa fa-filter"> Применить</span> </button>
+
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+}*@
+
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group row mb-4">
+                @* Faculty *@
+                <div class="col-md-3">
+                    <label class ="font-weight-bold">@Html.DisplayNameFor(x => x.FacultyId)</label>
+                </div>
+                <div class="col-md-9">
+                    @Html.DropDownListFor(x => x.FacultyId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "facultiesDropdown" })
+                </div>
+            </div>
+
+            <div class="form-group row mb-4">
+                @* Department *@
+                <div class="col-md-3">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.DepartmentId)</label>
+                </div>
+                <div class="col-md-9">
+                    @Html.DropDownListFor(x => x.DepartmentId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "departmentsDropdown" })
+                </div>
+            </div>
+
+            <div class="form-group row mb-4">
+                @* Direction *@
+                <div class="col-md-3">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.DirectionId)</label>
+                </div>
+                <div class="col-md-9">
+                    @Html.DropDownListFor(x => x.DirectionId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "directionsDropdown" })
+                </div>
+            </div>
+
+            <div class="form-group row mb-4">
+                @* Group *@
+                <div class="col-md-3">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.GroupId)</label>
+                </div>
+                <div class="col-md-9">
+                    @Html.DropDownListFor(x => x.GroupId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "groupsDropdown" })
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <button class="btn btn-success btn-block" type="submit"><span class="fa fa-filter"></span> Применить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<hr>
+<div id="toolbar">
+    <a asp-controller="Group" asp-action="Create">
+        <input type="button" class="btn btn-success" value="Добавить" />
+    </a>
+</div>
+
+<div class="data-table-area mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="sparkline13-list">
+                    <div class="sparkline13-graph">
+                        <div class="datatable-dashv1-list custom-datatable-overright">
+                            <table class="table-striped"
+                                   id="table"
+                                   data-toggle="table"
+                                   data-pagination="true"
+                                   data-search="true"
+                                   data-show-columns="true"
+                                   data-key-events="true"
+                                   data-show-toggle="true"
+                                   data-resizable="true"
+                                   data-cookie="true"
+                                   data-cookie-id-table="saveId"
+                                   data-show-export="true"
+                                   data-click-to-select="true"
+                                   data-show-search-clear-button="true"
+                                   data-filter-control="true"
+                                   data-toolbar="#toolbar"
+                                   data-show-refresh="true"
+                                   data-show-fullscreen="true"
+                                   data-show-columns-toggle-all="true"
+                                   data-minimum-count-columns="2"
+                                   data-show-pagination-switch="true"
+                                   data-page-list="[10, 25, 50, 100, всё]"
+                                   data-show-footer="true"
+                                   data-locale="ru-RU">
+
+                                <thead>
+                                    <tr>
+ @*                                       <th scope="col" data-sortable="true" data-filter-control="input" data-field="GroupName">
+                                            @Html.DisplayNameFor(x => x.)
+                                        </th>
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="DirectionId">
+                                            @Html.DisplayNameFor(x => x.DirectionId)
+                                        </th>*@
+                                        <th>
+                                            Действие
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetFaculties", "Faculty")',
+                type: 'GET',
+                success: function (data) {
+                    // Clear previous options
+                    //$('#facultiesDropdown').empty();
+
+                    // Add new options
+                    if (data.length > 0) {
+                        $.each(data, function (i, faculty) {
+                            $('#facultiesDropdown').append($('<option>').text(faculty.facultyName).val(faculty.id));
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('#facultiesDropdown').change(function () {
+                var facultyId = $(this).val();
+                if (!facultyId) {
+                    // Clear departments dropdown
+                    $('#departmentsDropdown').empty();
+                    $('#directionsDropdown').empty();
+                    $('#groupsDropdown').empty();
+
+                    // Add "select item" option
+                    $('#departmentsDropdown').append($('<option>').text('Не выбрано').val(''));
+                    $('#directionsDropdown').append($('<option>').text('Не выбрано').val(''));
+                    $('#groupsDropdown').append($('<option>').text('Не выбрано').val(''));
+                    return; // Exit the function
+                }
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetDepartmentsByFaculty", "Department")',
+                    data: { facultyId: facultyId },
+                    success: function (response) {
+                        // Clear previous options
+                        $('#departmentsDropdown').empty();
+
+                        // Add "select item" option
+                        $('#departmentsDropdown').append($('<option>').text('Не выбрано').val(''));
+
+                        // Add new options
+                        $.each(response, function (i, department) {
+                            $('#departmentsDropdown').append($('<option>').text(department.departmentName).val(department.id));
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error if any
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('#departmentsDropdown').change(function () {
+                var departmentId = $(this).val();
+                if (!departmentId) {
+                    // Clear departments dropdown
+                    $('#directionsDropdown').empty();
+                    $('#groupsDropdown').empty();
+
+                    // Add "select item" option
+                    $('#directionsDropdown').append($('<option>').text('Не выбрано').val(''));
+                    $('#groupsDropdown').append($('<option>').text('Не выбрано').val(''));
+                    return; // Exit the function
+                }
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetDirectionsByDepartment", "Direction")',
+                    data: { departmentId: departmentId },
+                    success: function (response) {
+                        // Clear previous options
+                        $('#directionsDropdown').empty();
+
+                        // Add "select item" option
+                        $('#directionsDropdown').append($('<option>').text('Не выбрано').val(''));
+
+                        // Add new options
+                        $.each(response, function (i, direction) {
+                            $('#directionsDropdown').append($('<option>').text(direction.directionName).val(direction.id));
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error if any
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('#directionsDropdown').change(function () {
+                var directionId = $(this).val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetGroupsByDirection", "Group")',
+                    data: { directionId: directionId },
+                    success: function (response) {
+                        // Clear previous options
+                        $('#groupsDropdown').empty();
+
+                        // Add "select item" option
+                        $('#groupsDropdown').append($('<option>').text('Не выбрано').val(''));
+
+                        // Add new options
+                        $.each(response, function (i, group) {
+                            $('#groupsDropdown').append($('<option>').text(group.groupName).val(group.id));
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error if any
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}

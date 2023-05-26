@@ -115,5 +115,12 @@ namespace AVN.Web.Controllers
             await unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDepartmentsByFaculty(int facultyId)
+        {
+            var departments = (await unitOfWork.DepartmentRepository.GetAllAsync()).Where(x => x.FacultyId == facultyId).ToList();
+            return Json(departments);
+        }
     }
 }
