@@ -1,9 +1,12 @@
-﻿using AVN.Common.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using AVN.Common.Enums;
 
 namespace AVN.Model.Entities;
 
 public class Student : BaseEntity
 {
+    [Key]
+    public string Id { get; set; }
     public string FullName { get; set; }
     public StudentStatus Status { get; set; }
     public DateTime DateOfBirth { get; set; }

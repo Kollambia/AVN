@@ -6,6 +6,7 @@ using AVN.Models;
 using AVN.PdfGenerator;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace AVN.Web.Controllers
 {
@@ -199,6 +200,21 @@ namespace AVN.Web.Controllers
         private static string GeneratePaymentAccountNumber()
         {
             return Guid.NewGuid().ToString();
+        }
+
+        private void AddStudent(AppUser user)
+        {
+            var studentUser = MapUser(user);
+            unitOfWork.StudentRepository.CreateAsync(studentUser);
+        }
+
+        private Student MapUser(AppUser user)
+        {
+            return new Student()
+            {
+                Id = user.Id,
+            };
+
         }
     }
 }

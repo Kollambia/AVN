@@ -2,9 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-using System.Text.Encodings.Web;
 using AVN.Model.Entities;
 using AVN.Utility;
 using Microsoft.AspNetCore.Authentication;
@@ -13,6 +10,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using AVN.Web.Controllers;
 
 namespace AVN.Areas.Identity.Pages.Account
 {
@@ -24,13 +24,17 @@ namespace AVN.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<AppUser> _emailStore;
         private readonly ILogger<RegisterStudentModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly StudentController _studentController;
+
 
         public RegisterStudentModel(
             UserManager<AppUser> userManager,
             IUserStore<AppUser> userStore,
             SignInManager<AppUser> signInManager,
             ILogger<RegisterStudentModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            StudentController studentController
+            )
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -38,6 +42,7 @@ namespace AVN.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _studentController = studentController;
         }
 
         /// <summary>
@@ -124,6 +129,9 @@ namespace AVN.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+
+                    _studentController.AddStudent(user);
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);

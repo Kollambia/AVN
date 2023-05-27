@@ -5,6 +5,5 @@ namespace AVN.Model.Entities;
 
 public class BaseEntity : IdentityUser
 {
-    [Key]
     public int Id { get; set; }
 }
