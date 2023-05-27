@@ -1,7 +1,7 @@
 using AVN.Automapper;
-using AVN.Controllers;
 using AVN.Data;
 using AVN.Data.UnitOfWorks;
+using AVN.Model.Entities;
 using AVN.Model.Initializer;
 using AVN.Utility;
 using Microsoft.AspNetCore.Identity;
@@ -16,7 +16,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer("DefaultConnection"));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<AppUser, IdentityRole>()
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultUI();
