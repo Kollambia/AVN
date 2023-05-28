@@ -4,8 +4,9 @@ namespace AVN.Common.Enums
 {
     public enum StudentStatus
     {
-        [Display(Name = "Обучается")] Studying = 0,
-        [Display(Name = "Отчислен")] Expelled = 1,
-        [Display(Name = "Восстановлен")] Restored = 2
+        [Display(Name = "Зачислен")] Enlisted = 0,
+        [Display(Name = "Обучается")] Studying = 1,
+        [Display(Name = "Отчислен")] Expelled = 2,
+        [Display(Name = "Восстановлен")] Restored = 3
     }
 }

@@ -89,7 +89,9 @@
                     $.each(data, function (i, faculty) {
                         $('#facultiesDropdown').append($('<option></option>').val(faculty.value).text(faculty.text));
                     });
-
+                    var facultyId = '@Model.FacultyId'; // Assuming FacultyId is an integer property
+                    $('#facultiesDropdown').val(facultyId);
+                    FillDepartmentsDropdown();
                 },
                 error: function (xhr, status, error) {
                     // Handle error if any
@@ -97,6 +99,29 @@
                 }
             });
         });
+
+        function FillDepartmentsDropdown() {
+            // Your code logic here
+            var facultyId = $('#facultiesDropdown').val();
+            $.ajax({
+                url: '@Url.Action("GetDepartmentsByFaculty", "Department")',
+                type: 'GET',
+                data: { facultyId: facultyId },
+                success: function (data) {
+                    // Add new options
+                    $.each(data, function (i, department) {
+                        $('#departmentsDropdown').append($('<option></option>').val(department.value).text(department.text));
+                    });
+
+                    var departmentId = '@Model.DepartmentId'; // Assuming FacultyId is an integer property
+                    $('#departmentsDropdown').val(departmentId);
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+        }
 
         $(document).ready(function () {
             $('#facultiesDropdown').change(function () {
@@ -122,6 +147,7 @@
                         $.each(response, function (i, department) {
                             $('#departmentsDropdown').append($('<option></option>').val(department.value).text(department.text));
                         });
+
                     },
                     error: function (xhr, status, error) {
                         // Handle error if any

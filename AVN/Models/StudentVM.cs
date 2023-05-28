@@ -30,6 +30,14 @@ namespace AVN.Models
         [DisplayName("Академическая степень")]
         public AcademicDegree? AcademicDegree { get; set; }
 
+        [Required(ErrorMessage = "Поле не заполнено")] //to do добавить RegularExpression "2022/123"
+        [DisplayName("Номер зачетной книжки")]
+        public string? GradeBookNumber { get; set; }
+
+        [Required(ErrorMessage = "Выберите статус")]
+        [DisplayName("Статус")]
+        public StudentStatus? Status { get; set; }
+
         [Required(ErrorMessage = "Выберите пол")]
         [DisplayName("Пол")]
         public Gender? Gender { get; set; }

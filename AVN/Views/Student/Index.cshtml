@@ -149,14 +149,18 @@
                 url: '@Url.Action("GetFaculties", "Faculty")',
                 type: 'GET',
                 success: function (data) {
-                    // Clear previous options
-                    //$('#facultiesDropdown').empty();
-
                     // Add new options
                     $.each(data, function (i, faculty) {
                         $('#facultiesDropdown').append($('<option></option>').val(faculty.value).text(faculty.text));
                     });
-                    
+
+                    var facultyId = '@Model.FacultyId'; // Assuming FacultyId is an integer property
+                    if (facultyId)
+                        $('#facultiesDropdown').val(facultyId);
+                    else
+                        $('#facultiesDropdown').append($('<option>').text('Не выбрано').val(''));
+
+                    FillDepartmentsDropdown(); 
                 },
                 error: function (xhr, status, error) {
                     // Handle error if any
@@ -164,6 +168,76 @@
                 }
             });
         });
+
+        function FillDepartmentsDropdown() {
+            // Your code logic here
+            var facultyId = $('#facultiesDropdown').val();
+            $.ajax({
+                url: '@Url.Action("GetDepartmentsByFaculty", "Department")',
+                type: 'GET',
+                data: { facultyId: facultyId },
+                success: function (data) {
+                    // Add new options
+                    $.each(data, function (i, department) {
+                        $('#departmentsDropdown').append($('<option></option>').val(department.value).text(department.text));
+                    });
+
+                    var departmentId = '@Model.DepartmentId';
+                    $('#departmentsDropdown').val(departmentId);
+                    FillDirectionsDropdown();
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+        function FillDirectionsDropdown() {
+            // Your code logic here
+            var departmentId = $('#departmentsDropdown').val();
+            $.ajax({
+                url: '@Url.Action("GetDirectionsByDepartment", "Direction")',
+                type: 'GET',
+                data: { departmentId: departmentId },
+                success: function (data) {
+                    // Add new options
+                    $.each(data, function (i, direction) {
+                        $('#directionsDropdown').append($('<option></option>').val(direction.value).text(direction.text));
+                    });
+
+                    var directionId = '@Model.DirectionId';
+                    $('#directionsDropdown').val(directionId);
+                    FillGroupsDropdown();
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+        function FillGroupsDropdown() {
+            // Your code logic here
+            var directionId = $('#directionsDropdown').val();
+            $.ajax({
+                url: '@Url.Action("GetGroupsByDirection", "Group")',
+                type: 'GET',
+                data: { directionId: directionId },
+                success: function (data) {
+                    // Add new options
+                    $.each(data, function (i, group) {
+                        $('#groupsDropdown').append($('<option></option>').val(group.value).text(group.text));
+                    });
+                    var groupId = '@Model.GroupId';
+                    $('#groupsDropdown').val(groupId);
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+        }
 
         $(document).ready(function () {
             $('#facultiesDropdown').change(function () {

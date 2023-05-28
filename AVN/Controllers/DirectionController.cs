@@ -47,7 +47,7 @@ namespace AVN.Web.Controllers
         // POST: Direction/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DirectionName,DirectionShortName,Description,DirectionNumber,CreditCost,DepartmentId")] DirectionVM direction)
+        public async Task<IActionResult> Create(DirectionVM direction)
         {
             if (ModelState.IsValid)
             {

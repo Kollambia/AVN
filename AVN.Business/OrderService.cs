@@ -68,8 +68,8 @@ public class OrderService
         int studentsCount = count % 1000;
         string lastThreeNumbers = studentsCount.ToString("D3");
 
-        student.GradeBookNumber = $"{DateTime.Now.Year}/{lastThreeNumbers}";
-        student.Status = StudentStatus.Studying;
+        student.GradeBookNumber = $"{DateTime.Now.Year}{lastThreeNumbers}";
+        student.Status = StudentStatus.Enlisted;
 
         return student;
     }

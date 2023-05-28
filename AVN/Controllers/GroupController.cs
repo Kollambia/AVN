@@ -72,7 +72,7 @@ namespace AVN.Web.Controllers
             mappedGroup.FacultyId = group.Direction?.Department?.FacultyId;
             mappedGroup.DepartmentId = group.Direction?.DepartmentId;
             mappedGroup.DirectionId = group.DirectionId;
-            mappedGroup.DateCreate = group.DateCreate.Date;
+            //mappedGroup.DateCreate = group.DateCreate.Date;
             return View(mappedGroup);
         }
 

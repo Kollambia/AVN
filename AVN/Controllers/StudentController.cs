@@ -38,15 +38,23 @@ namespace AVN.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(StudentViaFilterVM filter)
         {
-            var students = (await unitOfWork.StudentRepository.GetAllAsync()).Where(x =>
-                            x.GroupId == filter?.GroupId ||
-                            x.Group?.DirectionId == filter?.DirectionId ||
-                            x.Group?.Direction?.DepartmentId == filter?.DepartmentId ||
-                            x.Group?.Direction?.Department?.FacultyId == filter?.FacultyId
-                            );
+            var students = await unitOfWork.StudentRepository.GetAllAsync();
+            if (filter.GroupId.HasValue)
+                students = students.Where(x => x.GroupId == filter.GroupId);
+            else if (filter.DirectionId.HasValue)
+                students = students.Where(x => x.Group.DirectionId == filter.DirectionId);
+            else if (filter.DepartmentId.HasValue)
+                students = students.Where(x => x.Group.Direction.DepartmentId == filter.DepartmentId);
+            else if (filter.FacultyId.HasValue)
+                students = students.Where(x => x.Group.Direction.Department.FacultyId == filter.FacultyId);
+
 
             StudentViaFilterVM filteredStudents = new()
             {
+                FacultyId= filter?.FacultyId,
+                DepartmentId= filter?.DepartmentId,
+                DirectionId= filter?.DirectionId,
+                GroupId= filter?.GroupId,
                 studentVMs = mapper.Map<Student, StudentVM>(students).ToList()
             };
 
@@ -69,7 +77,11 @@ namespace AVN.Web.Controllers
         // GET: Student/Create
         public IActionResult Create()
         {
-            return View();
+            var studentOrderService = new OrderService(context);
+            Student student = new Student();
+            var updatedStudent = studentOrderService.SetStudentStatusAndGradeBookNumber(student);
+            var mappedStudent = mapper.Map<Student, StudentVM>(updatedStudent);
+            return View(mappedStudent);
         }
 
         // POST: Student/Create
@@ -77,12 +89,11 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(StudentVM student)
         {
-            var studentOrderService = new OrderService(context);
+            
             if (ModelState.IsValid)
             {
                 var mappedStudent = mapper.Map<StudentVM, Student>(student);
-                var registeredStudent = studentOrderService.SetStudentStatusAndGradeBookNumber(mappedStudent);
-                await unitOfWork.StudentRepository.CreateAsync(registeredStudent);
+                await unitOfWork.StudentRepository.CreateAsync(mappedStudent);
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -97,13 +108,17 @@ namespace AVN.Web.Controllers
             {
                 return NotFound();
             }
-            return View(student);
+            var mappedStudent = mapper.Map<Student, StudentVM>(student);
+            mappedStudent.FacultyId = student.Group.Direction.Department.FacultyId;
+            mappedStudent.DepartmentId = student.Group.Direction.DepartmentId;
+            mappedStudent.DirectionId = student.Group.DirectionId;
+            return View(mappedStudent);
         }
 
         // POST: Student/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FullName,Status,DateOfBirth,StudingForm,EducationalLine,AcademicDegree,GradeBookNumber,Gender,Citizenship,Address,PhoneNumber,Orders,GroupId")] Student student)
+        public async Task<IActionResult> Edit(int id, StudentVM student)
         {
             if (id != student.Id)
             {
@@ -112,7 +127,8 @@ namespace AVN.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                await unitOfWork.StudentRepository.UpdateAsync(student);
+                var mappedStudent = mapper.Map<StudentVM, Student>(student);
+                await unitOfWork.StudentRepository.UpdateAsync(mappedStudent);
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

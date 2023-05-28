@@ -1,7 +1,7 @@
 ﻿@model StudentVM
 @using AVN.Common.Enums
 @{
-    ViewBag.Title = "Регистрация";
+    ViewBag.Title = "Редактирование";
 }
 
 @using (Html.BeginForm())
@@ -9,7 +9,7 @@
     <div class="container py-3">
         <div class="row">
             <div class="col-md-12">
-                <h2 class="text-center mb-2">Регистрация студента</h2>
+                <h2 class="text-center mb-2">Редактирование студента</h2>
                 <hr class="mb-4">
 
                 <div class="row justify-content-center">
@@ -17,7 +17,7 @@
                         <span class="anchor" id="formPayment"></span>
                         <div class="card card-outline-secondary">
                             <div class="card-body">
-                                <h3 class="text-center">Форма регистрации</h3>
+                                <h3 class="text-center">Форма редактирования</h3>
                                 <hr>
                                 <form autocomplete="off" class="form" role="form">
                                     @Html.AntiForgeryToken()
@@ -29,7 +29,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>@Html.DisplayNameFor(x => x.DateOfBirth)</label>
-                                        @Html.EditorFor(x => x.DateOfBirth, new { htmlAttributes = new { @class = "form-control datetimepicker" }})
+                                        @Html.TextBoxFor(x => x.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control",@type = "date"})
                                         @Html.ValidationMessageFor(x => x.DateOfBirth, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group">
@@ -57,13 +57,12 @@
                                     </div>
                                     <div class="form-group">
                                         <label>@Html.DisplayNameFor(x => x.Status)</label>
-                                        @Html.DropDownListFor(x => x.Status, Html.GetEnumSelectList(typeof(StudentStatus)), "Не выбрано", new {@class = "form-control", disabled = "disabled"})
-                                        @Html.HiddenFor(x => x.Status, new { id = "StatusHidden" })
+                                        @Html.DropDownListFor(x => x.Status, Html.GetEnumSelectList(typeof(StudentStatus)), "Не выбрано", new {@class = "form-control"})
                                         @Html.ValidationMessageFor(x => x.Status, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group">
                                         <label>@Html.DisplayNameFor(x => x.GradeBookNumber)</label>
-                                        @Html.EditorFor(x => x.GradeBookNumber, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" }})
+                                        @Html.EditorFor(x => x.GradeBookNumber, new { htmlAttributes = new { @class = "form-control" }})
                                         @Html.ValidationMessageFor(x => x.GradeBookNumber, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group">
@@ -121,7 +120,7 @@
                                             <a href="/Student/Index" class="btn btn-secondary btn-lg btn-block" type="button">Отмена</a>
                                         </div>
                                         <div class="col-md-6">
-                                            <button class="btn btn-success btn-lg btn-block" type="submit">Добавить</button>
+                                            <button class="btn btn-success btn-lg btn-block" type="submit">Обновить</button>
                                         </div>
                                     </div>
                                 </form>
@@ -143,11 +142,8 @@
     </script>
 
     <script>
-        $(function () {
-            var selectedValue = $("#Status").val();
-            $("#StatusHidden").val(selectedValue);
-        });
-        
+
+
         $(document).ready(function () {
             $.ajax({
                 url: '@Url.Action("GetFaculties", "Faculty")',
@@ -310,6 +306,7 @@
                         $.each(response, function (i, direction) {
                             $('#directionsDropdown').append($('<option></option>').val(direction.value).text(direction.text));
                         });
+
                     },
                     error: function (xhr, status, error) {
                         // Handle error if any
