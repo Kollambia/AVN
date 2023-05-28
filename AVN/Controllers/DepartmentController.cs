@@ -42,7 +42,6 @@ namespace AVN.Web.Controllers
         // GET: Department/Create
         public async Task<IActionResult> Create()
         {
-            ViewBag.Faculties = await unitOfWork.FacultyRepository.GetAllAsync();
             return View();
         }
 
@@ -58,7 +57,6 @@ namespace AVN.Web.Controllers
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.Faculties = await unitOfWork.FacultyRepository.GetAllAsync();
             return View(department);
         }
 
@@ -71,7 +69,6 @@ namespace AVN.Web.Controllers
                 return NotFound();
             }
             var mappedDepartment = mapper.Map<Department, DepartmentVM> (department);
-            ViewBag.Faculties = await unitOfWork.FacultyRepository.GetAllAsync();
             return View(mappedDepartment);
         }
 
@@ -92,7 +89,6 @@ namespace AVN.Web.Controllers
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.Faculties = await unitOfWork.FacultyRepository.GetAllAsync();
             return View(department);
         }
 

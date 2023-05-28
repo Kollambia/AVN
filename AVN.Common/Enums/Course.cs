@@ -4,12 +4,10 @@ namespace AVN.Common.Enums
 {
     public enum Course
     {
-        [Display(Name = "Не указан")] NotSet = -1,
-        [Display(Name = "Неопределённый")] Undefined = 0,
-        [Display(Name = "1")] First = 1,
-        [Display(Name = "2")] Second = 2,
-        [Display(Name = "3")] Third = 3,
-        [Display(Name = "4")] Fourth = 4,
+        [Display(Name = "1")] First = 0,
+        [Display(Name = "2")] Second = 1,
+        [Display(Name = "3")] Third = 2,
+        [Display(Name = "4")] Fourth = 3,
     }
 
     public static class CourseExtensions

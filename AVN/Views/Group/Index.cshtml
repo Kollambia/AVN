@@ -4,7 +4,7 @@
     ViewData["Title"] = "Группы";
 }
 
-<h2 class="text-center mb-2">Таблица групп</h2>
+<h2 class="text-center mb-2">Группы</h2>
 <hr class="mb-4">
 
 <div id="toolbar">
@@ -50,8 +50,20 @@
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="GroupName">
                                             @Html.DisplayNameFor(x => x.GroupName)
                                         </th>
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="Course">
+                                            @Html.DisplayNameFor(x => x.Course)
+                                        </th>
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="DateCreate">
+                                            @Html.DisplayNameFor(x => x.DateCreate)
+                                        </th>
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="DirectionId">
                                             @Html.DisplayNameFor(x => x.DirectionId)
+                                        </th>
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="DepartmentId">
+                                            @Html.DisplayNameFor(x => x.DepartmentId)
+                                        </th>
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="FacultyId">
+                                            @Html.DisplayNameFor(x => x.FacultyId)
                                         </th>
                                         <th>
                                             Действие
@@ -66,7 +78,19 @@
                                                 @Html.DisplayFor(modelItem => item.GroupName)
                                             </td>
                                             <td>
+                                                @Html.DisplayFor(modelItem => item.Course)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DateCreate)
+                                            </td>
+                                            <td>
                                                 @Html.DisplayFor(modelItem => item.Direction.DirectionName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Direction.Department.DepartmentName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Direction.Department.Faculty.FacultyName)
                                             </td>
                                             <td>
                                                 <span> @Html.ActionLink("", "Edit", "Group", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;

@@ -39,9 +39,8 @@ namespace AVN.Web.Controllers
         }
 
         // GET: Direction/Create
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
-            ViewBag.Departments = await unitOfWork.DepartmentRepository.GetAllAsync();
             return View();
         }
 
@@ -57,7 +56,6 @@ namespace AVN.Web.Controllers
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.Departments = await unitOfWork.DepartmentRepository.GetAllAsync();
             return View(direction);
         }
 
@@ -70,14 +68,15 @@ namespace AVN.Web.Controllers
                 return NotFound();
             }
             var mappedDirection = mapper.Map<Direction, DirectionVM>(direction);
-            ViewBag.Departments = await unitOfWork.DepartmentRepository.GetAllAsync();
+            mappedDirection.FacultyId = direction.Department.FacultyId;
+            mappedDirection.DepartmentId = direction.DepartmentId;
             return View(mappedDirection);
         }
 
         // POST: Direction/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DirectionName,DirectionShortName,Description,DirectionNumber,CreditCost,DepartmentId")] DirectionVM direction)
+        public async Task<IActionResult> Edit(int id, DirectionVM direction)
         {
             if (id != direction.Id)
             {
@@ -91,7 +90,6 @@ namespace AVN.Web.Controllers
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.Departments = await unitOfWork.DepartmentRepository.GetAllAsync();
             return View(direction);
         }
 

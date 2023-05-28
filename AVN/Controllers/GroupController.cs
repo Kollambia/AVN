@@ -21,7 +21,7 @@ namespace AVN.Web.Controllers
         // GET: Group
         public async Task<IActionResult> Index()
         {
-            var groups = await unitOfWork.GroupRepository.GetAllAsync("Direction");
+            var groups = await unitOfWork.GroupRepository.GetAllAsync();
             var mappedGroups = mapper.Map<Group, GroupVM>(groups);
             return View(mappedGroups);
         }
@@ -40,27 +40,23 @@ namespace AVN.Web.Controllers
         }
 
         // GET: Group/Create
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
-            ViewBag.Directions = await unitOfWork.DirectionRepository.GetAllAsync();
             return View();
         }
 
         // POST: Group/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GroupName,DirectionId")] GroupVM group)
+        public async Task<IActionResult> Create(GroupVM group)
         {
             if (ModelState.IsValid)
             {
                 var mappedGroup = mapper.Map<GroupVM, Group>(group);
-                mappedGroup.DateCreate= DateTime.Now;
-                mappedGroup.Course = Course.First;
                 await unitOfWork.GroupRepository.CreateAsync(mappedGroup);
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.Directions = await unitOfWork.DirectionRepository.GetAllAsync();
             return View(group);
         }
 
@@ -73,31 +69,30 @@ namespace AVN.Web.Controllers
                 return NotFound();
             }
             var mappedGroup = mapper.Map<Group, GroupVM>(group);
-            ViewBag.Directions = await unitOfWork.DirectionRepository.GetAllAsync();
+            mappedGroup.FacultyId = group.Direction?.Department?.FacultyId;
+            mappedGroup.DepartmentId = group.Direction?.DepartmentId;
+            mappedGroup.DirectionId = group.DirectionId;
+            mappedGroup.DateCreate = group.DateCreate.Date;
             return View(mappedGroup);
         }
 
         // POST: Group/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,GroupName,DirectionId")] GroupVM group)
+        public async Task<IActionResult> Edit(int id, GroupVM group)
         {
-            var updatedGroup = await unitOfWork.GroupRepository.GetByIdAsync(id);
-
-            if (updatedGroup == null)
+            if (id != group.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
-            {              
-                updatedGroup.GroupName = group.GroupName;
-                updatedGroup.DirectionId = (int)group.DirectionId;
-                await unitOfWork.GroupRepository.UpdateAsync(updatedGroup);
+            {
+                var mappedGroup = mapper.Map<GroupVM, Group>(group);
+                await unitOfWork.GroupRepository.UpdateAsync(mappedGroup);
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.Directions = await unitOfWork.DirectionRepository.GetAllAsync();
             return View(group);
 
         }

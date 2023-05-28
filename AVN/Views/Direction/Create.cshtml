@@ -33,8 +33,13 @@
                                         @Html.ValidationMessageFor(x => x.DirectionShortName, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group">
+                                        <label>@Html.DisplayNameFor(x => x.FacultyId)</label>
+                                        @Html.DropDownListFor(x => x.FacultyId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "facultiesDropdown" })
+                                        @Html.ValidationMessageFor(x => x.FacultyId, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
                                         <label>@Html.DisplayNameFor(x => x.DepartmentId)</label>
-                                        @Html.DropDownListFor(x => x.DepartmentId, new SelectList(ViewBag.Departments, "Id", "DepartmentName"), "---", new {@class = "form-control"})
+                                        @Html.DropDownListFor(x => x.DepartmentId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "departmentsDropdown" })
                                         @Html.ValidationMessageFor(x => x.DepartmentId, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group">
@@ -71,4 +76,59 @@
     </div>
 
     <!--/container-->
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetFaculties", "Faculty")',
+                type: 'GET',
+                success: function (data) {
+                    // Add new options
+                    $.each(data, function (i, faculty) {
+                        $('#facultiesDropdown').append($('<option></option>').val(faculty.value).text(faculty.text));
+                    });
+
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('#facultiesDropdown').change(function () {
+                var facultyId = $(this).val();
+                if (!facultyId) {
+                    $('#departmentsDropdown').empty();
+                    $('#departmentsDropdown').append($('<option>').text('Не выбрано').val(''));
+                    return;
+                }
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetDepartmentsByFaculty", "Department")',
+                    data: { facultyId: facultyId },
+                    success: function (response) {
+                        // Clear previous options
+                        $('#departmentsDropdown').empty();
+
+                        // Add "select item" option
+                        $('#departmentsDropdown').append($('<option>').text('Не выбрано').val(''));
+
+                        // Add new options
+                        $.each(response, function (i, department) {
+                            $('#departmentsDropdown').append($('<option></option>').val(department.value).text(department.text));
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error if any
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
 }

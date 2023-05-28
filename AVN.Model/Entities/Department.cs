@@ -14,7 +14,6 @@ public class Department : BaseEntity
 
     public Department() 
     {
-        Faculty = new Faculty();
         Employees = new List<Employee>();
         Directions = new List<Direction>();
         Subjects = new List<Subject>();

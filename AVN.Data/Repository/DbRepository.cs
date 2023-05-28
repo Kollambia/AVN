@@ -32,23 +32,22 @@ namespace AVN.Data.Repository
             return await _context.Set<T>().ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(params string[] includes)
-        {
-            var query = _context.Set<T>().AsQueryable();
+        //public async Task<IEnumerable<T>> GetAllAsync(params string[] includes)
+        //{
+        //    var query = _context.Set<T>().AsQueryable();
 
-            foreach (var include in includes)
-            {
-                query = query.Include(include);
-            }
+        //    foreach (var include in includes)
+        //    {
+        //        query = query.Include(include);
+        //    }
 
-            return await query.ToListAsync();
-        }
+        //    return await query.ToListAsync();
+        //}
 
         public async Task<T> GetByIdAsync(int id)
         {
             return await _context.Set<T>()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(en => en.Id.Equals(id));
+                .FirstOrDefaultAsync(x => x.Id.Equals(id));
         }
 
         public async Task<T> DeleteAsync(T entity)
