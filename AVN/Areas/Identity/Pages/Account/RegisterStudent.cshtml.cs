@@ -118,17 +118,17 @@ namespace AVN.Areas.Identity.Pages.Account
                     Email = Input.Email,
                 };
 
-                if (User.IsInRole(RoleConst.AdminRole))
-                {
-                    await _userManager.AddToRoleAsync(user, RoleConst.StudentRole);
-                }
-
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
+                    if (User.IsInRole(RoleConst.AdminRole))
+                    {
+                        await _userManager.AddToRoleAsync(user, RoleConst.StudentRole);
+                    }
+
                     _studentController.AddStudent(user);
 
                     _logger.LogInformation("User created a new account with password.");
