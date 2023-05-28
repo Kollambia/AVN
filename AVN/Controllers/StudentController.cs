@@ -34,11 +34,12 @@ namespace AVN.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(StudentViaFilterVM filter)
         {
-            var students = (await unitOfWork.StudentRepository.GetAllAsync("Group")).Where(x => 
-                            x.Group?.Direction?.Department?.FacultyId == filter?.FacultyId |
-                            x.Group?.Direction?.DepartmentId == filter?.DepartmentId |
-                            x.Group?.DirectionId == filter?.DirectionId |
-                            x.GroupId == filter?.GroupId);
+            var students = (await unitOfWork.StudentRepository.GetAllAsync()).Where(x =>
+                            x.GroupId == filter?.GroupId ||
+                            x.Group?.DirectionId == filter?.DirectionId ||
+                            x.Group?.Direction?.DepartmentId == filter?.DepartmentId ||
+                            x.Group?.Direction?.Department?.FacultyId == filter?.FacultyId
+                            );
 
             StudentViaFilterVM filteredStudents = new()
             {

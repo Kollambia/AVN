@@ -4,6 +4,7 @@ using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AVN.Web.Controllers
 {
@@ -122,11 +123,11 @@ namespace AVN.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetGroupsByDirection(int directionId)
+        public async Task<List<SelectListItem>> GetGroupsByDirection(int directionId)
         {
-            var groups = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x => x.DirectionId == directionId).ToList();
-            return Json(groups);
+            var groups = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x => x.DirectionId == directionId);
+            var groupList = groups.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GroupName }).ToList();
+            return groupList;
         }
     }
 }

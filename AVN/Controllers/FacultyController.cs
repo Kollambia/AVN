@@ -3,6 +3,7 @@ using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Web.Controllers
@@ -113,11 +114,11 @@ namespace AVN.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetFaculties()
+        public async Task<List<SelectListItem>> GetFaculties()
         {
             var faculties = await unitOfWork.FacultyRepository.GetAllAsync();
-            return Json(faculties);
+            var facultyList = faculties.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.FacultyName }).ToList();
+            return facultyList;
         }
     }
 }

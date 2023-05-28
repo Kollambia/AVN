@@ -3,6 +3,7 @@ using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AVN.Web.Controllers
 {
@@ -116,11 +117,11 @@ namespace AVN.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetDepartmentsByFaculty(int facultyId)
+        public async Task<List<SelectListItem>> GetDepartmentsByFaculty(int facultyId)
         {
-            var departments = (await unitOfWork.DepartmentRepository.GetAllAsync()).Where(x => x.FacultyId == facultyId).ToList();
-            return Json(departments);
+            var departments = (await unitOfWork.DepartmentRepository.GetAllAsync()).Where(x => x.FacultyId == facultyId);
+            var departmentList = departments.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.DepartmentName }).ToList();
+            return departmentList;
         }
     }
 }
