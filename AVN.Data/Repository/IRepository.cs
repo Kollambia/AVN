@@ -12,7 +12,8 @@ namespace AVN.Data.Repository
         Task<T> UpdateAsync(T entity);
         Task<IEnumerable<T>> GetAllAsync(); 
         Task<IEnumerable<T>> GetAllAsync(params string[] includes); 
-        Task<T> GetByIdAsync(int id); 
+        Task<T> GetByIdAsync(int id);
+        Task<T> GetByIdAsync(string id);
         Task<T> DeleteAsync(T entity);
         Task<T> DeleteByIdAsync(int id); 
         Task<bool> IsExistsAsync(int id);

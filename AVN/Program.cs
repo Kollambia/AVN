@@ -4,6 +4,7 @@ using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Model.Initializer;
 using AVN.Utility;
+using AVN.Web.Controllers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<GeneralProfile>());
 builder.Services.AddScoped<IMapper, EntityMapper>();
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+builder.Services.AddScoped<StudentController>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

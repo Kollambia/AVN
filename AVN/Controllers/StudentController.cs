@@ -99,7 +99,7 @@ namespace AVN.Web.Controllers
         // POST: Student/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FullName,Status,DateOfBirth,StudingForm,EducationalLine,AcademicDegree,GradeBookNumber,Gender,Citizenship,Address,PhoneNumber,Orders,GroupId")] Student student)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,FullName,Status,DateOfBirth,StudingForm,EducationalLine,AcademicDegree,GradeBookNumber,Gender,Citizenship,Address,PhoneNumber,Orders,GroupId")] Student student)
         {
             if (id != student.Id)
             {
@@ -116,7 +116,7 @@ namespace AVN.Web.Controllers
         }
 
         // GET: Student/Delete/5
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
             var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
             if (student == null)
@@ -130,7 +130,7 @@ namespace AVN.Web.Controllers
         // POST: Student/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
             await unitOfWork.StudentRepository.DeleteAsync(student);
@@ -139,7 +139,7 @@ namespace AVN.Web.Controllers
         }
 
 
-        public async Task<IActionResult> GeneratePaymentInvoice(int id)
+        public async Task<IActionResult> GeneratePaymentInvoice(string id)
         {
 
             var studentTask = unitOfWork.StudentRepository.GetByIdAsync(id);
@@ -202,7 +202,7 @@ namespace AVN.Web.Controllers
             return Guid.NewGuid().ToString();
         }
 
-        private void AddStudent(AppUser user)
+        public void AddStudent(AppUser user)
         {
             var studentUser = MapUser(user);
             unitOfWork.StudentRepository.CreateAsync(studentUser);
@@ -212,7 +212,7 @@ namespace AVN.Web.Controllers
         {
             return new Student()
             {
-                Id = user.Id,
+                Id = user.Id
             };
 
         }
