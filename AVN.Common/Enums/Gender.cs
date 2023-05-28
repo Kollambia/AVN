@@ -17,10 +17,13 @@ namespace AVN.Common.Enums
             switch (sex)
             {
                 case Gender.Female:
-                    return "Ж";
+                    return "Жен.";
 
                 case Gender.Male:
-                    return "М";
+                    return "Муж.";
+
+                case Gender.Undefined:
+                    return "Не определено";
 
                 default:
                     return string.Empty;

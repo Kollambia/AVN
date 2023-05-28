@@ -1,11 +1,14 @@
 ﻿using AVN.Automapper;
+using AVN.Business;
 using AVN.Common.Enums;
+using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using AVN.PdfGenerator;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace AVN.Web.Controllers
 {
@@ -13,11 +16,12 @@ namespace AVN.Web.Controllers
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
-
-        public StudentController(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly AppDbContext context;
+        public StudentController(IUnitOfWork unitOfWork, IMapper mapper, AppDbContext context)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.context = context;
         }
 
         // GET: Student
@@ -71,14 +75,14 @@ namespace AVN.Web.Controllers
         // POST: Student/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FullName,Status,DateOfBirth,StudingForm," +
-                                                      "EducationalLine,AcademicDegree,GradeBookNumber," +
-                                                      "Gender,Citizenship,Address,PhoneNumber,Orders,GroupId")] 
-                                                        Student student)
+        public async Task<IActionResult> Create(StudentVM student)
         {
+            var studentOrderService = new OrderService(context);
             if (ModelState.IsValid)
             {
-                await unitOfWork.StudentRepository.CreateAsync(student);
+                var mappedStudent = mapper.Map<StudentVM, Student>(student);
+                var registeredStudent = studentOrderService.SetStudentStatusAndGradeBookNumber(mappedStudent);
+                await unitOfWork.StudentRepository.CreateAsync(registeredStudent);
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

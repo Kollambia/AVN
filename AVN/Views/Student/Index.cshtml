@@ -98,13 +98,13 @@
                                 <thead>
                                     <tr>
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="FullName">
-                                            @Html.DisplayNameFor(x => x.studentVMs.FirstOrDefault().FullName)
+                                            ФИО
                                         </th>
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="GroupName">
-                                            @Html.DisplayNameFor(x => x.studentVMs.FirstOrDefault().Group.GroupName)
+                                            Группа
                                         </th>
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="FacultyName">
-                                            @Html.DisplayNameFor(x => x.studentVMs.FirstOrDefault().Group.Direction.Department.Faculty.FacultyShortName)
+                                            Факультет
                                         </th>
                                         <th>
                                             Расписание студента
@@ -122,7 +122,7 @@
                                                     @Html.DisplayFor(modelItem => item.Group.GroupName)
                                                 </td>
                                                 <td>
-                                                @Html.DisplayFor(modelItem => item.Group.Direction.Department.Faculty.FacultyShortName)
+                                                    @Html.DisplayFor(modelItem => item.Group.Direction.Department.Faculty.FacultyShortName)
                                                 </td>
                                                 <td>
                                                     <span> @Html.ActionLink("", "Edit", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;

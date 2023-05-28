@@ -61,4 +61,16 @@ public class OrderService
         decimal contractValue = subjects.Sum(s => int.Parse(s.CreditHours)) * direction.CreditCost;
         return contractValue;
     }
+
+    public Student SetStudentStatusAndGradeBookNumber(Student student)
+    {
+        int count = _dbContext.Students.Count();
+        int studentsCount = count % 1000;
+        string lastThreeNumbers = studentsCount.ToString("D3");
+
+        student.GradeBookNumber = $"{DateTime.Now.Year}/{lastThreeNumbers}";
+        student.Status = StudentStatus.Studying;
+
+        return student;
+    }
 }
