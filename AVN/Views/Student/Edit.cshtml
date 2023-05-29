@@ -6,132 +6,147 @@
 
 @using (Html.BeginForm())
 {
-    <div class="container py-3">
-        <div class="row">
-            <div class="col-md-12">
-                <h2 class="text-center mb-2">Редактирование студента</h2>
-                <hr class="mb-4">
+    <div class="container mt-3">
+        <form>
+            <div class="row jumbotron box8">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="col-sm-12 mx-t3 mb-4">
+                    <h2 class="text-center text-info">Редактирование студента</h2>
+                </div>
+                @*start-first-row*@
+                <div class="col-sm-3 form-group">
+                    <label>@Html.DisplayNameFor(x => x.SName)</label>
+                    @Html.EditorFor(x => x.SName, new { htmlAttributes = new { @class = "form-control", placeholder="Введите вашу фамилию." }})
+                    @Html.ValidationMessageFor(x => x.SName, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label>@Html.DisplayNameFor(x => x.Name)</label>
+                    @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @class = "form-control", placeholder="Введите ваше имя." }})
+                    @Html.ValidationMessageFor(x => x.Name, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label>@Html.DisplayNameFor(x => x.PName)</label>
+                    @Html.EditorFor(x => x.PName, new { htmlAttributes = new { @class = "form-control", placeholder="Введите ваше отчество." }})
+                    @Html.ValidationMessageFor(x => x.PName, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label>@Html.DisplayNameFor(x => x.Status)</label>
+                    @Html.DropDownListFor(x => x.Status, Html.GetEnumSelectList(typeof(StudentStatus)), "Не выбрано", new {@class = "form-control"})
+                    @Html.HiddenFor(x => x.Status, new { id = "StatusHidden" })
+                    @Html.ValidationMessageFor(x => x.Status, "", new { @class = "text-danger" })
+                </div>
+                @*end-first-row*@
 
-                <div class="row justify-content-center">
-                    <div class="col-md-6">
-                        <span class="anchor" id="formPayment"></span>
-                        <div class="card card-outline-secondary">
-                            <div class="card-body">
-                                <h3 class="text-center">Форма редактирования</h3>
-                                <hr>
-                                <form autocomplete="off" class="form" role="form">
-                                    @Html.AntiForgeryToken()
-                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(x => x.FullName)</label>
-                                        @Html.EditorFor(x => x.FullName, new { htmlAttributes = new { @class = "form-control" }})
-                                        @Html.ValidationMessageFor(x => x.FullName, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(x => x.DateOfBirth)</label>
-                                        @Html.TextBoxFor(x => x.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control",@type = "date"})
-                                        @Html.ValidationMessageFor(x => x.DateOfBirth, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(x => x.Gender)</label>
-                                        <div class="radio-buttons">
-                                            <div class="form-check form-check-inline">
-                                                <label class="form-check-label" style="margin-right: 5px;">@Gender.Male.GetShortName()</label>
-                                                @Html.RadioButtonFor(m => m.Gender, Gender.Male, new { @class = "form-check-input" })
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <label class="form-check-label" style="margin-right: 5px;">@Gender.Female.GetShortName()</label>
-                                                @Html.RadioButtonFor(m => m.Gender, Gender.Female, new { @class = "form-check-input" })
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <label class="form-check-label" style="margin-right: 5px;">@Gender.Undefined.GetShortName()</label>
-                                                @Html.RadioButtonFor(m => m.Gender, Gender.Undefined, new { @class = "form-check-input"})
-                                            </div>
-                                        </div>
-                                        @Html.ValidationMessageFor(x => x.Gender, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(x => x.Address)</label>
-                                        @Html.EditorFor(x => x.Address, new { htmlAttributes = new { @class = "form-control" }})
-                                        @Html.ValidationMessageFor(x => x.Address, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(x => x.Status)</label>
-                                        @Html.DropDownListFor(x => x.Status, Html.GetEnumSelectList(typeof(StudentStatus)), "Не выбрано", new {@class = "form-control"})
-                                        @Html.ValidationMessageFor(x => x.Status, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(x => x.GradeBookNumber)</label>
-                                        @Html.EditorFor(x => x.GradeBookNumber, new { htmlAttributes = new { @class = "form-control" }})
-                                        @Html.ValidationMessageFor(x => x.GradeBookNumber, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(x => x.PhoneNumber)</label>
-                                        @Html.TextBoxFor(x => x.PhoneNumber, new { @class = "form-control phone", placeholder = "0(999)99-99-99" })
-                                        @Html.ValidationMessageFor(x => x.PhoneNumber, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(x => x.StudingForm)</label>
-                                        @Html.DropDownListFor(x => x.StudingForm, Html.GetEnumSelectList(typeof(FormOfEducation)), "Не выбрано", new {@class = "form-control"})
-                                        @Html.ValidationMessageFor(x => x.StudingForm, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(x => x.EducationalLine)</label>
-                                        @Html.DropDownListFor(x => x.EducationalLine, Html.GetEnumSelectList(typeof(EducationalLine)), "Не выбрано", new {@class = "form-control"})
-                                        @Html.ValidationMessageFor(x => x.EducationalLine, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(x => x.AcademicDegree)</label>
-                                        @Html.DropDownListFor(x => x.AcademicDegree, Html.GetEnumSelectList(typeof(AcademicDegree)), "Не выбрано", new {@class = "form-control"})
-                                        @Html.ValidationMessageFor(x => x.AcademicDegree, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(x => x.Citizenship)</label>
-                                        @Html.DropDownListFor(x => x.Citizenship, Html.GetEnumSelectList(typeof(Citizenship)), "Не выбрано", new {@class = "form-control"})
-                                        @Html.ValidationMessageFor(x => x.Citizenship, "", new { @class = "text-danger" })
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(x => x.FacultyId)</label>
-                                        @Html.DropDownListFor(x => x.FacultyId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "facultiesDropdown" })
-                                        @Html.ValidationMessageFor(x => x.FacultyId, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(x => x.DepartmentId)</label>
-                                        @Html.DropDownListFor(x => x.DepartmentId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "departmentsDropdown" })
-                                        @Html.ValidationMessageFor(x => x.DepartmentId, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(x => x.DirectionId)</label>
-                                        @Html.DropDownListFor(x => x.DirectionId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "directionsDropdown" })
-                                        @Html.ValidationMessageFor(x => x.DirectionId, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(x => x.GroupId)</label>
-                                        @Html.DropDownListFor(x => x.GroupId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "groupsDropdown" })
-                                        @Html.ValidationMessageFor(x => x.GroupId, "", new { @class = "text-danger" })
-                                    </div>
-
-
-
-                                    <hr>
-                                    <div class="form-group row">
-                                        <div class="col-md-6">
-                                            <a href="/Student/Index" class="btn btn-secondary btn-lg btn-block" type="button">Отмена</a>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <button class="btn btn-success btn-lg btn-block" type="submit">Обновить</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div><!-- /form card cc payment -->
+                @*start-second-row*@
+                <div class="col-sm-4 form-group">
+                    <label>@Html.DisplayNameFor(x => x.Gender):</label>
+                    <div class="radio-buttons">
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label" style="margin-right: 5px;">@Gender.Male.GetShortName()</label>
+                            @Html.RadioButtonFor(m => m.Gender, Gender.Male, new { @class = "form-check-input" })
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label" style="margin-right: 5px;">@Gender.Female.GetShortName()</label>
+                            @Html.RadioButtonFor(m => m.Gender, Gender.Female, new { @class = "form-check-input" })
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label" style="margin-right: 5px;">@Gender.Undefined.GetShortName()</label>
+                            @Html.RadioButtonFor(m => m.Gender, Gender.Undefined, new { @class = "form-check-input"})
+                        </div>
                     </div>
-                </div><!--/row-->
-            </div><!--/col-->
-        </div><!--/row-->
+                    @Html.ValidationMessageFor(x => x.Gender, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-5 form-group"></div>
+                <div class="col-sm-3 form-group">
+                    <label>@Html.DisplayNameFor(x => x.GradeBookNumber)</label>
+                    @Html.EditorFor(x => x.GradeBookNumber, new { htmlAttributes = new { @class = "form-control" }})
+                    @Html.ValidationMessageFor(x => x.GradeBookNumber, "", new { @class = "text-danger" })
+                </div>
+
+                @*end-second-row*@
+
+                @*start-third-row*@
+                <div class="col-sm-4 form-group">
+                    <label>@Html.DisplayNameFor(x => x.DateOfBirth)</label>
+                    @Html.TextBoxFor(x => x.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control",@type = "date"})
+                    @Html.ValidationMessageFor(x => x.DateOfBirth, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label>@Html.DisplayNameFor(x => x.Address)</label>
+                    @Html.EditorFor(x => x.Address, new { htmlAttributes = new { @class = "form-control", placeholder = "Введите ваш адрес." }})
+                    @Html.ValidationMessageFor(x => x.Address, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label>@Html.DisplayNameFor(x => x.PhoneNumber)</label>
+                    @Html.TextBoxFor(x => x.PhoneNumber, new { @class = "form-control phone", placeholder = "0(999)99-99-99" })
+                    @Html.ValidationMessageFor(x => x.PhoneNumber, "", new { @class = "text-danger" })
+                </div>
+                @*end-third-row*@
+
+                @*start-fourth-row*@
+                <div class="col-sm-3 form-group">
+                    <label>@Html.DisplayNameFor(x => x.StudingForm)</label>
+                    @Html.DropDownListFor(x => x.StudingForm, Html.GetEnumSelectList(typeof(FormOfEducation)), "Не выбрано", new {@class = "form-control"})
+                    @Html.ValidationMessageFor(x => x.StudingForm, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label>@Html.DisplayNameFor(x => x.EducationalLine)</label>
+                    @Html.DropDownListFor(x => x.EducationalLine, Html.GetEnumSelectList(typeof(EducationalLine)), "Не выбрано", new {@class = "form-control"})
+                    @Html.ValidationMessageFor(x => x.EducationalLine, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label>@Html.DisplayNameFor(x => x.AcademicDegree)</label>
+                    @Html.DropDownListFor(x => x.AcademicDegree, Html.GetEnumSelectList(typeof(AcademicDegree)), "Не выбрано", new {@class = "form-control"})
+                    @Html.ValidationMessageFor(x => x.AcademicDegree, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label>@Html.DisplayNameFor(x => x.Citizenship)</label>
+                    @Html.DropDownListFor(x => x.Citizenship, Html.GetEnumSelectList(typeof(Citizenship)), "Не выбрано", new {@class = "form-control"})
+                    @Html.ValidationMessageFor(x => x.Citizenship, "", new { @class = "text-danger" })
+                </div>
+                @*end-fourth-row*@
+
+                @*start-last-row*@
+                <div class="col-sm-5 form-group">
+                    <label>@Html.DisplayNameFor(x => x.FacultyId)</label>
+                    @Html.DropDownListFor(x => x.FacultyId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "facultiesDropdown" })
+                    @Html.ValidationMessageFor(x => x.FacultyId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-4 form-group"></div>
+                <div class="col-sm-5 form-group">
+                    <label>@Html.DisplayNameFor(x => x.DepartmentId)</label>
+                    @Html.DropDownListFor(x => x.DepartmentId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "departmentsDropdown" })
+                    @Html.ValidationMessageFor(x => x.DepartmentId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-4 form-group"></div>
+                <div class="col-sm-5 form-group">
+                    <label>@Html.DisplayNameFor(x => x.DirectionId)</label>
+                    @Html.DropDownListFor(x => x.DirectionId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "directionsDropdown" })
+                    @Html.ValidationMessageFor(x => x.DirectionId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-4 form-group"></div>
+                <div class="col-sm-5 form-group">
+                    <label>@Html.DisplayNameFor(x => x.GroupId)</label>
+                    @Html.DropDownListFor(x => x.GroupId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "groupsDropdown" })
+                    @Html.ValidationMessageFor(x => x.GroupId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-4 form-group"></div>
+                @*end-last-row*@
+
+
+                <hr>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <a href="/Student/Index" class="btn btn-secondary btn-lg btn-block" type="button">Отмена</a>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-success btn-lg btn-block" type="submit">Обновить</button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
-    <!--/container-->
 }
 
 @section Scripts {

@@ -9,9 +9,18 @@ namespace AVN.Models
     public class StudentVM : BasicVM
     {
         [Required(ErrorMessage = "Поле не заполнено")]
-        [DisplayName("ФИО")]
+        [DisplayName("Фамилия")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Поле должно содержать от 3 до 50 символов.")]
-        public string? FullName { get; set; }
+        public string SName { get; set; }
+
+        [Required(ErrorMessage = "Поле не заполнено")]
+        [DisplayName("Имя")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Поле должно содержать от 3 до 50 символов.")]
+        public string Name { get; set; }
+
+        [DisplayName("Отчество")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Поле должно содержать от 3 до 50 символов.")]
+        public string? PName { get; set; }
 
         [DateMinimumAge(16, ErrorMessage = "{0} должен быть кем-то в возрасте не менее {1} лет.")]
         [DisplayName("Дата рождения")]

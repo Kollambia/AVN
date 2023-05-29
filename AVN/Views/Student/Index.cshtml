@@ -97,7 +97,7 @@
 
                                 <thead>
                                     <tr>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="FullName">
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="">
                                             ФИО
                                         </th>
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="GroupName">
@@ -107,7 +107,7 @@
                                             Факультет
                                         </th>
                                         <th>
-                                            Расписание студента
+                                            Действие
                                         </th>
                                     </tr>
                                 </thead>
@@ -116,7 +116,7 @@
                                     {
                                             <tr>
                                                 <td>
-                                                    @Html.DisplayFor(modelItem => item.FullName)
+                                                    @Html.DisplayFor(modelItem => item.SName)  @Html.DisplayFor(modelItem => item.Name)  @Html.DisplayFor(modelItem => item.PName)
                                                 </td>
                                                 <td>
                                                     @Html.DisplayFor(modelItem => item.Group.GroupName)

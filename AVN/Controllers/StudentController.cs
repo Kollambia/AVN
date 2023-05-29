@@ -187,7 +187,7 @@ namespace AVN.Web.Controllers
                 Direction = direction.DirectionName ?? "Нет данных",
                 Group = group.GroupName ?? "Нет данных",
                 Course = student.Group?.Course.GetCourseInWriting() ?? "Нет данных",
-                FullName = student.FullName,
+                FullName = student.SName,
                 EducationForm = student.StudingForm.ToString(),
                 AcademicDegree = student.AcademicDegree.ToString(),
                 PaymentAccountNumber = GeneratePaymentAccountNumber(),
