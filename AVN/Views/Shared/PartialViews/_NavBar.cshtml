@@ -1,17 +1,61 @@
 ﻿@using AVN.Utility;
 
 <ul class="navbar-nav flex-grow-1">
+    @if (User.IsInRole(RoleConst.AdminRole))
+    {
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-user-plus"></i> Создать пользователя
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                @*<a class="dropdown-item" asp-area="Identity" asp-page="/Account/RegisterStudent">Регистрация студента</a>*@
+                <a class="dropdown-item" asp-controller="Student" asp-action="Create">Регистрация студента</a>
+                <div class="dropdown-divider"></div>
+                @*<a class="dropdown-item" asp-area="Identity" asp-page="/Account/RegisterTeacher">Регистрация преподавателя</a>*@
+                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/RegisterTeacher">Регистрация преподавателя</a>
+                <div class="dropdown-divider"></div>
+                @*<a class="dropdown-item" asp-area="Identity" asp-page="/Account/RegisterStudent">Регистрация администратора</a>*@
+                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/RegisterStudent">Регистрация администратора</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-exclamation-circle"></i> Справочник
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" asp-controller="Faculty" asp-action="Index"><i class="fas fa-archway"></i> Факультеты</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" asp-controller="Department" asp-action="Index"><i class="fas fa-book-open"></i> Кафедры</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" asp-controller="Direction" asp-action="Index"><i class="fas fa-hard-hat"></i> Направления</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" asp-controller="Group" asp-action="Index"><i class="fas fa-users"></i> Группа</a>
+            </div>
+        </li>
+    }
     <li class="nav-item">
         <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="far fa-newspaper"></i> Новости
         </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-user-edit"></i> Анкета
-        </a>
-    </li>
+    @if (User.IsInRole(RoleConst.StudentRole))
+    {
+        <li class="nav-item">
+            <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-user-edit"></i> Анкета
+            </a>
+        </li>
+    }
+
     <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user-graduate"></i> Абитуриент
+        </a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" asp-controller="Student" asp-action="Index"> <i class="fas fa-search"></i> Поиск студента</a>
+        </div>
+    </li>
+    @*<li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fab fa-accessible-icon"></i> Учебный процесс
         </a>
@@ -22,21 +66,10 @@
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" asp-controller="ClientSystem" asp-action="Index"><i class="far fa-paper-plane"></i> Электронная заявка</a>
         </div>
-    </li>
+    </li>*@
 
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-exclamation-circle"></i> Справочник
-        </a>
-        <div class="dropdown-menu">
-            <a class="dropdown-item" asp-controller="Faculty" asp-action="Index"><i class="fas fa-archway"></i> Факультеты</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" asp-controller="Department" asp-action="Index"><i class="fas fa-book-open"></i> Кафедры</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" asp-controller="Direction" asp-action="Index"><i class="fas fa-user-graduate"></i> Направления</a>
-        </div>
-    </li>
-
+    
+@*
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fas fa-chart-line"></i> Статистика
@@ -49,31 +82,7 @@
             <a class="dropdown-item" asp-controller="Statistic" asp-action="GetServiceStatistics"> <i class="fas fa-layer-group"></i> Провайдеры платежных систем</a>
 
         </div>
-    </li>
+    </li>*@
 
-    @if (User.IsInRole(RoleConst.AdminRole))
-    {
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-user-graduate"></i> Абитуриент
-            </a>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" asp-controller="Group" asp-action="Index"><i class="fas fa-users"></i> Группа</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" asp-controller="Student" asp-action="Index"> <i class="fas fa-user-alt"></i> Студент</a>
-            </div>
-        </li>
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Создать пользователя
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/RegisterTeacher">Зарегистрировать нового преподавателя</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/RegisterStudent">Зарегистрировать нового студента</a>
-                <div class="dropdown-divider"></div>
-            </div>
-        </li>
-    }
 
 </ul>
