@@ -1,6 +1,6 @@
 ﻿namespace AVN.Model.Entities
 {
-    public class Direction : BaseEntity
+    public class Direction : BaseEntity<Direction, int>
     {
         public string? DirectionName { get; set; }
         public string? DirectionShortName { get; set; }

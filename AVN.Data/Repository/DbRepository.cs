@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Data.Repository
 {
-    public class DbRepository<T> : IRepository<T> where T : BaseEntity
+    public class DbRepository<T, TId> : IRepository<T, TId> where T : BaseEntity<T, TId>
     {
         private readonly AppDbContext _context;
 
@@ -48,6 +48,13 @@ namespace AVN.Data.Repository
         {
             return await _context.Set<T>()
                 .FirstOrDefaultAsync(x => x.Id.Equals(id));
+        }
+
+        public async Task<T> GetByIdAsync(string id)
+        {
+            return await _context.Set<T>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(en => en.Id.Equals(id));
         }
 
         public async Task<T> DeleteAsync(T entity)

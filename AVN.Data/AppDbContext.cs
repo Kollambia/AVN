@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace AVN.Data
 {
-    public class AppDbContext : IdentityDbContext
+    public class AppDbContext : IdentityDbContext<AppUser>
     {
         public DbSet<Student> Students { get; set; }
         public DbSet<Faculty> Faculties { get; set; }

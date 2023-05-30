@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AVN.Model.Entities
 {
-    public class Order : BaseEntity
+    public class Order : BaseEntity<Order, int>
     {
         [Required]
         [DisplayName("Вид приказа")]
@@ -22,7 +22,7 @@ namespace AVN.Model.Entities
         [DisplayName("Примечание")]
         public string? Note { get; set; }
 
-        public int? StudentId { get; set; }
+        public string? StudentId { get; set; }
         public virtual Student Student { get; set; }
 
     }

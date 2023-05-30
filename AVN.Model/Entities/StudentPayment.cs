@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AVN.Model.Entities
 {
-    public class StudentPayment: BaseEntity
+    public class StudentPayment: BaseEntity<StudentPayment, int>
     {
         [Required]
         [DisplayName("Учебный год")]
@@ -21,7 +21,7 @@ namespace AVN.Model.Entities
         [DisplayName("Долг")]
         public decimal Debt { get; set; }
 
-        public int? StudentId { get; set; }
+        public string? StudentId { get; set; }
         public virtual Student Student { get; set; }
 
         public virtual ICollection<StudentPaymentDetail> PaymentDetails { get; set; }

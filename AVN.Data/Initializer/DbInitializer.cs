@@ -9,12 +9,12 @@ namespace AVN.Model.Initializer
     public class DbInitializer : IDbInitializer
     {
         private readonly AppDbContext _db;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
         public DbInitializer(
             AppDbContext db, 
-            UserManager<IdentityUser> userManager, 
+            UserManager<AppUser> userManager, 
             RoleManager<IdentityRole> roleManager)
         {
             _db = db;
