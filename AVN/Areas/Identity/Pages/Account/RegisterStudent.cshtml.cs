@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using AVN.Web.Controllers;
+using AVN.Common.Enums;
+using AVN.Models;
+using System.Text.RegularExpressions;
 
 namespace AVN.Areas.Identity.Pages.Account
 {
@@ -114,8 +117,7 @@ namespace AVN.Areas.Identity.Pages.Account
             {
                 var user = new AppUser()
                 {
-                    UserName = Input.Email,
-                    Email = Input.Email,
+                    
                 };
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
@@ -128,8 +130,6 @@ namespace AVN.Areas.Identity.Pages.Account
                     {
                         await _userManager.AddToRoleAsync(user, RoleConst.StudentRole);
                     }
-
-                    _studentController.AddStudent(user);
 
                     _logger.LogInformation("User created a new account with password.");
 

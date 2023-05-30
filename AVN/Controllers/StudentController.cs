@@ -1,4 +1,5 @@
-﻿using AVN.Automapper;
+﻿using AVN.Areas.Identity.Pages.Account;
+using AVN.Automapper;
 using AVN.Business;
 using AVN.Common.Enums;
 using AVN.Data;
@@ -89,12 +90,13 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(StudentVM student)
         {
-            
+
             if (ModelState.IsValid)
             {
                 var mappedStudent = mapper.Map<StudentVM, Student>(student);
                 await unitOfWork.StudentRepository.CreateAsync(mappedStudent);
                 await unitOfWork.SaveChangesAsync();
+                CreateStudentUser(student);
                 return RedirectToAction(nameof(Index));
             }
             return View(student);
@@ -222,20 +224,36 @@ namespace AVN.Web.Controllers
             return Guid.NewGuid().ToString();
         }
 
-        public void AddStudent(AppUser user)
+        public void CreateStudentUser(StudentVM studentVm)
         {
-            var studentUser = MapUser(user);
-            unitOfWork.StudentRepository.CreateAsync(studentUser);
+            var studentUser = MapStudentUser(studentVm);
+            context.AppUsers.Add(studentUser);
+            context.SaveChanges();
         }
-
-        private Student MapUser(AppUser user)
+        public AppUser MapStudentUser(StudentVM student)
         {
-            return new Student()
+            return new AppUser()
             {
-                Id = user.Id,
-                
-            };
+                Id = "1",
+                SName = student.SName,
+                Name = student.Name,
+                PName = student.PName,
+                DateOfBirth = student.DateOfBirth,
+                StudingForm = student.StudingForm,
+                EducationalLine = student.EducationalLine,
+                AcademicDegree = student.AcademicDegree,
+                GradeBookNumber = student.GradeBookNumber,
+                Status = student.Status,
+                Gender = student.Gender,
+                Citizenship = student.Citizenship,
+                Address = student.Address,
+                PhoneNumber = student.PhoneNumber,
+                FacultyId = student.FacultyId,
+                DepartmentId = student.DepartmentId,
+                DirectionId = student.DirectionId,
+                GroupId = student.GroupId
 
+            };
         }
     }
 }

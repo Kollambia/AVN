@@ -1,7 +1,7 @@
 ﻿namespace AVN.Models
 {
-    public class BasicVM
+    public class BasicVM<T>
     {
-        public int Id { get; set; }
+        public T Id { get; set; }
     }
 }
