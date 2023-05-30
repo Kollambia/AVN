@@ -8,7 +8,7 @@ using AVN.Models;
 using AVN.PdfGenerator;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.X509;
+using Microsoft.Extensions.Logging;
 
 namespace AVN.Web.Controllers
 {
@@ -136,7 +136,7 @@ namespace AVN.Web.Controllers
         }
 
         // GET: Student/Delete/5
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
             var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
             if (student == null)
@@ -150,7 +150,7 @@ namespace AVN.Web.Controllers
         // POST: Student/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
             await unitOfWork.StudentRepository.DeleteAsync(student);
@@ -159,7 +159,7 @@ namespace AVN.Web.Controllers
         }
 
 
-        public async Task<IActionResult> GeneratePaymentInvoice(int id)
+        public async Task<IActionResult> GeneratePaymentInvoice(string id)
         {
 
             var studentTask = unitOfWork.StudentRepository.GetByIdAsync(id);
@@ -220,6 +220,22 @@ namespace AVN.Web.Controllers
         private static string GeneratePaymentAccountNumber()
         {
             return Guid.NewGuid().ToString();
+        }
+
+        public void AddStudent(AppUser user)
+        {
+            var studentUser = MapUser(user);
+            unitOfWork.StudentRepository.CreateAsync(studentUser);
+        }
+
+        private Student MapUser(AppUser user)
+        {
+            return new Student()
+            {
+                Id = user.Id,
+                FullName = user.UserName
+            };
+
         }
     }
 }

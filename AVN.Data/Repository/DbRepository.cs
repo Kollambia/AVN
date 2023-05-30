@@ -50,6 +50,13 @@ namespace AVN.Data.Repository
                 .FirstOrDefaultAsync(x => x.Id.Equals(id));
         }
 
+        public async Task<T> GetByIdAsync(string id)
+        {
+            return await _context.Set<T>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(en => en.Id.Equals(id));
+        }
+
         public async Task<T> DeleteAsync(T entity)
         {
             var deleteEntity = _context.Set<T>().Remove(entity);

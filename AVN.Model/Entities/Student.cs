@@ -1,4 +1,5 @@
-﻿using AVN.Common.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using AVN.Common.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
@@ -21,10 +22,10 @@ public class Student : BaseEntity
     public string PhoneNumber { get; set; }
 
     public int? GroupId { get; set; }
-    public virtual Group Group { get; set; }
+    public virtual Group? Group { get; set; }
 
-    public virtual ICollection<StudentPayment> StudentPayments { get; set; }
-    public virtual ICollection<Order> Orders { get; set; }
+    public virtual ICollection<StudentPayment>? StudentPayments { get; set; }
+    public virtual ICollection<Order>? Orders { get; set; }
 
     public Student()
     {

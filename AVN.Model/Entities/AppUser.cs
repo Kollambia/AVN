@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AVN.Common.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace AVN.Model.Entities
 {
