@@ -53,7 +53,7 @@ public class OrderService
     {
         var student = _dbContext.Students.Include(s => s.Group)
             .ThenInclude(g => g.Direction)
-            .First(s => s.UserId == studentId);
+            .First(s => s.Id == studentId);
 
         var course = student.Group.Course;
         var direction = student.Group.Direction;

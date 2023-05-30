@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Identity;
 
 namespace AVN.Model.Entities;
 
-public class BaseEntity
+public class BaseEntity<T, TId>
 {
-    public int Id { get; set; }
+    [Key]
+    public TId Id { get; set; }
 }

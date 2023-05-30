@@ -1,6 +1,6 @@
 ﻿namespace AVN.Model.Entities;
 
-public class Faculty : BaseEntity
+public class Faculty : BaseEntity<Faculty, int>
 {
     public string FacultyName { get; set; }
     public string? FacultyShortName { get; set; }

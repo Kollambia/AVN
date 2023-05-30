@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AVN.Model.Entities
 {
-    public class Order : BaseEntity
+    public class Order : BaseEntity<Order, int>
     {
         [Required]
         [DisplayName("Вид приказа")]

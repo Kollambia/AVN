@@ -1,6 +1,6 @@
 ﻿namespace AVN.Model.Entities
 {
-    public class SubjectEmployee : BaseEntity
+    public class SubjectEmployee : BaseEntity<SubjectEmployee, int>
     {
         public int EmployeeCreditHours { get; set; }
         public int? SubjectId { get; set; }

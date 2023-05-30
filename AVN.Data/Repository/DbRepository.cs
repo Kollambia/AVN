@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Data.Repository
 {
-    public class DbRepository<T> : IRepository<T> where T : BaseEntity
+    public class DbRepository<T, TId> : IRepository<T, TId> where T : BaseEntity<T, TId>
     {
         private readonly AppDbContext _context;
 

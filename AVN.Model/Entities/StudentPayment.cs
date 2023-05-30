@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AVN.Model.Entities
 {
-    public class StudentPayment: BaseEntity
+    public class StudentPayment: BaseEntity<StudentPayment, int>
     {
         [Required]
         [DisplayName("Учебный год")]

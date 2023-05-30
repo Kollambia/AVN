@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AVN.Model.Entities
 {
-    public class StudentPaymentDetail: BaseEntity
+    public class StudentPaymentDetail: BaseEntity<StudentPaymentDetail, int>
     {
         [Required]
         [DisplayName("Оплата")]

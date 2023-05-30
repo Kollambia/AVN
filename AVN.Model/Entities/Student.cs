@@ -1,15 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AVN.Common.Enums;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
-using System.Security;
+﻿using AVN.Common.Enums;
 
 namespace AVN.Model.Entities;
 
-public class Student : BaseEntity
+public class Student : BaseEntity<Student, string>
 {
-    [Key]
-    public string UserId { get; set; }
     public string SName { get; set; }
     public string Name { get; set; }
     public string PName { get; set; }

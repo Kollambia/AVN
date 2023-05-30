@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AVN.Data.Migrations
 {
-    public partial class FullDataBase : Migration
+    public partial class AllDBAdd : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -216,8 +216,7 @@ namespace AVN.Data.Migrations
                 name: "Employees",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     PName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -290,16 +289,18 @@ namespace AVN.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeCreditHours = table.Column<int>(type: "int", nullable: false),
                     SubjectId = table.Column<int>(type: "int", nullable: true),
-                    EmployeeId = table.Column<int>(type: "int", nullable: true)
+                    EmployeeId = table.Column<int>(type: "int", nullable: true),
+                    EmployeeId1 = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SubjectEmployees", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SubjectEmployees_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
+                        name: "FK_SubjectEmployees_Employees_EmployeeId1",
+                        column: x => x.EmployeeId1,
                         principalTable: "Employees",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SubjectEmployees_Subjects_SubjectId",
                         column: x => x.SubjectId,
@@ -311,7 +312,7 @@ namespace AVN.Data.Migrations
                 name: "Students",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -325,12 +326,11 @@ namespace AVN.Data.Migrations
                     Citizenship = table.Column<int>(type: "int", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GroupId = table.Column<int>(type: "int", nullable: true),
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    GroupId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Students", x => x.UserId);
+                    table.PrimaryKey("PK_Students", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Students_Groups_GroupId",
                         column: x => x.GroupId,
@@ -357,7 +357,7 @@ namespace AVN.Data.Migrations
                         name: "FK_Order_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
-                        principalColumn: "UserId");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -379,7 +379,7 @@ namespace AVN.Data.Migrations
                         name: "FK_StudentPayments_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
-                        principalColumn: "UserId");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -485,9 +485,9 @@ namespace AVN.Data.Migrations
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SubjectEmployees_EmployeeId",
+                name: "IX_SubjectEmployees_EmployeeId1",
                 table: "SubjectEmployees",
-                column: "EmployeeId");
+                column: "EmployeeId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SubjectEmployees_SubjectId",

@@ -232,7 +232,7 @@ namespace AVN.Web.Controllers
         {
             return new Student()
             {
-                UserId = user.Id,
+                Id = user.Id,
                 
             };
 

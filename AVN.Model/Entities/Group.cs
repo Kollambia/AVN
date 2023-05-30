@@ -2,7 +2,7 @@
 
 namespace AVN.Model.Entities;
 
-public class Group : BaseEntity
+public class Group : BaseEntity<Group, int>
 {
     public string GroupName { get; set; }
     public Course Course { get; set; }

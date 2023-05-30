@@ -8,123 +8,123 @@ namespace AVN.Data.UnitOfWorks;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly AppDbContext _context;
-    private IRepository<Student> _studentRepository;
-    private IRepository<Faculty> _facultyRepository;
-    private IRepository<Department> _departmentRepository;
-    private IRepository<Group> _groupRepository;
-    private IRepository<Employee> _employeeRepository;
-    private IRepository<Direction> _directionRepository;
-    private IRepository<Subject> _subjectRepository;
-    private IRepository<SubjectEmployee> _subjectEmployeeRepository;
-    private IRepository<StudentPayment> _studentPaymentRepository;
-    private IRepository<StudentPaymentDetail> _studentPaymentDetailRepository;
-    private IRepository<Order> _orderRepository;
+    private IRepository<Student, string> _studentRepository;
+    private IRepository<Faculty, int> _facultyRepository;
+    private IRepository<Department, int> _departmentRepository;
+    private IRepository<Group, int> _groupRepository;
+    private IRepository<Employee, string> _employeeRepository;
+    private IRepository<Direction, int> _directionRepository;
+    private IRepository<Subject, int> _subjectRepository;
+    private IRepository<SubjectEmployee, int> _subjectEmployeeRepository;
+    private IRepository<StudentPayment, int> _studentPaymentRepository;
+    private IRepository<StudentPaymentDetail, int> _studentPaymentDetailRepository;
+    private IRepository<Order, int> _orderRepository;
 
     public UnitOfWork(AppDbContext context)
     {
         _context = context;
     }
 
-    public IRepository<Student> StudentRepository
+    public IRepository<Student, string> StudentRepository
     {
         get
         {
             if (_studentRepository == null)
-                _studentRepository = new DbRepository<Student>(_context);
+                _studentRepository = new DbRepository<Student, string>(_context);
             return _studentRepository;
         }
     }
     
-    public IRepository<Faculty> FacultyRepository
+    public IRepository<Faculty, int> FacultyRepository
     {
         get
         {
             if (_facultyRepository == null)
-                _facultyRepository = new DbRepository<Faculty>(_context);
+                _facultyRepository = new DbRepository<Faculty, int>(_context);
             return _facultyRepository;
         }
     }
     
-    public IRepository<Department> DepartmentRepository
+    public IRepository<Department, int> DepartmentRepository
     {
         get
         {
             if (_departmentRepository == null)
-                _departmentRepository = new DbRepository<Department>(_context);
+                _departmentRepository = new DbRepository<Department, int>(_context);
             return _departmentRepository;
         }
     }
     
-    public IRepository<Group> GroupRepository
+    public IRepository<Group, int> GroupRepository
     {
         get
         {
             if (_groupRepository == null)
-                _groupRepository = new DbRepository<Group>(_context);
+                _groupRepository = new DbRepository<Group, int>(_context);
             return _groupRepository;
         }
     }
-    public IRepository<Employee> EmployeeRepository
+    public IRepository<Employee, string> EmployeeRepository
     {
         get
         {
             if (_employeeRepository == null)
-                _employeeRepository = new DbRepository<Employee>(_context);
+                _employeeRepository = new DbRepository<Employee, string>(_context);
             return _employeeRepository;
         }
     }
-    public IRepository<Direction> DirectionRepository
+    public IRepository<Direction, int> DirectionRepository
     {
         get
         {
             if (_directionRepository == null)
-                _directionRepository = new DbRepository<Direction>(_context);
+                _directionRepository = new DbRepository<Direction, int>(_context);
             return _directionRepository;
         }
     }
-    public IRepository<Subject> SubjectRepository
+    public IRepository<Subject, int> SubjectRepository
     {
         get
         {
             if (_subjectRepository == null)
-                _subjectRepository = new DbRepository<Subject>(_context);
+                _subjectRepository = new DbRepository<Subject, int>(_context);
             return _subjectRepository;
         }
     }
-    public IRepository<SubjectEmployee> SubjectEmployeeRepository
+    public IRepository<SubjectEmployee, int> SubjectEmployeeRepository
     {
         get
         {
             if (_subjectEmployeeRepository == null)
-                _subjectEmployeeRepository = new DbRepository<SubjectEmployee>(_context);
+                _subjectEmployeeRepository = new DbRepository<SubjectEmployee, int>(_context);
             return _subjectEmployeeRepository;
         }
     }
-    public IRepository<StudentPayment> StudentPaymentRepository
+    public IRepository<StudentPayment, int> StudentPaymentRepository
     {
         get
         {
             if (_studentPaymentRepository == null)
-                _studentPaymentRepository = new DbRepository<StudentPayment>(_context);
+                _studentPaymentRepository = new DbRepository<StudentPayment, int>(_context);
             return _studentPaymentRepository;
         }
     }
-    public IRepository<StudentPaymentDetail> StudentPaymentDetailRepository
+    public IRepository<StudentPaymentDetail, int> StudentPaymentDetailRepository
     {
         get
         {
             if (_studentPaymentDetailRepository == null)
-                _studentPaymentDetailRepository = new DbRepository<StudentPaymentDetail>(_context);
+                _studentPaymentDetailRepository = new DbRepository<StudentPaymentDetail, int>(_context);
             return _studentPaymentDetailRepository;
         }
     }
 
-    public IRepository<Order> OrderRepository
+    public IRepository<Order, int> OrderRepository
     {
         get
         {
             if(_orderRepository == null)
-                _orderRepository = new DbRepository<Order>(_context);
+                _orderRepository = new DbRepository<Order, int>(_context);
             return _orderRepository;
         }
     }

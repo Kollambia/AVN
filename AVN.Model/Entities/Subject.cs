@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AVN.Model.Entities
 {
-    public class Subject : BaseEntity
+    public class Subject : BaseEntity<Subject, int>
     {
         [Required]
         [DisplayName("Наименование предмета")]

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AVN.Model.Entities
 {
-    public class Employee : BaseEntity
+    public class Employee : BaseEntity<Employee, string>
     {
         [Required]
         [DisplayName("Фамилия")]

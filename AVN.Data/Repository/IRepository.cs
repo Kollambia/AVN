@@ -6,7 +6,7 @@ using AVN.Model.Entities;
 
 namespace AVN.Data.Repository
 {
-    public interface IRepository<T> where T : BaseEntity
+    public interface IRepository<T, TId> where T : BaseEntity<T, TId>
     {
         Task<T> CreateAsync(T entity);
         Task<T> UpdateAsync(T entity);
