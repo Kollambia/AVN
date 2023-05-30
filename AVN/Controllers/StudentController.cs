@@ -232,8 +232,8 @@ namespace AVN.Web.Controllers
         {
             return new Student()
             {
-                Id = user.Id,
-                FullName = user.UserName
+                UserId = user.Id,
+                
             };
 
         }

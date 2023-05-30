@@ -2,11 +2,14 @@
 using AVN.Common.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using System.Security;
 
 namespace AVN.Model.Entities;
 
 public class Student : BaseEntity
 {
+    [Key]
+    public string UserId { get; set; }
     public string SName { get; set; }
     public string Name { get; set; }
     public string PName { get; set; }
