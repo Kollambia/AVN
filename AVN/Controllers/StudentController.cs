@@ -1,5 +1,4 @@
-﻿using AVN.Areas.Identity.Pages.Account;
-using AVN.Automapper;
+﻿using AVN.Automapper;
 using AVN.Business;
 using AVN.Common.Enums;
 using AVN.Data;
@@ -7,9 +6,9 @@ using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using AVN.PdfGenerator;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace AVN.Web.Controllers
 {
@@ -18,11 +17,13 @@ namespace AVN.Web.Controllers
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
         private readonly AppDbContext context;
-        public StudentController(IUnitOfWork unitOfWork, IMapper mapper, AppDbContext context)
+        private readonly UserManager<AppUser> userManager;
+        public StudentController(IUnitOfWork unitOfWork, IMapper mapper, AppDbContext context, UserManager<AppUser> userManager)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
             this.context = context;
+            this.userManager = userManager;
         }
 
         // GET: Student
@@ -63,7 +64,7 @@ namespace AVN.Web.Controllers
         }
 
         // GET: Student/Details/5
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(string id)
         {
             var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
 
@@ -93,23 +94,37 @@ namespace AVN.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                var newId = Guid.NewGuid().ToString();
                 var mappedStudent = mapper.Map<StudentVM, Student>(student);
-                await unitOfWork.StudentRepository.CreateAsync(mappedStudent);
-                await unitOfWork.SaveChangesAsync();
-                CreateStudentUser(student);
-                return RedirectToAction(nameof(Index));
+                mappedStudent.Id = newId;
+
+                var user = new AppUser() { UserName = student.Name, Id = newId };
+                var result = await userManager.CreateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    await unitOfWork.StudentRepository.CreateAsync(mappedStudent);
+                    await unitOfWork.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(student);
         }
 
         // GET: Student/Edit/5
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
+            var student = await context.Students
+                .Include(s => s.Group)
+                .ThenInclude(g => g.Direction)
+                .ThenInclude(d => d.Department)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
             if (student == null)
             {
                 return NotFound();
             }
+
             var mappedStudent = mapper.Map<Student, StudentVM>(student);
             mappedStudent.FacultyId = student.Group.Direction.Department.FacultyId;
             mappedStudent.DepartmentId = student.Group.Direction.DepartmentId;
@@ -120,7 +135,7 @@ namespace AVN.Web.Controllers
         // POST: Student/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, StudentVM student)
+        public async Task<IActionResult> Edit(string id, StudentVM student)
         {
             if (id != student.Id)
             {
@@ -222,38 +237,6 @@ namespace AVN.Web.Controllers
         private static string GeneratePaymentAccountNumber()
         {
             return Guid.NewGuid().ToString();
-        }
-
-        public void CreateStudentUser(StudentVM studentVm)
-        {
-            var studentUser = MapStudentUser(studentVm);
-            context.AppUsers.Add(studentUser);
-            context.SaveChanges();
-        }
-        public AppUser MapStudentUser(StudentVM student)
-        {
-            return new AppUser()
-            {
-                Id = "1",
-                SName = student.SName,
-                Name = student.Name,
-                PName = student.PName,
-                DateOfBirth = student.DateOfBirth,
-                StudingForm = student.StudingForm,
-                EducationalLine = student.EducationalLine,
-                AcademicDegree = student.AcademicDegree,
-                GradeBookNumber = student.GradeBookNumber,
-                Status = student.Status,
-                Gender = student.Gender,
-                Citizenship = student.Citizenship,
-                Address = student.Address,
-                PhoneNumber = student.PhoneNumber,
-                FacultyId = student.FacultyId,
-                DepartmentId = student.DepartmentId,
-                DirectionId = student.DirectionId,
-                GroupId = student.GroupId
-
-            };
         }
     }
 }

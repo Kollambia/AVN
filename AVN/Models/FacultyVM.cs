@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace AVN.Models
 {
-    public class FacultyVM : BasicVM
+    public class FacultyVM : BasicVM<int>
     {
         [Required(ErrorMessage = "Поле не заполнено")]
         [DisplayName("Название")]

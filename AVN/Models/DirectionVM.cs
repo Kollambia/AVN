@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace AVN.Models
 {
-    public class DirectionVM : BasicVM
+    public class DirectionVM : BasicVM<int>
     {
         [Required(ErrorMessage = "Поле не заполнено")]
         [DisplayName("Название")]

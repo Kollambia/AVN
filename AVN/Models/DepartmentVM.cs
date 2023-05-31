@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AVN.Models
 {
-    public class DepartmentVM : BasicVM
+    public class DepartmentVM : BasicVM<int>
     {
         [Required(ErrorMessage = "Поле не заполнено")]
         [DisplayName("Название")]

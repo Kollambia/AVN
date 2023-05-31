@@ -6,7 +6,7 @@ using AVN.Common.Enums;
 
 namespace AVN.Models
 {
-    public class StudentVM : BasicVM
+    public class StudentVM : BasicVM<string>
     {
         [Required(ErrorMessage = "Поле не заполнено")]
         [DisplayName("Фамилия")]
@@ -82,6 +82,17 @@ namespace AVN.Models
         public int? GroupId { get; set; }
 
         public Group? Group { get; set; }
+
+        //[Required]
+        //[DataType(DataType.Password)]
+        //[Display(Name = "Password")]
+        //public string Password { get; set; }
+
+        //[Required]
+        //[DataType(DataType.Password)]
+        //[Display(Name = "Confirm password")]
+        //[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        //public string ConfirmPassword { get; set; }
     }
 
     public class DateMinimumAgeAttribute : ValidationAttribute
