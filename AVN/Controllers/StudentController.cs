@@ -179,19 +179,19 @@ namespace AVN.Web.Controllers
         public async Task<IActionResult> GeneratePaymentInvoice(string id)
         {
 
-            var studentTask = unitOfWork.StudentRepository.GetByIdAsync(id);
-            var groupTask = unitOfWork.GroupRepository.GetByIdAsync((int)studentTask.Result.GroupId);
-            var directionTask = unitOfWork.DirectionRepository.GetByIdAsync((int)groupTask.Result.DirectionId);
-            var departmentTask = unitOfWork.DepartmentRepository.GetByIdAsync((int)directionTask.Result.DepartmentId);
-            var facultyTask = unitOfWork.FacultyRepository.GetByIdAsync((int)departmentTask.Result.FacultyId);
+                var studentTask = unitOfWork.StudentRepository.GetByIdAsync(id);
+                var groupTask = unitOfWork.GroupRepository.GetByIdAsync((int)studentTask.Result.GroupId);
+                var directionTask = unitOfWork.DirectionRepository.GetByIdAsync((int)groupTask.Result.DirectionId);
+                var departmentTask = unitOfWork.DepartmentRepository.GetByIdAsync((int)directionTask.Result.DepartmentId);
+                var facultyTask = unitOfWork.FacultyRepository.GetByIdAsync((int)departmentTask.Result.FacultyId);
 
-            await Task.WhenAll(studentTask, groupTask, directionTask, departmentTask, facultyTask);
+                await Task.WhenAll(studentTask, groupTask, directionTask, departmentTask, facultyTask);
 
-            var student = await studentTask;
-            var group = await groupTask;
-            var direction = await directionTask;
-            var department = await departmentTask;
-            var faculty = await facultyTask;
+                var student = await studentTask;
+                var group = await groupTask;
+                var direction = await directionTask;
+                var department = await departmentTask;
+                var faculty = await facultyTask;
 
             var contract = await unitOfWork.StudentPaymentRepository.FindByConditionAsync(s => s.StudentId == id);
 
