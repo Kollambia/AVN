@@ -56,7 +56,7 @@ namespace AVN.Controllers
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, RoleConst.TeacherRole);
+                    await _userManager.AddToRoleAsync(user, RoleConst.Employee);
 
                     await _unitOfWork.EmployeeRepository.CreateAsync(employee);
                     await _unitOfWork.SaveChangesAsync();

@@ -4,10 +4,9 @@ namespace AVN.Common.Enums
 {
     public enum Gender
     {
-        [Display(Name = "Не указан")] NotSet = -1,
-        [Display(Name = "Женский")] Female = 0,
-        [Display(Name = "Мужской")] Male = 1,
-        [Display(Name = "Неопределённый")] Undefined = 2
+        [Display(Name = "Женский")] Female = 1,
+        [Display(Name = "Мужской")] Male = 2,
+        [Display(Name = "Неопределённый")] Undefined = 3
     }
 
     public static class GenderExtensions

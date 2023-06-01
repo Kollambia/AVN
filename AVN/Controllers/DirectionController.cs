@@ -41,9 +41,7 @@ namespace AVN.Web.Controllers
         // GET: Direction/Create
         public IActionResult Create()
         {
-            DirectionVM directionVM = new DirectionVM();
-            directionVM.FacultyId = 1;
-            return View(directionVM);
+            return View();
         }
 
         // POST: Direction/Create

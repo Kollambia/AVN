@@ -4,7 +4,7 @@ namespace AVN.Common.Enums
 {
     public enum FormOfEducation
     {
-        [Display(Name = "Очная")] FullTime = 0,
-        [Display(Name = "Заочная")] Сorrespondence = 1
+        [Display(Name = "Очная")] FullTime = 1,
+        [Display(Name = "Заочная")] Сorrespondence = 2
     }
 }

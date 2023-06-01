@@ -115,7 +115,7 @@ namespace AVN.Areas.Identity.Pages.Account
 
                 if (User.IsInRole(RoleConst.AdminRole))
                 {
-                    await _userManager.AddToRoleAsync(user, RoleConst.TeacherRole);
+                    await _userManager.AddToRoleAsync(user, RoleConst.Employee);
                 }
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);

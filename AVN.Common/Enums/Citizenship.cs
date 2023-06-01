@@ -10,10 +10,10 @@ namespace AVN.Common.Enums
 {
     public enum Citizenship
     {
-        [Display(Name = "Неопределённый")] Undefined = 0,
-        [Display(Name = "Кыргызстан")] Kyrgyzstan = 1,
-        [Display(Name = "Казахстан")] Kazakhstan = 2,
-        [Display(Name = "Россия")] Russia = 3,
-        [Display(Name = "Узбекистан")] Uzbekistan = 4
+        [Display(Name = "Неопределённый")] Undefined = 1,
+        [Display(Name = "Кыргызстан")] Kyrgyzstan = 2,
+        [Display(Name = "Казахстан")] Kazakhstan = 3,
+        [Display(Name = "Россия")] Russia = 4,
+        [Display(Name = "Узбекистан")] Uzbekistan = 5
     }
 }

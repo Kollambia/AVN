@@ -99,7 +99,7 @@ namespace AVN.Web.Controllers
                 var mappedStudent = mapper.Map<StudentVM, Student>(student);
                 mappedStudent.Id = newId;
 
-                var user = new AppUser() { UserName = student.Name, Id = newId };
+                var user = new AppUser() { UserName = student.GradeBookNumber, Id = newId };
                 var result = await userManager.CreateAsync(user);
 
                 if (result.Succeeded)
@@ -129,9 +129,9 @@ namespace AVN.Web.Controllers
             }
 
             var mappedStudent = mapper.Map<Student, StudentVM>(student);
-            mappedStudent.FacultyId = student.Group.Direction.Department.FacultyId;
-            mappedStudent.DepartmentId = student.Group.Direction.DepartmentId;
-            mappedStudent.DirectionId = student.Group.DirectionId;
+            mappedStudent.FacultyId = student?.Group?.Direction.Department.FacultyId;
+            mappedStudent.DepartmentId = student?.Group?.Direction.DepartmentId;
+            mappedStudent.DirectionId = student?.Group?.DirectionId;
             return View(mappedStudent);
         }
 
