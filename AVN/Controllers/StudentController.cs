@@ -6,6 +6,7 @@ using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using AVN.PdfGenerator;
+using AVN.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -103,6 +104,8 @@ namespace AVN.Web.Controllers
 
                 if (result.Succeeded)
                 {
+                    await userManager.AddToRoleAsync(user, RoleConst.StudentRole);
+
                     await unitOfWork.StudentRepository.CreateAsync(mappedStudent);
                     await unitOfWork.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
