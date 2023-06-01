@@ -40,7 +40,7 @@ namespace AVN.Model.Initializer
             if (!_roleManager.RoleExistsAsync(RoleConst.AdminRole).GetAwaiter().GetResult())
             {
                 _roleManager.CreateAsync(new IdentityRole(RoleConst.AdminRole)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(RoleConst.TeacherRole)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(RoleConst.Employee)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(RoleConst.StudentRole)).GetAwaiter().GetResult();
             }
             else

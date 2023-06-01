@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Linq;
+﻿using AVN.Model.Entities;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-using AVN.Model.Entities;
 
 namespace AVN.Data.Repository
 {
