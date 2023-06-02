@@ -2,6 +2,7 @@
 using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
+using AVN.Models.FilterVM;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AVN.Web.Controllers
@@ -17,9 +18,9 @@ namespace AVN.Web.Controllers
             this.context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await unitOfWork.OrderRepository.GetAllAsync());
+            return PartialView("PartialViews/_StudentFilters", new StudentsFilterVM());
         }
 
         public IActionResult Create()

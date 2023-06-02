@@ -8,6 +8,8 @@
                 <i class="fas fa-user-plus"></i> Создать пользователя
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" asp-controller="Order" asp-action="Index">Приказы</a>
+                <div class="dropdown-divider"></div>
                 @*<a class="dropdown-item" asp-area="Identity" asp-page="/Account/RegisterStudent">Регистрация студента</a>*@
                 <a class="dropdown-item" asp-controller="Student" asp-action="Create">Регистрация студента</a>
                 <div class="dropdown-divider"></div>
