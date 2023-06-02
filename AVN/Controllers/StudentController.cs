@@ -5,6 +5,7 @@ using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
+using AVN.Models.FilterVM;
 using AVN.PdfGenerator;
 using AVN.Utility;
 using Microsoft.AspNetCore.Identity;
@@ -31,38 +32,51 @@ namespace AVN.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            StudentViaFilterVM studentViaFilterVM = new StudentViaFilterVM
-            {
-                studentVMs = new List<StudentVM>()
-            };
-            return View(studentViaFilterVM);
+            return View(new StudentsFilterVM());
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Index(StudentViaFilterVM filter)
+        public async Task<ActionResult> StudentList(int facultyId = 0, int departmentId = 0, int directionId = 0, int groupId = 0)
         {
             var students = await unitOfWork.StudentRepository.GetAllAsync();
-            if (filter.GroupId.HasValue)
-                students = students.Where(x => x.GroupId == filter.GroupId);
-            else if (filter.DirectionId.HasValue)
-                students = students.Where(x => x.Group.DirectionId == filter.DirectionId);
-            else if (filter.DepartmentId.HasValue)
-                students = students.Where(x => x.Group.Direction.DepartmentId == filter.DepartmentId);
-            else if (filter.FacultyId.HasValue)
-                students = students.Where(x => x.Group.Direction.Department.FacultyId == filter.FacultyId);
+            if (groupId > 0)
+                students = students.Where(x => x.GroupId == groupId);
+            else if (directionId > 0)
+                students = students.Where(x => x.Group.DirectionId == directionId);
+            else if (departmentId > 0)
+                students = students.Where(x => x.Group.Direction.DepartmentId == departmentId);
+            else if (facultyId > 0)
+                students = students.Where(x => x.Group.Direction.Department.FacultyId == facultyId);
 
-
-            StudentViaFilterVM filteredStudents = new()
-            {
-                FacultyId= filter?.FacultyId,
-                DepartmentId= filter?.DepartmentId,
-                DirectionId= filter?.DirectionId,
-                GroupId= filter?.GroupId,
-                studentVMs = mapper.Map<Student, StudentVM>(students).ToList()
-            };
-
-            return View(filteredStudents);
+            var mappedStudents = mapper.Map<Student, StudentVM>(students).ToList();
+            return PartialView(mappedStudents);
         }
+
+
+        //[HttpPost]
+        //public async Task<IActionResult> Index(StudentsFilterVM filter)
+        //{
+        //    var students = await unitOfWork.StudentRepository.GetAllAsync();
+        //    if (filter.GroupId.HasValue)
+        //        students = students.Where(x => x.GroupId == filter.GroupId);
+        //    else if (filter.DirectionId.HasValue)
+        //        students = students.Where(x => x.Group.DirectionId == filter.DirectionId);
+        //    else if (filter.DepartmentId.HasValue)
+        //        students = students.Where(x => x.Group.Direction.DepartmentId == filter.DepartmentId);
+        //    else if (filter.FacultyId.HasValue)
+        //        students = students.Where(x => x.Group.Direction.Department.FacultyId == filter.FacultyId);
+
+
+        //    StudentsFilterVM filteredStudents = new()
+        //    {
+        //        //FacultyId= filter?.FacultyId,
+        //        //DepartmentId= filter?.DepartmentId,
+        //        //DirectionId= filter?.DirectionId,
+        //        //GroupId= filter?.GroupId,
+        //        //studentVMs = mapper.Map<Student, StudentVM>(students).ToList()
+        //    };
+
+        //    return View(filteredStudents);
+        //}
 
         // GET: Student/Details/5
         public async Task<IActionResult> Details(string id)

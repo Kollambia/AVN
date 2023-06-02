@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace AVN.Models
+namespace AVN.Models.FilterVM
 {
-    public class StudentViaFilterVM
+    public class StudentsFilterVM
     {
         [DisplayName("Факультет")]
         public int? FacultyId { get; set; }
@@ -16,7 +16,5 @@ namespace AVN.Models
 
         [DisplayName("Группа")]
         public int? GroupId { get; set; }
-
-        public List<StudentVM>? studentVMs { get; set;}
     }
 }

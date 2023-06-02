@@ -1,27 +1,25 @@
-﻿using System.Runtime.CompilerServices;
-using AVN.Business;
+﻿using AVN.Business;
 using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Build.Framework;
 
 namespace AVN.Web.Controllers
 {
     public class OrderController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly AppDbContext _context;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly AppDbContext context;
 
         public OrderController(IUnitOfWork unitOfWork, AppDbContext context)
         {
-            _unitOfWork = unitOfWork;
-            _context = context;
+            this.unitOfWork = unitOfWork;
+            this.context = context;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _unitOfWork.OrderRepository.GetAllAsync());
+            return View(await unitOfWork.OrderRepository.GetAllAsync());
         }
 
         public IActionResult Create()
@@ -35,10 +33,10 @@ namespace AVN.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _unitOfWork.OrderRepository.CreateAsync(order);
-                await _unitOfWork.SaveChangesAsync();
+                await unitOfWork.OrderRepository.CreateAsync(order);
+                await unitOfWork.SaveChangesAsync();
 
-                var studentOrderService = new OrderService(_context);
+                var studentOrderService = new OrderService(context);
                 studentOrderService.AddOrder(order);
 
                 if (studentOrderService.AddOrder(order))
@@ -55,7 +53,7 @@ namespace AVN.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var order = await _unitOfWork.OrderRepository.GetByIdAsync(id);
+            var order = await unitOfWork.OrderRepository.GetByIdAsync(id);
             if (order == null)
             {
                 return NotFound();
@@ -74,8 +72,8 @@ namespace AVN.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                await _unitOfWork.OrderRepository.UpdateAsync(order);
-                await _unitOfWork.SaveChangesAsync();
+                await unitOfWork.OrderRepository.UpdateAsync(order);
+                await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(order);
@@ -83,7 +81,7 @@ namespace AVN.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var order = await _unitOfWork.OrderRepository.GetByIdAsync(id);
+            var order = await unitOfWork.OrderRepository.GetByIdAsync(id);
             if (order == null)
             {
                 return NotFound();
@@ -95,8 +93,8 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _unitOfWork.OrderRepository.DeleteByIdAsync(id);
-            await _unitOfWork.SaveChangesAsync();
+            await unitOfWork.OrderRepository.DeleteByIdAsync(id);
+            await unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

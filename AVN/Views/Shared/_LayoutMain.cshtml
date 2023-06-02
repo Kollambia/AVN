@@ -24,27 +24,6 @@
 
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-md navbar-toggleable-md navbar-dark bg-dark border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                   <img src="~/img/logo-halyk-test.png" width="90" height="30" class="d-inline-block align-top" alt="">
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse">
-
-                    @await Html.PartialAsync("_LoginPartial")
-                    @if (User.Identity?.IsAuthenticated ?? false)
-                    {
-                        @await Html.PartialAsync("PartialViews/_NavBar")
-                    }
-                </div>
-            </div>
-        </nav>
-    </header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

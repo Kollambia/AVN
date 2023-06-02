@@ -1,4 +1,4 @@
-﻿@model StudentViaFilterVM
+﻿@model AVN.Models.FilterVM.StudentsFilterVM
 @{
     ViewData["Title"] = "Студенты";
 }
@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-md-5">
             <div class="form-group row mb-1">
-                @* Faculty *@
+               
                 <div class="col-md-3">
                     <label class ="font-weight-bold">@Html.DisplayNameFor(x => x.FacultyId)</label>
                 </div>
@@ -18,7 +18,7 @@
             </div>
 
             <div class="form-group row mb-1">
-                @* Department *@
+                
                 <div class="col-md-3">
                     <label class="font-weight-bold">@Html.DisplayNameFor(x => x.DepartmentId)</label>
                 </div>
@@ -29,7 +29,7 @@
         </div>
         <div class="col-md-5">
             <div class="form-group row mb-1">
-                @* Direction *@
+                
                 <div class="col-md-3">
                     <label class="font-weight-bold">@Html.DisplayNameFor(x => x.DirectionId)</label>
                 </div>
@@ -39,7 +39,7 @@
             </div>
 
             <div class="form-group row mb-1">
-                @* Group *@
+                
                 <div class="col-md-3">
                     <label class="font-weight-bold">@Html.DisplayNameFor(x => x.GroupId)</label>
                 </div>
@@ -49,89 +49,31 @@
             </div>
         </div>
 
-        <div class="col-md-2">
-             <button class="btn btn-success btn-block" type="submit"><span class="fa fa-filter"></span> Применить</button>
-        </div>
+@*        <div class="col-md-2">
+            <button type="submit" class="btn btn-success btn-block">
+                <span class="fa fa-filter"></span> Применить
+            </button>
+        </div>*@
+            
     </div>
 }
 
+@*<section class="content">
+    <div class="box">
+ 
+        <!-- /.box-header -->
+        <div class="box-body" id="dataContainer">
+
+        </div>
+        <!-- /.box-body -->
+    </div>
+
+</section>*@
+
+
 
 <hr>
-<div class="data-table-area mg-b-15">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="sparkline13-list">
-                    <div class="sparkline13-graph">
-                        <div class="datatable-dashv1-list custom-datatable-overright">
-                            <table class="table-striped"
-                                   id="table"
-                                   data-toggle="table"
-                                   data-pagination="true"
-                                   data-search="true"
-                                   data-show-columns="true"
-                                   data-key-events="true"
-                                   data-show-toggle="true"
-                                   data-resizable="true"
-                                   data-cookie="true"
-                                   data-cookie-id-table="saveId"
-                                   data-show-export="true"
-                                   data-click-to-select="true"
-                                   data-show-search-clear-button="true"
-                                   data-filter-control="true"
-                                   data-toolbar="#toolbar"
-                                   data-show-refresh="true"
-                                   data-show-fullscreen="true"
-                                   data-show-columns-toggle-all="true"
-                                   data-minimum-count-columns="2"
-                                   data-show-pagination-switch="true"
-                                   data-page-list="[10, 25, 50, 100, всё]"
-                                   data-show-footer="true"
-                                   data-locale="ru-RU">
-
-                                <thead>
-                                    <tr>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="">
-                                            ФИО
-                                        </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="GroupName">
-                                            Группа
-                                        </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="FacultyName">
-                                            Факультет
-                                        </th>
-                                        <th>
-                                            Действие
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model.studentVMs)
-                                    {
-                                            <tr>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.SName)  @Html.DisplayFor(modelItem => item.Name)  @Html.DisplayFor(modelItem => item.PName)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Group.GroupName)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Group.Direction.Department.Faculty.FacultyShortName)
-                                                </td>
-                                                <td>
-                                                    <span> @Html.ActionLink("", "Edit", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
-                                                    <span> @Html.ActionLink("", "Delete", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
-                                                </td>
-                                            </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="data-table-area mg-b-15" id="dataContainer">
 </div>
 
 
@@ -264,12 +206,14 @@
                         $.each(response, function (i, department) {
                             $('#departmentsDropdown').append($('<option></option>').val(department.value).text(department.text));
                         });
+                        
                     },
                     error: function (xhr, status, error) {
                         // Handle error if any
                         console.error(xhr.responseText);
                     }
-                });
+                })
+                GetList()
             });
         });
 
@@ -308,6 +252,7 @@
                         console.error(xhr.responseText);
                     }
                 });
+                GetList()
             });
         });
 
@@ -336,7 +281,47 @@
                         console.error(xhr.responseText);
                     }
                 });
+                GetList()
             });
         });
+
+        $(document).ready(function () {
+            $('#groupsDropdown').change(function () {
+                GetList()
+            });
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        
+        function GetList() {
+            var facultyId = $("#facultiesDropdown").val() || 0;
+            var departmentId = $("#departmentsDropdown").val();
+            var directionId = $("#directionsDropdown").val();
+            var groupId = $("#groupsDropdown").val();
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("StudentList", "Student")',
+                contentType: 'application/json',
+                data: { 
+                    'facultyId': facultyId, 
+                    'departmentId': departmentId,
+                    'directionId': directionId,
+                    'groupId': groupId
+                },
+                success: function (response) {
+                    $('#dataContainer').html(response);
+                    $('#studentsTbl').DataTable()
+                    console.log(result)
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            })
+            
+        }
     </script>
 }
