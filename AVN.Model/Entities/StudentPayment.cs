@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using AVN.Common.Enums;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace AVN.Model.Entities
@@ -20,6 +21,11 @@ namespace AVN.Model.Entities
         [Required]
         [DisplayName("Долг")]
         public decimal Debt { get; set; }
+
+        public Course Course { get; set; }
+
+        public int GroupId { get; set; }
+        public virtual Group Group { get; set; }
 
         public string? StudentId { get; set; }
         public virtual Student Student { get; set; }

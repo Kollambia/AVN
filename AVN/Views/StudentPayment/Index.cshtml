@@ -1,0 +1,81 @@
+﻿@model IEnumerable<StudentPaymentVM>
+@functions {
+    public static string GetEnumDisplayName(Enum value)
+    {
+        var displayAttribute = value.GetType()
+            .GetField(value.ToString())
+            .GetCustomAttributes(typeof(DisplayAttribute), false)
+            .FirstOrDefault() as DisplayAttribute;
+
+        return displayAttribute?.Name ?? value.ToString();
+    }
+}
+<style>
+    /* CSS for hover effect */
+    .table-hover tr:hover {
+        background-color: #f5f5f5; /* Apply the desired background color */
+    }
+</style>
+
+<table class="table table-bordered table-hover" id="firstTable">
+    <thead class="thead-light">
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.AcademicYear)</th>
+            <th>@Html.DisplayNameFor(model => model.Contract)</th>
+            <th>@Html.DisplayNameFor(model => model.Payed)</th>
+            <th>@Html.DisplayNameFor(model => model.Debt)</th>
+            <th>@Html.DisplayNameFor(model => model.StudentId)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var group in Model.GroupBy(item => item.Group))
+        {
+            <tr class="table-primary text-left">
+                <th colspan="5">@group.Key.GroupName (@group.Key.Direction.Department.Faculty.FacultyName)</th>
+            </tr>
+            @foreach (var item in group)
+            {
+                <tr data-id="@item.Id">
+                    <td>@item.AcademicYear</td>
+                    <td>@item.Contract</td>
+                    <td>@item.Payed</td>
+                    <td>@item.Debt</td>
+                    <td>@item.Student.Group.Direction.DirectionName (@GetEnumDisplayName(@item.Student.StudingForm) @GetEnumDisplayName(@item.Student.AcademicDegree))(@item.Student.Group.Direction.Department.Faculty.FacultyShortName)</td>
+                </tr>
+            }
+        }
+       
+    </tbody>
+</table>
+
+<table class="table table-bordered" id="secondTable">
+    @await Html.PartialAsync("PartialViews/_PaymentDetails", new List<StudentPaymentDetailVM>())
+</table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#firstTable').on('click', 'tr', function () {
+                var id = $(this).data('id'); // Get the id from the selected row
+                refreshSecondTable(id);
+            });
+        });
+
+        function refreshSecondTable(id) {
+            $.ajax({
+                url: '@Url.Action("RefreshStudentPaymentDetails", "StudentPaymentDetails")',
+                type: 'POST',
+                data: {
+                    id: id // Pass the id as a parameter
+                },
+                success: function (data) {
+                    $('#secondTable').html(data);
+                },
+                error: function () {
+                    // Handle any errors that occur during the AJAX request
+                }
+            });
+        }
+    </script>
+}
+

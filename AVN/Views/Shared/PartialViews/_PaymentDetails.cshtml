@@ -1,0 +1,40 @@
+﻿@model IEnumerable<StudentPaymentDetailVM>
+
+@functions {
+    public static string GetEnumDisplayName(Enum value)
+    {
+        var displayAttribute = value.GetType()
+            .GetField(value.ToString())
+            .GetCustomAttributes(typeof(DisplayAttribute), false)
+            .FirstOrDefault() as DisplayAttribute;
+
+        return displayAttribute?.Name ?? value.ToString();
+    }
+}
+
+<thead class="thead-dark">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.StudentPaymentId)</th>
+        <th>@Html.DisplayNameFor(model => model.PaymentDate)</th>
+        <th>@Html.DisplayNameFor(model => model.Payment)</th>
+        <th>@Html.DisplayNameFor(model => model.Number)</th>
+        <th>@Html.DisplayNameFor(model => model.PaymentType)</th>
+        <th>@Html.DisplayNameFor(model => model.SpecialPurpose)</th>
+    </tr>
+</thead>
+<tbody>
+    @foreach (var item in Model.OrderBy(item => item.PaymentDate))
+    {
+        <tr data-id="@item.Id">
+            <td>@item.StudentPayment.AcademicYear</td>
+            <td>@item.PaymentType</td>
+            <td>@item.Payment</td>
+            <td>@item.Number</td>
+            <td>@GetEnumDisplayName(@item.PaymentType)</td>
+            <td>@item.SpecialPurpose</td>
+        </tr>
+    }
+
+</tbody>
+
+

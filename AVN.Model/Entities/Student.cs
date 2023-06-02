@@ -18,7 +18,7 @@ public class Student : BaseEntity<Student, string>
     public string Address { get; set; }
     public string PhoneNumber { get; set; }
 
-    public int? GroupId { get; set; }
+    public int GroupId { get; set; }
     public virtual Group? Group { get; set; }
 
     public virtual ICollection<StudentPayment>? StudentPayments { get; set; }

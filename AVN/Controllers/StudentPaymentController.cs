@@ -1,22 +1,29 @@
-﻿using AVN.Data.UnitOfWorks;
+﻿using AVN.Automapper;
+using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
+using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AVN.Web.Controllers
 {
     public class StudentPaymentController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
 
-        public StudentPaymentController(IUnitOfWork unitOfWork)
+        public StudentPaymentController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string id)
         {
-            var payments = await _unitOfWork.StudentPaymentRepository.GetAllAsync();
-            return View(payments);
+            var payments = (await unitOfWork.StudentPaymentRepository.GetAllAsync()).ToList().Where(x=> x.StudentId == id);
+            var mappedPayments= mapper.Map<StudentPayment, StudentPaymentVM>(payments).ToList();
+            if(mappedPayments == null)
+                return View(new List<StudentPaymentVM>());
+            return View(mappedPayments);
         }
 
         public IActionResult Create()
@@ -30,7 +37,7 @@ namespace AVN.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _unitOfWork.StudentPaymentRepository.CreateAsync(payment);
+                await unitOfWork.StudentPaymentRepository.CreateAsync(payment);
                 return RedirectToAction(nameof(Index));
             }
             return View(payment);
@@ -38,7 +45,7 @@ namespace AVN.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var payment = await _unitOfWork.StudentPaymentRepository.GetByIdAsync(id);
+            var payment = await unitOfWork.StudentPaymentRepository.GetByIdAsync(id);
             if (payment == null)
             {
                 return NotFound();
@@ -56,7 +63,7 @@ namespace AVN.Web.Controllers
             }
             if (ModelState.IsValid)
             {
-                await _unitOfWork.StudentPaymentRepository.UpdateAsync(payment);
+                await unitOfWork.StudentPaymentRepository.UpdateAsync(payment);
                 return RedirectToAction(nameof(Index));
             }
             return View(payment);
@@ -64,7 +71,7 @@ namespace AVN.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var payment = await _unitOfWork.StudentPaymentRepository.GetByIdAsync(id);
+            var payment = await unitOfWork.StudentPaymentRepository.GetByIdAsync(id);
             if (payment == null)
             {
                 return NotFound();
@@ -76,8 +83,8 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var payment = await _unitOfWork.StudentPaymentRepository.GetByIdAsync(id);
-            await _unitOfWork.StudentPaymentRepository.DeleteAsync(payment);
+            var payment = await unitOfWork.StudentPaymentRepository.GetByIdAsync(id);
+            await unitOfWork.StudentPaymentRepository.DeleteAsync(payment);
             return RedirectToAction(nameof(Index));
         }
     }

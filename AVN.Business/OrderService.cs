@@ -41,7 +41,9 @@ public class OrderService
                 Contract = contract,
                 Payed = 0,
                 Debt = contract,
-                AcademicYear = order.Date.Year
+                AcademicYear = order.Date.Year,
+                Course = order.Student.Group.Course,
+                GroupId = order.Student.GroupId
             });
         }
 

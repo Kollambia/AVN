@@ -4,7 +4,7 @@ namespace AVN.Common.Enums
 {
     public enum PaymentType
     {
-        [Display(Name = "Наличный расчет")] Cash = 0
+        [Display(Name = "Наличный расчет")] Cash = 1
     }
 
 }

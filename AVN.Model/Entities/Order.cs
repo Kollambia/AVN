@@ -22,6 +22,11 @@ namespace AVN.Model.Entities
         [DisplayName("Примечание")]
         public string? Note { get; set; }
 
+        public Course Course { get; set; }
+
+        public int GroupId { get; set; }
+        
+
         public string? StudentId { get; set; }
         public virtual Student Student { get; set; }
 

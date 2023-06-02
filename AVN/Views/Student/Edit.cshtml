@@ -113,7 +113,11 @@
                     @Html.DropDownListFor(x => x.FacultyId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "facultiesDropdown" })
                     @Html.ValidationMessageFor(x => x.FacultyId, "", new { @class = "text-danger" })
                 </div>
-                <div class="col-sm-4 form-group"></div>
+                <div class="col-sm-3 form-group"></div>
+                <div class="col-sm-4 form-group">
+                    <label></label>
+                    <a asp-controller="StudentPayment" asp-action="Index" asp-route-id="@Model.Id" class="btn btn-primary btn-m btn-block" type="button">Контракт</a>
+                </div>
                 <div class="col-sm-5 form-group">
                     <label>@Html.DisplayNameFor(x => x.DepartmentId)</label>
                     @Html.DropDownListFor(x => x.DepartmentId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "departmentsDropdown" })
@@ -133,15 +137,20 @@
                 </div>
                 <div class="col-sm-4 form-group"></div>
                 @*end-last-row*@
-
-
-                <hr>
-                <div class="form-group row">
-                    <div class="col-md-6">
-                        <a href="/Student/Index" class="btn btn-secondary btn-lg btn-block" type="button">Отмена</a>
-                    </div>
-                    <div class="col-md-6">
-                        <button class="btn btn-success btn-lg btn-block" type="submit">Обновить</button>
+            </div>
+            <hr>
+            <div class="form-group row">
+                <div class="col-md-6">
+                    
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <a href="/Student/Index" class="btn btn-danger btn-lg btn-block" type="button">Отмена</a>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="btn btn-success btn-lg btn-block" type="submit">Обновить</button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,19 +1,24 @@
-﻿using AVN.Data.UnitOfWorks;
+﻿using AVN.Automapper;
+using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
+using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 public class StudentPaymentDetailsController : Controller
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork unitOfWork;
+    private readonly IMapper mapper;
 
-    public StudentPaymentDetailsController(IUnitOfWork unitOfWork)
+    public StudentPaymentDetailsController(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _unitOfWork = unitOfWork;
+        this.unitOfWork = unitOfWork;
+        this.mapper = mapper;
     }
 
     public async Task<IActionResult> Index()
     {
-        return View(await _unitOfWork.StudentPaymentDetailRepository.GetAllAsync());
+        return View(await unitOfWork.StudentPaymentDetailRepository.GetAllAsync());
     }
 
     public IActionResult Create()
@@ -27,7 +32,7 @@ public class StudentPaymentDetailsController : Controller
     {
         if (ModelState.IsValid)
         {
-            await _unitOfWork.StudentPaymentDetailRepository.CreateAsync(studentPaymentDetail);
+            await unitOfWork.StudentPaymentDetailRepository.CreateAsync(studentPaymentDetail);
             return RedirectToAction(nameof(Index));
         }
         return View(studentPaymentDetail);
@@ -40,7 +45,7 @@ public class StudentPaymentDetailsController : Controller
             return NotFound();
         }
 
-        var studentPaymentDetail = await _unitOfWork.StudentPaymentDetailRepository.GetByIdAsync(id.Value);
+        var studentPaymentDetail = await unitOfWork.StudentPaymentDetailRepository.GetByIdAsync(id.Value);
         if (studentPaymentDetail == null)
         {
             return NotFound();
@@ -59,7 +64,7 @@ public class StudentPaymentDetailsController : Controller
 
         if (ModelState.IsValid)
         {
-            await _unitOfWork.StudentPaymentDetailRepository.UpdateAsync(studentPaymentDetail);
+            await unitOfWork.StudentPaymentDetailRepository.UpdateAsync(studentPaymentDetail);
             return RedirectToAction(nameof(Index));
         }
         return View(studentPaymentDetail);
@@ -72,7 +77,7 @@ public class StudentPaymentDetailsController : Controller
             return NotFound();
         }
 
-        var studentPaymentDetail = await _unitOfWork.StudentPaymentDetailRepository.GetByIdAsync(id.Value);
+        var studentPaymentDetail = await unitOfWork.StudentPaymentDetailRepository.GetByIdAsync(id.Value);
         if (studentPaymentDetail == null)
         {
             return NotFound();
@@ -85,8 +90,16 @@ public class StudentPaymentDetailsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var studentPaymentDetail = await _unitOfWork.StudentPaymentDetailRepository.GetByIdAsync(id);
-        await _unitOfWork.StudentPaymentDetailRepository.DeleteAsync(studentPaymentDetail);
+        var studentPaymentDetail = await unitOfWork.StudentPaymentDetailRepository.GetByIdAsync(id);
+        await unitOfWork.StudentPaymentDetailRepository.DeleteAsync(studentPaymentDetail);
         return RedirectToAction(nameof(Index));
     }
+
+    public async Task<ActionResult> RefreshStudentPaymentDetails(int id)
+    {
+        var paymentDetails = (await unitOfWork.StudentPaymentDetailRepository.GetAllAsync()).Where(x => x.StudentPaymentId == id).ToList();
+        var mappedpaymentDetails = mapper.Map<StudentPaymentDetail, StudentPaymentDetailVM>(paymentDetails).ToList();
+        return PartialView("PartialViews/_PaymentDetails", mappedpaymentDetails);
+    }
+
 }

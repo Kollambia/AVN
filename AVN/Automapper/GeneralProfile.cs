@@ -14,6 +14,8 @@ namespace AVN.Automapper
             CreateMap<Direction, DirectionVM>().ReverseMap();
             CreateMap<Group, GroupVM>().ReverseMap();
             CreateMap<Student, StudentVM>().ReverseMap();
+            CreateMap<StudentPayment, StudentPaymentVM>().ReverseMap();
+            CreateMap<StudentPaymentDetail, StudentPaymentDetailVM>().ReverseMap();
         }
     }
 }
