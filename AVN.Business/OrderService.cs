@@ -16,36 +16,36 @@ public class OrderService
 
     public bool AddOrder(Order order)
     {
-        // Валидация на зачисление студента
-        if (order.OrderType == OrderType.Enrollment && _dbContext.Order.Any(o => o.StudentId == order.StudentId && o.OrderType == OrderType.Enrollment))
-        {
-            return false;
-        }
+        //// Валидация на зачисление студента
+        //if (order.OrderType == MovementType.Enrollment && _dbContext.Order.Any(o => o.StudentId == order.StudentId && o.OrderType == MovementType.Enrollment))
+        //{
+        //    return false;
+        //}
 
-        // Валидация на ежегодный перевод студента
-        if (order.OrderType == OrderType.Translation
-            && _dbContext.Order.Any(o => o.StudentId == order.StudentId && o.OrderType == OrderType.Translation && o.Date.Year == DateTime.Now.Year)
-            && _dbContext.StudentPayments.Any(sp => sp.StudentId == order.StudentId && sp.AcademicYear == DateTime.Now.Year && sp.Debt > 0))
-        {
-            return false;
-        }
+        //// Валидация на ежегодный перевод студента
+        //if (order.OrderType == MovementType.Translation
+        //    && _dbContext.Order.Any(o => o.StudentId == order.StudentId && o.OrderType == MovementType.Translation && o.Date.Year == DateTime.Now.Year)
+        //    && _dbContext.StudentPayments.Any(sp => sp.StudentId == order.StudentId && sp.AcademicYear == DateTime.Now.Year && sp.Debt > 0))
+        //{
+        //    return false;
+        //}
 
-        _dbContext.Order.Add(order);
+        //_dbContext.Order.Add(order);
 
-        if (order.OrderType == OrderType.Enrollment || order.OrderType == OrderType.Translation)
-        {
-            decimal contract = CalculateContract(order.StudentId);
-            _dbContext.StudentPayments.Add(new StudentPayment
-            {
-                StudentId = order.StudentId,
-                Contract = contract,
-                Payed = 0,
-                Debt = contract,
-                AcademicYear = order.Date.Year,
-                Course = order.Student.Group.Course,
-                GroupId = order.Student.GroupId
-            });
-        }
+        //if (order.OrderType == MovementType.Enrollment || order.OrderType == MovementType.Translation)
+        //{
+        //    decimal contract = CalculateContract(order.StudentId);
+        //    _dbContext.StudentPayments.Add(new StudentPayment
+        //    {
+        //        StudentId = order.StudentId,
+        //        Contract = contract,
+        //        Payed = 0,
+        //        Debt = contract,
+        //        AcademicYear = order.Date.Year,
+        //        Course = order.Student.Group.Course,
+        //        GroupId = order.Student.GroupId
+        //    });
+        //}
 
         _dbContext.SaveChanges();
         return true;

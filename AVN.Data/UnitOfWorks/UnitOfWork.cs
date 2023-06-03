@@ -19,6 +19,10 @@ public class UnitOfWork : IUnitOfWork
     private IRepository<StudentPayment, int> _studentPaymentRepository;
     private IRepository<StudentPaymentDetail, int> _studentPaymentDetailRepository;
     private IRepository<Order, int> _orderRepository;
+    private IRepository<AcademicYear, int> _academicYearRepository;
+    private IRepository<StudentMovement, int> _studentMovementRepository;
+    private IRepository<MovementType, int> _movementTypeRepository;
+    private IRepository<OrderType, int> _orderTypeRepository;
 
     public UnitOfWork(AppDbContext context)
     {
@@ -128,6 +132,45 @@ public class UnitOfWork : IUnitOfWork
             return _orderRepository;
         }
     }
+
+    public IRepository<AcademicYear, int> AcademicYearRepository
+    {
+        get
+        {
+            if(_academicYearRepository == null)
+                _academicYearRepository = new DbRepository<AcademicYear, int>(_context);
+            return _academicYearRepository;
+        }
+    }
+
+    public IRepository<StudentMovement, int> StudentMovementRepository
+    {
+        get
+        {
+            if(_studentMovementRepository == null)
+                _studentMovementRepository = new DbRepository<StudentMovement, int>(_context);
+            return _studentMovementRepository;
+        }
+    }
+    public IRepository<MovementType, int> MovementTypeRepository
+    {
+        get
+        {
+            if (_movementTypeRepository == null)
+                _movementTypeRepository = new DbRepository<MovementType, int>(_context);
+            return _movementTypeRepository;
+        }
+    }
+    public IRepository<OrderType, int> OrderTypeRepository
+    {
+        get
+        {
+            if (_orderTypeRepository == null)
+                _orderTypeRepository = new DbRepository<OrderType, int>(_context);
+            return _orderTypeRepository;
+        }
+    }
+
     public async Task<int> SaveChangesAsync()
     {
         return await _context.SaveChangesAsync();

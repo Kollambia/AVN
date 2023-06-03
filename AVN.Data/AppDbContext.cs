@@ -18,7 +18,11 @@ namespace AVN.Data
         public DbSet<SubjectEmployee> SubjectEmployees { get; set; }
         public DbSet<StudentPayment> StudentPayments { get; set; }
         public DbSet<StudentPaymentDetail> StudentPaymentDetails { get; set; }
-        public DbSet<Order> Order { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<AcademicYear> AcademicYears { get; set; }
+        public DbSet<StudentMovement> StudentMovements { get; set; }
+        public DbSet<MovementType> MovementTypes { get; set; }
+        public DbSet<OrderType> OrderTypes { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> context) : base(context)
         {

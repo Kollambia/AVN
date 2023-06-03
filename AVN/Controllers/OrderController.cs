@@ -20,7 +20,8 @@ namespace AVN.Web.Controllers
 
         public IActionResult Index()
         {
-            return PartialView("PartialViews/_StudentFilters", new StudentsFilterVM());
+            return View();
+            //return PartialView("PartialViews/_StudentFilters", new StudentsFilterVM());
         }
 
         public IActionResult Create()

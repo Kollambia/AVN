@@ -222,8 +222,8 @@ namespace AVN.Web.Controllers
                 Group = group.GroupName ?? "Нет данных",
                 Course = student.Group?.Course.GetCourseInWriting() ?? "Нет данных",
                 FullName = student.SName,
-                EducationForm = student.StudingForm.ToString(),
-                AcademicDegree = student.AcademicDegree.ToString(),
+                //EducationForm = student.StudingForm.ToString(),
+                //AcademicDegree = student.AcademicDegree.ToString(),
                 PaymentAccountNumber = GeneratePaymentAccountNumber(),
                 PaymentAmount = 40000,
                 PaymentPurpose = "Оплата за обучение"   

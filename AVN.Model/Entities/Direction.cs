@@ -1,4 +1,6 @@
-﻿namespace AVN.Model.Entities
+﻿using AVN.Common.Enums;
+
+namespace AVN.Model.Entities
 {
     public class Direction : BaseEntity<Direction, int>
     {
@@ -7,6 +9,8 @@
         public string? Description { get; set; }
         public int DirectionNumber { get; set; }
         public decimal CreditCost { get; set; }
+        public AcademicDegree AcademicDegree { get; set; }
+        public TrainingPeriod TrainingPeriod { get; set; } 
 
         public int? DepartmentId { get; set; }
         public virtual Department Department { get; set; }
