@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using AVN.Common.Enums;
 
 namespace AVN.Models
 {
@@ -10,10 +11,10 @@ namespace AVN.Models
         [Required(ErrorMessage = "Поле не заполнено")]
         [DisplayName("Название")]
         [StringLength(100, MinimumLength = 3, ErrorMessage = "Поле должно содержать от 3 до 100 символов.")]
-        public string DirectionName { get; set; }
+        public string? DirectionName { get; set; }
 
-        [DisplayName("Корот. название")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Поле должно содержать от 2 до 50 символов.")]
+        [DisplayName("Короткое назв.")]
+        [StringLength(10, MinimumLength = 2, ErrorMessage = "Поле должно содержать от 2 до 10 символов.")]
         public string? DirectionShortName { get; set; }
 
         [DisplayName("Описание")]
@@ -21,14 +22,22 @@ namespace AVN.Models
         public string? Description { get; set; }
 
         [Required(ErrorMessage = "Поле не заполнено")]
-        [DisplayName("Номер направления")]
+        [DisplayName("Номер")]
         [RegularExpression(@"^[0-9]{6}$", ErrorMessage = "Номер должен состоять ровно из 6 цифр.")]
         public int? DirectionNumber { get; set; }
 
         [Required(ErrorMessage = "Поле не заполнено")]
-        [DisplayName("Стоимость кредита")]
+        [DisplayName("Стоим. кредита")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Стоимость кредита должна быть больше нуля.")]
         public decimal? CreditCost { get; set; }
+
+        [Required(ErrorMessage = "Выберите академическую степень")]
+        [DisplayName("Cтепень")]
+        public AcademicDegree? AcademicDegree { get; set; }
+
+        [Required(ErrorMessage = "Выберите срок обучения")]
+        [DisplayName("Срок")]
+        public TrainingPeriod? TrainingPeriod { get; set; }
 
         [Required(ErrorMessage = "Выберите факультет")]
         [DisplayName("Факультет")]

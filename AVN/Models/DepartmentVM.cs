@@ -14,7 +14,7 @@ namespace AVN.Models
         public string DepartmentName { get; set; }
 
         [DisplayName("Корот. название")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Поле должно содержать от 2 до 50 символов.")]
+        [StringLength(10, MinimumLength = 2, ErrorMessage = "Поле должно содержать от 2 до 10 символов.")]
         public string? DepartmentShortName { get; set; }
 
         [Required(ErrorMessage = "Выберите факультет"), ForeignKey("Faculty")]

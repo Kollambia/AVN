@@ -11,7 +11,7 @@ namespace AVN.Models
         public string FacultyName { get; set; }
 
         [DisplayName("Корот. название")]
-        [StringLength(50, MinimumLength = 3, ErrorMessage = "Поле должно содержать от 3 до 50 символов.")]
+        [StringLength(10, MinimumLength = 2, ErrorMessage = "Поле должно содержать от 2 до 10 символов.")]
         public string? FacultyShortName { get; set; }
 
         [Required(ErrorMessage = "Поле не заполнено")]

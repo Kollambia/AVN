@@ -1,110 +1,76 @@
 ﻿@model IEnumerable<DirectionVM>
-
 @{
     ViewData["Title"] = "Специальности";
 }
 
-<h2 class="text-center mb-2">Таблица специальностей</h2>
-<hr class="mb-4">
-
-<div id="toolbar">
-    <a asp-controller="Direction" asp-action="Create">
-        <input type="button" class="btn btn-success" value="Добавить" />
-    </a>
-</div>
-
-<div class="data-table-area mg-b-15">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="sparkline13-list">
-                    <div class="sparkline13-graph">
-                        <div class="datatable-dashv1-list custom-datatable-overright">
-                            <table class="table-striped"
-                                   id="table"
-                                   data-toggle="table"
-                                   data-pagination="true"
-                                   data-search="true"
-                                   data-show-columns="true"
-                                   data-key-events="true"
-                                   data-show-toggle="true"
-                                   data-resizable="true"
-                                   data-cookie="true"
-                                   data-cookie-id-table="saveId"
-                                   data-show-export="true"
-                                   data-click-to-select="true"
-                                   data-show-search-clear-button="true"
-                                   data-filter-control="true"
-                                   data-toolbar="#toolbar"
-                                   data-show-refresh="true"
-                                   data-show-fullscreen="true"
-                                   data-show-columns-toggle-all="true"
-                                   data-minimum-count-columns="2"
-                                   data-show-pagination-switch="true"
-                                   data-page-list="[10, 25, 50, 100, всё]"
-                                   data-show-footer="true"
-                                   data-locale="ru-RU">
-
-                                <thead>
-                                    <tr>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="FacultyName">
-                                            @Html.DisplayNameFor(x => x.DirectionName)
-                                        </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="FacultyShortName">
-                                            @Html.DisplayNameFor(x => x.DirectionShortName)
-                                        </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="DepartmentId">
-                                            @Html.DisplayNameFor(x => x.DepartmentId)
-                                        </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="DirectionNumber">
-                                            @Html.DisplayNameFor(x => x.DirectionNumber)
-                                        </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="CreditCost">
-                                            @Html.DisplayNameFor(x => x.CreditCost)
-                                        </th>
-                                        <th>
-                                            Действие
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model)
-                                    {
-                                            <tr>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.DirectionName)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.DirectionShortName)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Department.DepartmentName)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.DirectionNumber)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.CreditCost)
-                                                </td>
-                                                <td>
-                                                    <span> @Html.ActionLink("", "Edit", "Direction", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
-                                                    <span> @Html.ActionLink("", "Delete", "Direction", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
-                                                </td>
-                                            </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="form-group row">
+            <div class="col-lg-3">
+                <label class="form-label">Факультет</label>
+            </div>
+            <div class="col-lg-9">
+                
+                <select id="facultyDropdown" name="facultyDropdown" class="form-control"></select>
             </div>
         </div>
+
     </div>
-</div>
+}
+<hr>
+<div id="dataContainer"></div>
 
 
 
 @section Scripts {
-        <script>
-        </script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetFaculties", "Faculty")',
+                type: 'GET',
+                success: function (data) {
+                    // Add new options
+                    $('#facultyDropdown').append($('<option>').text('Не выбрано').val(''));
+                    $.each(data, function (i, faculty) {
+                        $('#facultyDropdown').append($('<option></option>').val(faculty.value).text(faculty.text));
+                    });
+
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+        $(document).ready(function () {
+            $('#facultyDropdown').change(function () {
+                GetList()
+            });
+        });
+    </script>
+    <script type="text/javascript">
+
+        function GetList() {
+            var facultyId = $("#facultyDropdown").val();
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("DirectionList", "Direction")',
+                contentType: 'application/json',
+                data: {
+                    'facultyId': facultyId
+                },
+                success: function (response) {
+                    $('#dataContainer').html(response);
+                    $('#table').DataTable()
+                    console.log(result)
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            })
+
+        }
+    </script>
 }

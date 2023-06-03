@@ -20,9 +20,20 @@ namespace AVN.Web.Controllers
         // GET: Direction
         public async Task<IActionResult> Index()
         {
+            //var directions = await unitOfWork.DirectionRepository.GetAllAsync();
+            //var mappedDirections = mapper.Map<Direction, DirectionVM>(directions);
+            //return View(mappedDirections);
+            return View();
+        }
+
+        public async Task<ActionResult> DirectionList(int facultyId = 0)
+        {
             var directions = await unitOfWork.DirectionRepository.GetAllAsync();
-            var mappedDirections = mapper.Map<Direction, DirectionVM>(directions);
-            return View(mappedDirections);
+            if (facultyId > 0)
+                directions = directions.Where(x => x.Department.FacultyId == facultyId);
+
+            var mappedDirections = mapper.Map<Direction, DirectionVM>(directions).ToList();
+            return PartialView( mappedDirections);
         }
 
         // GET: Direction/Details/5
