@@ -61,7 +61,7 @@ namespace AVN.Models
         [YearRange(2000, ErrorMessage = "Пожалуйста, введите действительный год между 2000 и текущим годом")]
         public int RecruitmentYear { get; set; }
 
-        [DisplayName("Есть задолженность")]
+        [DisplayName("Долг")]
         public bool IsHasDebt { get; set; }
 
         [Required(ErrorMessage = "Выберите факультет")]
@@ -134,7 +134,7 @@ namespace AVN.Models
 
         public override string FormatErrorMessage(string name)
         {
-            return $"The field {name} must be a valid year between {_minYear} and {_maxYear}.";
+            return $"Поле '{name}' должен быть действительным годом между {_minYear} и {_maxYear}.";
         }
     }
 }
