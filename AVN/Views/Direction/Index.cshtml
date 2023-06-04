@@ -6,20 +6,26 @@
 @using (Html.BeginForm())
 {
     <div class="row">
-        <div class="form-group row">
-            <div class="col-lg-3">
-                <label class="form-label">Факультет</label>
-            </div>
-            <div class="col-lg-9">
-                
-                <select id="facultyDropdown" name="facultyDropdown" class="form-control"></select>
-            </div>
-        </div>
+        <div class="col-md-5">
+            <div class="form-group row mb-1">
 
+                <div class="col-md-3">
+                    <label class="font-weight-bold">Факультет</label>
+                </div>
+                <div class="col-md-9">
+                    <select id="facultyDropdown" name="facultyDropdown" class="form-control"></select>
+                   
+                </div>
+            </div>
+
+        </div>
+       
     </div>
 }
 <hr>
-<div id="dataContainer"></div>
+<div id="dataContainer">
+    
+</div>
 
 
 
@@ -31,7 +37,7 @@
                 type: 'GET',
                 success: function (data) {
                     // Add new options
-                    $('#facultyDropdown').append($('<option>').text('Не выбрано').val(''));
+                    $('#facultyDropdown').append($('<option>').text('Все').val(''));
                     $.each(data, function (i, faculty) {
                         $('#facultyDropdown').append($('<option></option>').val(faculty.value).text(faculty.text));
                     });
@@ -42,6 +48,7 @@
                     console.error(xhr.responseText);
                 }
             });
+            GetList()
         });
         $(document).ready(function () {
             $('#facultyDropdown').change(function () {

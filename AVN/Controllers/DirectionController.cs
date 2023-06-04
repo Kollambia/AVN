@@ -18,11 +18,8 @@ namespace AVN.Web.Controllers
         }
 
         // GET: Direction
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            //var directions = await unitOfWork.DirectionRepository.GetAllAsync();
-            //var mappedDirections = mapper.Map<Direction, DirectionVM>(directions);
-            //return View(mappedDirections);
             return View();
         }
 
@@ -33,7 +30,7 @@ namespace AVN.Web.Controllers
                 directions = directions.Where(x => x.Department.FacultyId == facultyId);
 
             var mappedDirections = mapper.Map<Direction, DirectionVM>(directions).ToList();
-            return PartialView( mappedDirections);
+            return PartialView(mappedDirections);
         }
 
         // GET: Direction/Details/5

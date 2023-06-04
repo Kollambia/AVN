@@ -2,6 +2,7 @@
 @{
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
+
 <div id="toolbar">
     <a asp-controller="Direction" asp-action="Create">
         <input type="button" class="btn btn-success" value="Добавить" />
@@ -108,3 +109,19 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @* --- Jquery --- *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    @* --- Bootstrap --- *@
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @* --- Скрипт таблицы --- *@
+    <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/bootstrap-table-locale-all.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+    
+}
