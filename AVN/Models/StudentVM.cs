@@ -1,8 +1,7 @@
-﻿using AVN.Model.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using AVN.Common.Enums;
+using AVN.Model.Entities;
 using System.ComponentModel;
-using AVN.Common.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace AVN.Models
 {
@@ -11,41 +10,33 @@ namespace AVN.Models
         [Required(ErrorMessage = "Поле не заполнено")]
         [DisplayName("Фамилия")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Поле должно содержать от 3 до 50 символов.")]
-        public string SName { get; set; }
+        public string? SName { get; set; }
 
         [Required(ErrorMessage = "Поле не заполнено")]
         [DisplayName("Имя")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Поле должно содержать от 3 до 50 символов.")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [DisplayName("Отчество")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Поле должно содержать от 3 до 50 символов.")]
         public string? PName { get; set; }
 
+        [Required(ErrorMessage = "Выберите статус")]
+        [DisplayName("Статус")]
+        public StudentStatus? Status { get; set; }
+
         [DateMinimumAge(16, ErrorMessage = "{0} должен быть кем-то в возрасте не менее {1} лет.")]
-        [DisplayName("Дата рождения")]
+        [DisplayName("Дата рожд.")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? DateOfBirth { get; set; }
-
-        [Required(ErrorMessage = "Выберите форму обучения")]
-        [DisplayName("Форма обучения")]
-        public FormOfEducation? StudingForm { get; set; }
 
         [Required(ErrorMessage = "Выберите линию обучения")]
         [DisplayName("Линия обучения")]
         public EducationalLine? EducationalLine { get; set; }
 
-        [Required(ErrorMessage = "Выберите академическую степень")]
-        [DisplayName("Академическая степень")]
-        public AcademicDegree? AcademicDegree { get; set; }
-
-        [Required(ErrorMessage = "Поле не заполнено")] //to do добавить RegularExpression "2022/123"
-        [DisplayName("Номер зачетной книжки")]
+        [Required(ErrorMessage = "Поле не заполнено")]
+        [DisplayName("Номер зач. книж.")]
         public string? GradeBookNumber { get; set; }
-
-        [Required(ErrorMessage = "Выберите статус")]
-        [DisplayName("Статус")]
-        public StudentStatus? Status { get; set; }
 
         [Required(ErrorMessage = "Выберите пол")]
         [DisplayName("Пол")]
@@ -58,12 +49,20 @@ namespace AVN.Models
         [Required(ErrorMessage = "Поле не заполнено")]
         [DisplayName("Адрес")]
         [StringLength(100, MinimumLength = 5, ErrorMessage = "Поле должно содержать от 5 до 100 символов.")]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         [Required(ErrorMessage = "Поле не заполнено")]
         [DisplayName("Номер телефона")]
         [RegularExpression(@"^0\(\d{3}\)\d{2}-\d{2}-\d{2}$", ErrorMessage = "Неправильный номер телефона.")]
         public string PhoneNumber { get; set; }
+
+        [Required(ErrorMessage = "Поле не заполнено")]
+        [DisplayName("Год набора")]
+        [YearRange(2000, ErrorMessage = "Пожалуйста, введите действительный год между 2000 и текущим годом")]
+        public int RecruitmentYear { get; set; }
+
+        [DisplayName("Есть задолженность")]
+        public bool IsHasDebt { get; set; }
 
         [Required(ErrorMessage = "Выберите факультет")]
         [DisplayName("Факультет")]
@@ -80,19 +79,8 @@ namespace AVN.Models
         [Required(ErrorMessage = "Выберите группу")]
         [DisplayName("Группа")]
         public int? GroupId { get; set; }
-
         public Group? Group { get; set; }
 
-        //[Required]
-        //[DataType(DataType.Password)]
-        //[Display(Name = "Password")]
-        //public string Password { get; set; }
-
-        //[Required]
-        //[DataType(DataType.Password)]
-        //[Display(Name = "Confirm password")]
-        //[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        //public string ConfirmPassword { get; set; }
     }
 
     public class DateMinimumAgeAttribute : ValidationAttribute
@@ -120,5 +108,33 @@ namespace AVN.Models
         }
 
         public int MinimumAge { get; }
+    }
+
+    public class YearRangeAttribute : ValidationAttribute
+    {
+        private readonly int _minYear;
+        private readonly int _maxYear;
+
+        public YearRangeAttribute(int minYear)
+        {
+            _minYear = minYear;
+            _maxYear = DateTime.Now.Year;
+        }
+
+        public override bool IsValid(object value)
+        {
+            if (value is int year)
+            {
+                int currentYear = DateTime.Now.Year;
+                return year >= _minYear && year <= currentYear;
+            }
+
+            return false;
+        }
+
+        public override string FormatErrorMessage(string name)
+        {
+            return $"The field {name} must be a valid year between {_minYear} and {_maxYear}.";
+        }
     }
 }

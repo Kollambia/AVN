@@ -71,7 +71,7 @@ public class OrderService
         string lastThreeNumbers = studentsCount.ToString("D3");
 
         student.GradeBookNumber = $"{DateTime.Now.Year}{lastThreeNumbers}";
-        student.Status = StudentStatus.Enlisted;
+        //student.Status = StudentStatus.Enlisted;
 
         return student;
     }

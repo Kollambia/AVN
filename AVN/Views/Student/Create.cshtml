@@ -86,21 +86,21 @@
                 @*end-third-row*@
 
                 @*start-fourth-row*@
-                <div class="col-sm-3 form-group">
+@*                <div class="col-sm-3 form-group">
                     <label>@Html.DisplayNameFor(x => x.StudingForm)*</label>
                     @Html.DropDownListFor(x => x.StudingForm, Html.GetEnumSelectList(typeof(FormOfEducation)), "Не выбрано", new {@class = "form-control"})
                     @Html.ValidationMessageFor(x => x.StudingForm, "", new { @class = "text-danger" })
-                </div>
+                </div>*@
                 <div class="col-sm-3 form-group">
                     <label>@Html.DisplayNameFor(x => x.EducationalLine)*</label>
                     @Html.DropDownListFor(x => x.EducationalLine, Html.GetEnumSelectList(typeof(EducationalLine)), "Не выбрано", new {@class = "form-control"})
                     @Html.ValidationMessageFor(x => x.EducationalLine, "", new { @class = "text-danger" })
                 </div>
-                <div class="col-sm-3 form-group">
+@*                <div class="col-sm-3 form-group">
                     <label>@Html.DisplayNameFor(x => x.AcademicDegree)*</label>
                     @Html.DropDownListFor(x => x.AcademicDegree, Html.GetEnumSelectList(typeof(AcademicDegree)), "Не выбрано", new {@class = "form-control"})
                     @Html.ValidationMessageFor(x => x.AcademicDegree, "", new { @class = "text-danger" })
-                </div>
+                </div>*@
                 <div class="col-sm-3 form-group">
                     <label>@Html.DisplayNameFor(x => x.Citizenship)*</label>
                     @Html.DropDownListFor(x => x.Citizenship, Html.GetEnumSelectList(typeof(Citizenship)), "Не выбрано", new {@class = "form-control"})

@@ -2,90 +2,133 @@
 @{
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
-<div class="data-table-area mg-b-15">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="sparkline13-list">
-                    <div class="sparkline13-graph">
-                        <div class="datatable-dashv1-list custom-datatable-overright">
-                            <table class="table-striped"
-                                   id="table"
-                                   data-toggle="table"
-                                   data-pagination="true"
-                                   data-search="true"
-                                   data-show-columns="true"
-                                   data-key-events="true"
-                                   data-show-toggle="true"
-                                   data-resizable="true"
-                                   data-cookie="true"
-                                   data-cookie-id-table="saveId"
-                                   data-show-export="true"
-                                   data-click-to-select="true"
-                                   data-show-search-clear-button="true"
-                                   data-filter-control="true"
-                                   data-toolbar="#toolbar"
-                                   data-show-refresh="true"
-                                   data-show-fullscreen="true"
-                                   data-show-columns-toggle-all="true"
-                                   data-minimum-count-columns="2"
-                                   data-show-pagination-switch="true"
-                                   data-page-list="[10, 25, 50, 100, всё]"
-                                   data-show-footer="true"
-                                   data-locale="ru-RU">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="SName">
-                                            @Html.DisplayNameFor(model => model.SName)
-                                        </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="Name">
-                                            @Html.DisplayNameFor(model => model.Name)
-                                        </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="PName">
-                                            @Html.DisplayNameFor(model => model.PName)
-                                        </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="GroupId">
-                                            @Html.DisplayNameFor(model => model.GroupId)
-                                        </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="FacultyId">
-                                            @Html.DisplayNameFor(model => model.FacultyId)
-                                        </th>
-                                        <th>
-                                            Действие
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model)
-                                    {
-                                        <tr>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.SName)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Name)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.PName)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Group.GroupName)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Group.Direction.Department.Faculty.FacultyShortName)
-                                            </td>
-                                            <td>
-                                                <span> @Html.ActionLink("", "Edit", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
-                                                <span> @Html.ActionLink("", "Delete", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
+
+<div class="table-responsive">
+    <table class="table-striped w-auto"
+           id="table"
+           data-toggle="table"
+           data-pagination="true"
+           data-search="true"
+           data-show-columns="true"
+           data-key-events="true"
+           data-show-toggle="true"
+           data-resizable="true"
+           data-cookie="true"
+           data-cookie-id-table="saveId"
+           data-show-export="true"
+           data-click-to-select="true"
+           data-show-search-clear-button="true"
+           data-filter-control="true"
+           data-toolbar="#toolbar"
+           data-show-refresh="true"
+           data-show-fullscreen="true"
+           data-show-columns-toggle-all="true"
+           data-minimum-count-columns="2"
+           data-show-pagination-switch="true"
+           data-page-list="[10, 25, 50, 100, всё]"
+           data-show-footer="true"
+           data-locale="ru-RU">
+        <thead>
+            <tr>
+                <th class="fixed-column">
+                    Действие
+                </th>
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="GroupId">
+                    @Html.DisplayNameFor(model => model.GroupId)
+                </th>
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="SName">
+                    @Html.DisplayNameFor(model => model.SName)
+                </th>
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="Name">
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="PName">
+                    @Html.DisplayNameFor(model => model.PName)
+                </th>
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="RecruitmentYear">
+                    @Html.DisplayNameFor(model => model.RecruitmentYear)
+                </th>
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="GradeBookNumber">
+                    @Html.DisplayNameFor(model => model.GradeBookNumber)
+                </th>
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="GradeBoGenderokNumber">
+                    @Html.DisplayNameFor(model => model.Gender)
+                </th>
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="Status">
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="DateOfBirth">
+                    @Html.DisplayNameFor(model => model.DateOfBirth)
+                </th>
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="DirectionId">
+                    @Html.DisplayNameFor(model => model.DirectionId)
+                </th>
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="FacultyId">
+                    @Html.DisplayNameFor(model => model.FacultyId)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <span> @Html.ActionLink("", "Edit", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
+                        <span> @Html.ActionLink("", "Delete", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Group.GroupName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RecruitmentYear)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GradeBookNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Gender)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateOfBirth)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Group.Direction.DirectionShortName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Group.Direction.Department.Faculty.FacultyShortName)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
+
+
+@section Scripts {
+    @* --- Jquery --- *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    @* --- Bootstrap --- *@
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @* --- Скрипт таблицы --- *@
+    <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/bootstrap-table-locale-all.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+
+}

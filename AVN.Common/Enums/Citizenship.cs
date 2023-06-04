@@ -8,6 +8,7 @@ using System.Xml.Linq;
 
 namespace AVN.Common.Enums
 {
+    // to do Доработать, так не годится
     public enum Citizenship
     {
         [Display(Name = "Неопределённый")] Undefined = 1,

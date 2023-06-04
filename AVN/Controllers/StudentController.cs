@@ -32,7 +32,7 @@ namespace AVN.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return PartialView("PartialViews/_StudentFilters", new StudentsFilterVM());
+            return View();
         }
 
         public async Task<ActionResult> StudentList(int facultyId = 0, int departmentId = 0, int directionId = 0, int groupId = 0)
