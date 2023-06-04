@@ -7,29 +7,41 @@
 @using (Html.BeginForm())
 {
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-7">
             <div class="form-group row mb-1">
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="font-weight-bold">Факультет</label>
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-10">
                     <select id="facultyDropdown" name="facultyDropdown" class="form-control"></select>
 
                 </div>
             </div>
             <div class="form-group row mb-1">
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="font-weight-bold">Кафедра</label>
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-10">
                     <select id="departmentDropdown" name="departmentDropdown" class="form-control"></select>
 
                 </div>
             </div>
         </div>
+        <div class="col-md-5">
+            <div class="form-group row mb-1">
 
+                <div class="col-md-4">
+                    <label class="font-weight-bold">Учебный год</label>
+                </div>
+                <div class="col-md-8">
+                    <select id="academYearDropdown" name="academYearDropdown" class="form-control"></select>
+
+                </div>
+            </div>
+
+        </div>
     </div>
 }
 <hr>
@@ -56,7 +68,21 @@
                     console.error(xhr.responseText);
                 }
             });
-            GetList()
+            $.ajax({
+                url: '@Url.Action("GetAcademicYears", "AcademicYear")',
+                type: 'GET',
+                success: function (data) {
+                    $.each(data, function (i, academYear) {
+                        $('#academYearDropdown').append($('<option></option>').val(academYear.value).text(academYear.text));
+                    });
+                    GetList()
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+            //GetList()
         });
 
         function FillDepartmentsDropdown() {
@@ -115,6 +141,11 @@
                 GetList()
             });
         });
+        $(document).ready(function () {
+            $('#academYearDropdown').change(function () {
+                GetList()
+            });
+        });
     </script>
 
     <script type="text/javascript">
@@ -122,13 +153,15 @@
         function GetList() {
             var facultyId = $("#facultyDropdown").val();
             var departmentId = $("#departmentDropdown").val();
+            var academYearId = $("#academYearDropdown").val();
             $.ajax({
                 type: 'GET',
                 url: '@Url.Action("GroupList", "Group")',
                 contentType: 'application/json',
                 data: {
                     'facultyId': facultyId,
-                    'departmentId': departmentId
+                    'departmentId': departmentId,
+                    'academYearId': academYearId
                 },
                 success: function (response) {
                     $('#dataContainer').html(response);

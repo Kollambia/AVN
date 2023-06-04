@@ -45,20 +45,23 @@
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="GroupName">
                                             @Html.DisplayNameFor(x => x.GroupName)
                                         </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="Course">
-                                            @Html.DisplayNameFor(x => x.Course)
-                                        </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="DateCreate">
-                                            @Html.DisplayNameFor(x => x.DateCreate)
-                                        </th>
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="DirectionId">
                                             @Html.DisplayNameFor(x => x.DirectionId)
                                         </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="DepartmentId">
-                                            @Html.DisplayNameFor(x => x.DepartmentId)
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="Course">
+                                            @Html.DisplayNameFor(x => x.Course)
                                         </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="FacultyId">
-                                            @Html.DisplayNameFor(x => x.FacultyId)
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="AcademicDegree">
+                                            @Html.DisplayNameFor(x => x.AcademicDegree)
+                                        </th>
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="StudingForm">
+                                            @Html.DisplayNameFor(x => x.StudingForm)
+                                        </th>
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="TrainingPeriod">
+                                            @Html.DisplayNameFor(x => x.TrainingPeriod)
+                                        </th>
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="DateCreate">
+                                            @Html.DisplayNameFor(x => x.DateCreate)
                                         </th>
                                         <th>
                                             Действие
@@ -73,19 +76,22 @@
                                                 @Html.DisplayFor(modelItem => item.GroupName)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Course)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.DateCreate)
-                                            </td>
-                                            <td>
                                                 @Html.DisplayFor(modelItem => item.Direction.DirectionName)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Direction.Department.DepartmentName)
+                                                @Html.DisplayFor(modelItem => item.Course)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Direction.Department.Faculty.FacultyName)
+                                                @Html.DisplayFor(modelItem => item.AcademicDegree)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.StudingForm)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.TrainingPeriod)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DateCreate)
                                             </td>
                                             <td>
                                                 <span> @Html.ActionLink("", "Edit", "Group", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;

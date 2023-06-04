@@ -24,13 +24,15 @@ namespace AVN.Web.Controllers
             return View();
         }
 
-        public async Task<ActionResult> GroupList(int facultyId, int departmentId)
+        public async Task<ActionResult> GroupList(int facultyId, int departmentId, int academYearId)
         {
             var groups = await unitOfWork.GroupRepository.GetAllAsync();
             if (departmentId > 0)
                 groups = groups.Where(x => x.Direction.DepartmentId == departmentId);
             else if (facultyId > 0)
                 groups = groups.Where(x => x.Direction.Department.FacultyId == facultyId);
+            if (academYearId > 0)
+                groups = groups.Where(x => x.AcademicYearId == academYearId);
 
             var mappedGroups = mapper.Map<Group, GroupVM>(groups).ToList();
             return PartialView(mappedGroups);

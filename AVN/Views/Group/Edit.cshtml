@@ -37,6 +37,26 @@
                                         @Html.ValidationMessageFor(x => x.Course, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group">
+                                        <label>@Html.DisplayNameFor(x => x.StudingForm)</label>
+                                        @Html.DropDownListFor(x => x.StudingForm, Html.GetEnumSelectList(typeof(FormOfEducation)), new {@class = "form-control"})
+                                        @Html.ValidationMessageFor(x => x.StudingForm, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.DisplayNameFor(x => x.AcademicDegree)</label>
+                                        @Html.DropDownListFor(x => x.AcademicDegree, Html.GetEnumSelectList(typeof(AcademicDegree)), new {@class = "form-control"})
+                                        @Html.ValidationMessageFor(x => x.AcademicDegree, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.DisplayNameFor(x => x.TrainingPeriod)</label>
+                                        @Html.DropDownListFor(x => x.TrainingPeriod, Html.GetEnumSelectList(typeof(TrainingPeriod)), new {@class = "form-control"})
+                                        @Html.ValidationMessageFor(x => x.TrainingPeriod, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.DisplayNameFor(x => x.AcademicYearId)</label>
+                                        @Html.DropDownListFor(x => x.AcademicYearId, new List<SelectListItem>(), new { @class = "form-control", id = "academYearDropdown" })
+                                        @Html.ValidationMessageFor(x => x.AcademicYearId, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
                                         <label>@Html.DisplayNameFor(x => x.FacultyId)</label>
                                         @Html.DropDownListFor(x => x.FacultyId, new List<SelectListItem>(), new { @class = "form-control", id = "facultiesDropdown" })
                                         @Html.ValidationMessageFor(x => x.FacultyId, "", new { @class = "text-danger" })
@@ -74,6 +94,25 @@
 
 @section Scripts {
     <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetAcademicYears", "AcademicYear")',
+                type: 'GET',
+                success: function (data) {
+                    // Add new options
+                    $.each(data, function (i, academYear) {
+                        $('#academYearDropdown').append($('<option></option>').val(academYear.value).text(academYear.text));
+                    });
+                    var academYearId = '@Model.AcademicYearId';
+                    $('#academYearDropdown').val(academYearId);
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
         $(document).ready(function () {
             $.ajax({
                 url: '@Url.Action("GetFaculties", "Faculty")',
