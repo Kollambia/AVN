@@ -23,9 +23,7 @@
     </div>
 }
 <hr>
-<div id="dataContainer">
-    
-</div>
+<div id="dataContainer"></div>
 
 
 
@@ -37,7 +35,7 @@
                 type: 'GET',
                 success: function (data) {
                     // Add new options
-                    $('#facultyDropdown').append($('<option>').text('Все').val(''));
+                    $('#facultyDropdown').append($('<option>').text('Все').val('0'));
                     $.each(data, function (i, faculty) {
                         $('#facultyDropdown').append($('<option></option>').val(faculty.value).text(faculty.text));
                     });

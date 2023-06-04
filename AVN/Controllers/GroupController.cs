@@ -19,11 +19,21 @@ namespace AVN.Web.Controllers
         }
 
         // GET: Group
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public async Task<ActionResult> GroupList(int facultyId, int departmentId)
         {
             var groups = await unitOfWork.GroupRepository.GetAllAsync();
-            var mappedGroups = mapper.Map<Group, GroupVM>(groups);
-            return View(mappedGroups);
+            if (departmentId > 0)
+                groups = groups.Where(x => x.Direction.DepartmentId == departmentId);
+            else if (facultyId > 0)
+                groups = groups.Where(x => x.Direction.Department.FacultyId == facultyId);
+
+            var mappedGroups = mapper.Map<Group, GroupVM>(groups).ToList();
+            return PartialView(mappedGroups);
         }
 
         // GET: Group/Details/5

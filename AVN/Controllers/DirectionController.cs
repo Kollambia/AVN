@@ -23,7 +23,7 @@ namespace AVN.Web.Controllers
             return View();
         }
 
-        public async Task<ActionResult> DirectionList(int facultyId = 0)
+        public async Task<ActionResult> DirectionList(int facultyId)
         {
             var directions = await unitOfWork.DirectionRepository.GetAllAsync();
             if (facultyId > 0)
