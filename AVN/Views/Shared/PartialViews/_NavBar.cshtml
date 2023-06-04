@@ -4,42 +4,59 @@
     @if (User.IsInRole(RoleConst.AdminRole))
     {
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-user-plus"></i> Создать пользователя
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-cog mr-2"></i>
+                <span>Действие</span>
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" asp-controller="Order" asp-action="Index">Менеджер перевода</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item d-flex align-items-center" asp-controller="Order" asp-action="Index">
+                    <i class="fas fa-people-arrows mr-2" style="width: 20px;"></i>
+                    <span>Менеджер перевода</span>
+                </a>
                 <div class="dropdown-divider"></div>
-                @*<a class="dropdown-item" asp-area="Identity" asp-page="/Account/RegisterStudent">Регистрация студента</a>*@
-                <a class="dropdown-item" asp-controller="Student" asp-action="Create">Регистрация студента</a>
-                <div class="dropdown-divider"></div>
-                @*<a class="dropdown-item" asp-area="Identity" asp-page="/Account/RegisterTeacher">Регистрация преподавателя</a>*@
-                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/RegisterTeacher">Регистрация преподавателя</a>
-                <div class="dropdown-divider"></div>
-                @*<a class="dropdown-item" asp-area="Identity" asp-page="/Account/RegisterStudent">Регистрация администратора</a>*@
-                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/RegisterStudent">Регистрация администратора</a>
+                <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Create">
+                    <i class="fas fa-user-plus mr-2" style="width: 20px;"></i>
+                    <span>Создать студента</span>
+                </a>
+                <a class="dropdown-item d-flex align-items-center" asp-area="Identity" asp-page="/Account/RegisterTeacher">
+                    <i class="fas fa-user-plus mr-2" style="width: 20px;"></i>
+                    <span>Создать преподавателя</span>
+                </a>
+                <a class="dropdown-item d-flex align-items-center" asp-area="Identity"  asp-page="/Account/RegisterStudent">
+                    <i class="fas fa-user-plus mr-2" style="width: 20px;"></i>
+                    <span>Создать администратора</span>
+                </a>
+                
             </div>
         </li>
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-exclamation-circle"></i> Справочник
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <span>Справочник</span>
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" asp-controller="Faculty" asp-action="Index"><i class="fas fa-archway"></i> Факультеты</a>
+                <a class="dropdown-item d-flex align-items-center" asp-controller="Faculty" asp-action="Index">
+                    <i class="fas fa-archway mr-2" style="width: 20px;"></i>
+                    <span>Факультеты</span>
+                </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" asp-controller="Department" asp-action="Index"><i class="fas fa-book-open"></i> Кафедры</a>
+                <a class="dropdown-item d-flex align-items-center" asp-controller="Department" asp-action="Index">
+                    <i class="fas fa-book-open mr-2" style="width: 20px;"></i>
+                    <span>Кафедры</span>
+                </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" asp-controller="Direction" asp-action="Index"><i class="fas fa-hard-hat"></i> Специализации</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" asp-controller="Group" asp-action="Index"><i class="fas fa-users"></i> Группа</a>
+                <a class="dropdown-item d-flex align-items-center" asp-controller="Direction" asp-action="Index">
+                    <i class="fas fa-hard-hat mr-2" style="width: 20px;"></i>
+                    <span>Специализации</span>
+                </a>
             </div>
         </li>
     }
-    <li class="nav-item">
+@*    <li class="nav-item">
         <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="far fa-newspaper"></i> Новости
         </a>
-    </li>
+    </li>*@
     @if (User.IsInRole(RoleConst.StudentRole))
     {
         <li class="nav-item">
@@ -50,11 +67,25 @@
     }
 
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-user-graduate"></i> Абитуриент
+        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user-graduate mr-2"></i>
+            <span>Студенты</span>
         </a>
         <div class="dropdown-menu">
-            <a class="dropdown-item" asp-controller="Student" asp-action="Index"> <i class="fas fa-search"></i> Поиск студента</a>
+            <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Index">
+                <i class="fas fa-search mr-2" style="width: 20px;"></i>
+                <span>Поиск студента</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item d-flex align-items-center" asp-controller="Group" asp-action="Index">
+                <i class="fas fa-users mr-2" style="width: 20px;"></i>
+                <span>Список групп</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Index">
+                <i class="fas fa-archive mr-2" style="width: 20px;"></i>
+                <span>Архив</span>
+            </a>
         </div>
     </li>
     @*<li class="nav-item dropdown">

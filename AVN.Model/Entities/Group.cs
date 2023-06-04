@@ -8,7 +8,7 @@ public class Group : BaseEntity<Group, int>
     public Course Course { get; set; }
     public DateTime DateCreate { get; set; }
     public FormOfEducation StudingForm { get; set; }
-    public AcademicDegree AcademicDegree { get; set; }
+    public AcademicDegree AcademicDegree { get; set; } 
     public TrainingPeriod TrainingPeriod { get; set; }
 
     public int? AcademicYearId { get; set; }

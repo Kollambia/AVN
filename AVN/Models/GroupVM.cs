@@ -17,6 +17,7 @@ namespace AVN.Models
         [DisplayName("Курс")]
         public Course? Course { get; set; }
 
+        [Required(ErrorMessage = "Выберите дату")]
         [DisplayName("Дата создания")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? DateCreate { get; set; }
