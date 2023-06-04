@@ -43,22 +43,22 @@
                         </div>
                         @*start-first-row*@
                         <div class="col-sm-3 form-group">
-                            <label>@Html.DisplayNameFor(x => x.SName)</label>
+                            <label class="font-weight-bold">@Html.DisplayNameFor(x => x.SName)</label>
                             @Html.EditorFor(x => x.SName, new { htmlAttributes = new { @class = "form-control", placeholder="Введите вашу фамилию." }})
                             @Html.ValidationMessageFor(x => x.SName, "", new { @class = "text-danger" })
                         </div>
                         <div class="col-sm-3 form-group">
-                            <label>@Html.DisplayNameFor(x => x.Name)</label>
+                            <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Name)</label>
                             @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @class = "form-control", placeholder="Введите ваше имя." }})
                             @Html.ValidationMessageFor(x => x.Name, "", new { @class = "text-danger" })
                         </div>
                         <div class="col-sm-3 form-group">
-                            <label>@Html.DisplayNameFor(x => x.PName)</label>
+                            <label class="font-weight-bold">@Html.DisplayNameFor(x => x.PName)</label>
                             @Html.EditorFor(x => x.PName, new { htmlAttributes = new { @class = "form-control", placeholder="Введите ваше отчество." }})
                             @Html.ValidationMessageFor(x => x.PName, "", new { @class = "text-danger" })
                         </div>
                         <div class="col-sm-2 form-group">
-                            <label>@Html.DisplayNameFor(x => x.DateOfBirth)</label>
+                            <label class="font-weight-bold">@Html.DisplayNameFor(x => x.DateOfBirth)</label>
                             @Html.TextBoxFor(x => x.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control",@type = "date"})
                             @Html.ValidationMessageFor(x => x.DateOfBirth, "", new { @class = "text-danger" })
                         </div>
@@ -67,7 +67,7 @@
 
                         @*start-second-row*@
                         <div class="col-sm-3 form-group">
-                            <label>@Html.DisplayNameFor(x => x.Gender):</label>
+                            <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Gender):</label>
                             <div class="radio-buttons">
                                 <div class="form-check form-check-inline">
                                     <label class="form-check-label" style="margin-right: 5px;">@Gender.Male.GetShortName()</label>
@@ -85,17 +85,17 @@
                             @Html.ValidationMessageFor(x => x.Gender, "", new { @class = "text-danger" })
                         </div>
                         <div class="col-sm-4 form-group">
-                            <label>@Html.DisplayNameFor(x => x.Address)</label>
+                            <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Address)</label>
                             @Html.EditorFor(x => x.Address, new { htmlAttributes = new { @class = "form-control", placeholder = "Введите ваш адрес." }})
                             @Html.ValidationMessageFor(x => x.Address, "", new { @class = "text-danger" })
                         </div>
                         <div class="col-sm-2 form-group">
-                            <label>@Html.DisplayNameFor(x => x.Citizenship)</label>
+                            <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Citizenship)</label>
                             @Html.DropDownListFor(x => x.Citizenship, Html.GetEnumSelectList(typeof(Citizenship)), "Не выбрано", new {@class = "form-control"})
                             @Html.ValidationMessageFor(x => x.Citizenship, "", new { @class = "text-danger" })
                         </div>
                         <div class="col-sm-2 form-group">
-                            <label>@Html.DisplayNameFor(x => x.PhoneNumber)</label>
+                            <label class="font-weight-bold">@Html.DisplayNameFor(x => x.PhoneNumber)</label>
                             @Html.TextBoxFor(x => x.PhoneNumber, new { @class = "form-control phone", placeholder = "0(999)99-99-99" })
                             @Html.ValidationMessageFor(x => x.PhoneNumber, "", new { @class = "text-danger" })
                         </div>
@@ -108,17 +108,17 @@
                             @Html.ValidationMessageFor(x => x.EducationalLine, "", new { @class = "text-danger" })
                         </div>
                         <div class="col-sm-2 form-group">
-                            <label>@Html.DisplayNameFor(x => x.RecruitmentYear)</label>
+                            <label class="font-weight-bold">@Html.DisplayNameFor(x => x.RecruitmentYear)</label>
                             @Html.EditorFor(x => x.RecruitmentYear, new { htmlAttributes = new { @class = "form-control" }})
                             @Html.ValidationMessageFor(x => x.RecruitmentYear, "", new { @class = "text-danger" })
                         </div>
                         <div class="col-sm-3 form-group">
-                            <label>@Html.DisplayNameFor(x => x.GradeBookNumber)</label>
+                            <label class="font-weight-bold">@Html.DisplayNameFor(x => x.GradeBookNumber)</label>
                             @Html.EditorFor(x => x.GradeBookNumber, new { htmlAttributes = new { @class = "form-control" }})
                             @Html.ValidationMessageFor(x => x.GradeBookNumber, "", new { @class = "text-danger" })
                         </div>
                         <div class="col-sm-3 form-group">
-                            <label>@Html.DisplayNameFor(x => x.Status)</label>
+                            <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Status)</label>
                             @Html.DropDownListFor(x => x.Status, Html.GetEnumSelectList(typeof(StudentStatus)), "Не выбрано", new {@class = "form-control"})
                             @Html.HiddenFor(x => x.Status, new { id = "StatusHidden" })
                             @Html.ValidationMessageFor(x => x.Status, "", new { @class = "text-danger" })
@@ -126,7 +126,7 @@
 
                         <div class="form-group">
                             <div class="col-sm-1">
-                                <label>@Html.DisplayNameFor(x => x.IsHasDebt)</label>
+                                <label class="font-weight-bold">@Html.DisplayNameFor(x => x.IsHasDebt)</label>
                                 @Html.CheckBoxFor(x => x.IsHasDebt, new { htmlAttributes = new { @class = "form-control" }})
                                 @Html.ValidationMessageFor(x => x.IsHasDebt, "", new { @class = "text-danger" })
                             </div>
@@ -134,16 +134,9 @@
 
                         @*end-third-row*@
 
-                        @*start-fourth-row*@
-
-                       
-
-                        
-                        @*end-fourth-row*@
-
                         @*start-last-row*@
                         <div class="col-sm-5 form-group">
-                            <label>@Html.DisplayNameFor(x => x.FacultyId)</label>
+                            <label class="font-weight-bold">@Html.DisplayNameFor(x => x.FacultyId)</label>
                             @Html.DropDownListFor(x => x.FacultyId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "facultiesDropdown" })
                             @Html.ValidationMessageFor(x => x.FacultyId, "", new { @class = "text-danger" })
                         </div>
@@ -153,19 +146,19 @@
                             <a asp-controller="StudentPayment" asp-action="Index" asp-route-id="@Model.Id" class="btn btn-primary btn-m btn-block" type="button">Контракт</a>
                         </div>
                         <div class="col-sm-5 form-group">
-                            <label>@Html.DisplayNameFor(x => x.DepartmentId)</label>
+                            <label class="font-weight-bold">@Html.DisplayNameFor(x => x.DepartmentId)</label>
                             @Html.DropDownListFor(x => x.DepartmentId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "departmentsDropdown" })
                             @Html.ValidationMessageFor(x => x.DepartmentId, "", new { @class = "text-danger" })
                         </div>
                         <div class="col-sm-4 form-group"></div>
                         <div class="col-sm-5 form-group">
-                            <label>@Html.DisplayNameFor(x => x.DirectionId)</label>
+                            <label class="font-weight-bold">@Html.DisplayNameFor(x => x.DirectionId)</label>
                             @Html.DropDownListFor(x => x.DirectionId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "directionsDropdown" })
                             @Html.ValidationMessageFor(x => x.DirectionId, "", new { @class = "text-danger" })
                         </div>
                         <div class="col-sm-4 form-group"></div>
                         <div class="col-sm-5 form-group">
-                            <label>@Html.DisplayNameFor(x => x.GroupId)</label>
+                            <label class="font-weight-bold">@Html.DisplayNameFor(x => x.GroupId)</label>
                             @Html.DropDownListFor(x => x.GroupId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "groupsDropdown" })
                             @Html.ValidationMessageFor(x => x.GroupId, "", new { @class = "text-danger" })
                         </div>
