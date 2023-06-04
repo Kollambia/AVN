@@ -136,5 +136,12 @@ namespace AVN.Web.Controllers
             var groupList = groups.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GroupName }).ToList();
             return groupList;
         }
+
+        public async Task<List<SelectListItem>> GetGroupsByFaculty(int facultyId)
+        {
+            var groups = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x => x.Direction.Department.FacultyId == facultyId);
+            var groupList = groups.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GroupName }).ToList();
+            return groupList;
+        }
     }
 }

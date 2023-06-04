@@ -4,23 +4,50 @@
 
 @using (Html.BeginForm())
 {
-    <div class="row justify-content-center">
-        <div class="form-group row">
-            <div class="col-lg-5">
-                <select id="facultyFromDropdown" name="facultyFromDropdown" class="form-control"></select>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group row mb-1">
+                <div class="col-lg-5">
+                    <select id="facultyFromDropdown" name="facultyFromDropdown" class="form-control"></select>
+                </div>
+                <div class="col-lg-2  text-center">
+                    <label class="font-weight-bold">- ФАКУЛЬТЕТЫ -</label>
+                </div>
+                <div class="col-lg-5">
+                    <select id="facultyToDropdown" name="facultyToDropdown" class="form-control"></select>
+                </div>
             </div>
-            <div class="col-lg-2">
-                <label>- ФАКУЛЬТЕТЫ -</label>
-            </div>
-            <div class="col-lg-5">
-                <select id="facultyToDropdown" name="facultyToDropdown" class="form-control"></select>
+            <br>
+            <div class="form-group row mb-1">
+
+                <div class="col-md-2 text-center">
+                    <label class="font-weight-bold">Учебный год</label>
+                    <select id="academYearFirstDropdown" name="academYearFirstDropdown" class="form-control"></select>
+                </div>
+                <div class="col-md-2 text-center">
+                    <label class="font-weight-bold">Из группы</label>
+                    <select id="groupFromDropdown" name="groupFromDropdown" class="form-control"></select>
+                </div>
+                <div class="col-md-4 text-center">
+                    <label class="font-weight-bold">Тип перемещения</label>
+                    <select id="movementTypeDropdown" name="movementTypeDropdown" class="form-control"></select>
+                </div>
+                <div class="col-md-2 text-center">
+                    <label class="font-weight-bold">В группу</label>
+                    <select id="groupToDropdown" name="groupToDropdown" class="form-control"></select>
+                </div>
+                <div class="col-md-2 text-center">
+                    <label class="font-weight-bold">Учебный год</label>
+                    <select id="academYearSecondDropdown" name="academYearSecondDropdown" class="form-control"></select>
+                </div>
             </div>
         </div>
-  
+
     </div>
 }
 <hr>
-<div class="data-table-area mg-b-15" id="dataContainer"></div>
+<div id="dataContainer"></div>
 
 
 @section Scripts {
@@ -30,209 +57,97 @@
                 url: '@Url.Action("GetFaculties", "Faculty")',
                 type: 'GET',
                 success: function (data) {
-                    // Add new options
-                    $('#facultyFromDropdown').append($('<option>').text('Не выбрано').val(''));
+      
                     $.each(data, function (i, faculty) {
                         $('#facultyFromDropdown').append($('<option></option>').val(faculty.value).text(faculty.text));
                     });
 
-                    $('#facultyToDropdown').append($('<option>').text('Не выбрано').val(''));
                     $.each(data, function (i, faculty) {
                         $('#facultyToDropdown').append($('<option></option>').val(faculty.value).text(faculty.text));
                     });
 
+                    FillGroupsDropdown()
                 },
                 error: function (xhr, status, error) {
-                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+            $.ajax({
+                url: '@Url.Action("GetAcademicYears", "AcademicYear")', //to do перенести в контроллер Option
+                type: 'GET',
+                success: function (data) {
+
+                    $.each(data, function (i, academYear) {
+                        $('#academYearFirstDropdown').append($('<option></option>').val(academYear.value).text(academYear.text));
+                    });
+                    FillGroupFromDropdown()
+
+                    $.each(data, function (i, academYear) {
+                        $('#academYearSecondDropdown').append($('<option></option>').val(academYear.value).text(academYear.text));
+                    });
+                    FillGroupToDropdown()
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+            $.ajax({
+                url: '@Url.Action("GetMovementTypes", "Option")',
+                type: 'GET',
+                success: function (data) {
+
+                    $.each(data, function (i, movementType) {
+                        $('#academYearFirstDropdown').append($('<option></option>').val(movementType.value).text(movementType.text));
+                    });
+                    // to do обработка выпадающего списка groupFromDropdown
+                },
+                error: function (xhr, status, error) {
                     console.error(xhr.responseText);
                 }
             });
         });
 
-        function FillDepartmentsDropdown() {
-            // Your code logic here
-            var facultyId = $('#facultiesDropdown').val();
+        function FillGroupFromDropdown() {
+            var facultyId = $('#facultyFromDropdown').val();
+
             $.ajax({
-                url: '@Url.Action("GetDepartmentsByFaculty", "Department")',
+                url: '@Url.Action("GetGroupsByFaculty", "Group")',
                 type: 'GET',
                 data: { facultyId: facultyId },
                 success: function (data) {
-                    // Add new options
-                    $.each(data, function (i, department) {
-                        $('#departmentsDropdown').append($('<option></option>').val(department.value).text(department.text));
-                    });
 
-                    FillDirectionsDropdown();
-                },
-                error: function (xhr, status, error) {
-                    // Handle error if any
-                    console.error(xhr.responseText);
-                }
-            });
-        }
-
-        function FillDirectionsDropdown() {
-            // Your code logic here
-            var departmentId = $('#departmentsDropdown').val();
-            $.ajax({
-                url: '@Url.Action("GetDirectionsByDepartment", "Direction")',
-                type: 'GET',
-                data: { departmentId: departmentId },
-                success: function (data) {
-                    // Add new options
-                    $.each(data, function (i, direction) {
-                        $('#directionsDropdown').append($('<option></option>').val(direction.value).text(direction.text));
-                    });
-
-
-                    FillGroupsDropdown();
-                },
-                error: function (xhr, status, error) {
-                    // Handle error if any
-                    console.error(xhr.responseText);
-                }
-            });
-        }
-
-        function FillGroupsDropdown() {
-            // Your code logic here
-            var directionId = $('#directionsDropdown').val();
-            $.ajax({
-                url: '@Url.Action("GetGroupsByDirection", "Group")',
-                type: 'GET',
-                data: { directionId: directionId },
-                success: function (data) {
-                    // Add new options
                     $.each(data, function (i, group) {
-                        $('#groupsDropdown').append($('<option></option>').val(group.value).text(group.text));
+                        $('#groupFromDropdown').append($('<option></option>').val(group.value).text(group.text));
                     });
         
                 },
                 error: function (xhr, status, error) {
-                    // Handle error if any
                     console.error(xhr.responseText);
                 }
             });
         }
 
-        $(document).ready(function () {
-            $('#facultiesDropdown').change(function () {
-                var facultyId = $(this).val();
-                if (!facultyId) {
-                    // Clear departments dropdown
-                    $('#departmentsDropdown').empty();
-                    $('#directionsDropdown').empty();
-                    $('#groupsDropdown').empty();
+        function FillGroupToDropdown() {
+            var facultyId = $('#facultyToDropdown').val();
 
-                    // Add "select item" option
-                    $('#departmentsDropdown').append($('<option>').text('Не выбрано').val(''));
-                    $('#directionsDropdown').append($('<option>').text('Не выбрано').val(''));
-                    $('#groupsDropdown').append($('<option>').text('Не выбрано').val(''));
-                    return; // Exit the function
+            $.ajax({
+                url: '@Url.Action("GetGroupsByFaculty", "Group")',
+                type: 'GET',
+                data: { facultyId: facultyId },
+                success: function (data) {
+
+                    $.each(data, function (i, group) {
+                        $('#groupToDropdown').append($('<option></option>').val(group.value).text(group.text));
+                    });
+
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
                 }
-
-                $.ajax({
-                    type: 'GET',
-                    url: '@Url.Action("GetDepartmentsByFaculty", "Department")',
-                    data: { facultyId: facultyId },
-                    success: function (response) {
-                        // Clear previous options
-                        $('#departmentsDropdown').empty();
-                        $('#directionsDropdown').empty();
-                        $('#groupsDropdown').empty();
-                        // Add "select item" option
-                        $('#departmentsDropdown').append($('<option>').text('Не выбрано').val(''));
-                        $('#directionsDropdown').append($('<option>').text('Не выбрано').val(''));
-                        $('#groupsDropdown').append($('<option>').text('Не выбрано').val(''));
-                        // Add new options
-                        $.each(response, function (i, department) {
-                            $('#departmentsDropdown').append($('<option></option>').val(department.value).text(department.text));
-                        });
-
-                    },
-                    error: function (xhr, status, error) {
-                        // Handle error if any
-                        console.error(xhr.responseText);
-                    }
-                })
-                GetList()
             });
-        });
+        }
 
-        $(document).ready(function () {
-            $('#departmentsDropdown').change(function () {
-                var departmentId = $(this).val();
-                if (!departmentId) {
-                    // Clear departments dropdown
-                    $('#directionsDropdown').empty();
-                    $('#groupsDropdown').empty();
-
-                    // Add "select item" option
-                    $('#directionsDropdown').append($('<option>').text('Не выбрано').val(''));
-                    $('#groupsDropdown').append($('<option>').text('Не выбрано').val(''));
-                    return; // Exit the function
-                }
-
-                $.ajax({
-                    type: 'GET',
-                    url: '@Url.Action("GetDirectionsByDepartment", "Direction")',
-                    data: { departmentId: departmentId },
-                    success: function (response) {
-                        // Clear previous options
-                        $('#directionsDropdown').empty();
-                        $('#groupsDropdown').empty();
-                        // Add "select item" option
-                        $('#directionsDropdown').append($('<option>').text('Не выбрано').val(''));
-                        $('#groupsDropdown').append($('<option>').text('Не выбрано').val(''));
-                        // Add new options
-                        $.each(response, function (i, direction) {
-                            $('#directionsDropdown').append($('<option></option>').val(direction.value).text(direction.text));
-                        });
-                    },
-                    error: function (xhr, status, error) {
-                        // Handle error if any
-                        console.error(xhr.responseText);
-                    }
-                });
-                GetList()
-            });
-        });
-
-        $(document).ready(function () {
-            $('#directionsDropdown').change(function () {
-                var directionId = $(this).val();
-
-                $.ajax({
-                    type: 'GET',
-                    url: '@Url.Action("GetGroupsByDirection", "Group")',
-                    data: { directionId: directionId },
-                    success: function (response) {
-                        // Clear previous options
-                        $('#groupsDropdown').empty();
-
-                        // Add "select item" option
-                        $('#groupsDropdown').append($('<option>').text('Не выбрано').val(''));
-
-                        // Add new options
-                        $.each(response, function (i, group) {
-                            $('#groupsDropdown').append($('<option></option>').val(group.value).text(group.text));
-                        });
-                    },
-                    error: function (xhr, status, error) {
-                        // Handle error if any
-                        console.error(xhr.responseText);
-                    }
-                });
-                GetList()
-            });
-        });
-
-        $(document).ready(function () {
-            $('#groupsDropdown').change(function () {
-                GetList()
-            });
-        });
-
+ 
     </script>
 
     <script type="text/javascript">
