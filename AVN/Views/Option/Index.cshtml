@@ -1,0 +1,144 @@
+﻿@{
+    ViewBag.Title = "Параметры программы";
+}
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="param-tab" data-toggle="tab" href="#param" role="tab" aria-controls="param"
+           aria-selected="true">Параметры</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="academicYear-tab" data-toggle="tab" href="#academicYear" role="tab" aria-controls="academicYear"
+           aria-selected="false">Учебный год</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="movementType-tab" data-toggle="tab" href="#movementType" role="tab" aria-controls="movementType"
+           aria-selected="false">Типы перемещений</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="orderType-tab" data-toggle="tab" href="#orderType" role="tab" aria-controls="orderType"
+           aria-selected="false">Типы приказов</a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-panel fade show active" id="param" role="tabpanel" aria-labelledby="param-tab">
+        <div id="paramContainer"></div>
+    </div>
+    <div class="tab-panel fade" id="academicYear" role="tabpanel" aria-labelledby="academicYear-tab">
+        <div id="academicYearContainer"></div>
+    </div>
+
+    <div class="tab-panel fade" id="movementType" role="tabpanel" aria-labelledby="movementType-tab">
+        <div id="movementTypeContainer"></div>
+    </div>
+    <div class="tab-panel fade" id="orderType" role="tabpanel" aria-labelledby="orderType-tab">
+        <div id="orderTypeContainer"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Retrieve the last selected tab from local storage
+            var lastTab = localStorage.getItem('lastTab');
+
+            // Check if the lastTab variable has a value
+            if (lastTab) {
+                // Activate the last selected tab
+                $('a[href="' + lastTab + '"]').tab('show');
+            } else {
+                // Open the #param tab by default
+                $('a[href="#param"]').tab('show');
+            }
+
+            // Handle tab change event
+            $('.nav-link').on('shown.bs.tab', function (e) {
+                var target = $(e.target).attr("href"); // Get the target tab ID
+
+                // Store the last selected tab in local storage
+                localStorage.setItem('lastTab', target);
+
+                // Execute action based on the target tab
+                switch (target) {
+                    case "#param":
+                        $.ajax({
+                            type: 'GET',
+                            url: '@Url.Action("ParamList", "Option")',
+                            success: function (response) {
+                                $('#paramContainer').html(response);
+                                $('#table').DataTable()
+                                console.log(result)
+                            },
+                            error: function (xhr, status, error) {
+                                // Handle error if any
+                                console.error(xhr.responseText);
+                            }
+                        })
+                        break;
+                    case "#academicYear":
+                        $.ajax({
+                            type: 'GET',
+                            url: '@Url.Action("AcademicYearList", "Option")',
+                            success: function (response) {
+                                $('#academicYearContainer').html(response);
+                                $('#table').DataTable()
+                                console.log(result)
+                            },
+                            error: function (xhr, status, error) {
+                                // Handle error if any
+                                console.error(xhr.responseText);
+                            }
+                        })
+                        break;
+                    case "#movementType":
+                        $.ajax({
+                            type: 'GET',
+                            url: '@Url.Action("GroupList", "Group")',
+                            contentType: 'application/json',
+                            data: {
+                                'facultyId': facultyId,
+                                'departmentId': departmentId,
+                                'academYearId': academYearId
+                            },
+                            success: function (response) {
+                                $('#dataContainer').html(response);
+                                $('#table').DataTable()
+                                console.log(result)
+                            },
+                            error: function (xhr, status, error) {
+                                // Handle error if any
+                                console.error(xhr.responseText);
+                            }
+                        })
+                        break;
+                    case "#orderType":
+                        $.ajax({
+                            type: 'GET',
+                            url: '@Url.Action("GroupList", "Group")',
+                            contentType: 'application/json',
+                            data: {
+                                'facultyId': facultyId,
+                                'departmentId': departmentId,
+                                'academYearId': academYearId
+                            },
+                            success: function (response) {
+                                $('#dataContainer').html(response);
+                                $('#table').DataTable()
+                                console.log(result)
+                            },
+                            error: function (xhr, status, error) {
+                                // Handle error if any
+                                console.error(xhr.responseText);
+                            }
+                        })
+                        break;
+                    default:
+                        // Default action
+                        break;
+                }
+            });
+        });
+
+    </script>
+
+}

@@ -67,7 +67,7 @@
                 }
             });
             $.ajax({
-                url: '@Url.Action("GetAcademicYears", "AcademicYear")',
+                url: '@Url.Action("GetAcademicYears", "Option")',
                 type: 'GET',
                 success: function (data) {
                     $.each(data, function (i, academYear) {
