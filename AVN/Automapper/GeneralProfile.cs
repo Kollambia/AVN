@@ -17,6 +17,8 @@ namespace AVN.Automapper
             CreateMap<StudentPayment, StudentPaymentVM>().ReverseMap();
             CreateMap<StudentPaymentDetail, StudentPaymentDetailVM>().ReverseMap();
             CreateMap<AcademicYear, AcademicYearVM>().ReverseMap();
+            CreateMap<MovementType, MovementTypeVM>().ReverseMap();
+            CreateMap<OrderType, OrderTypeVM>().ReverseMap();
         }
     }
 }

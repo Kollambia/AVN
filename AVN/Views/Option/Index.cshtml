@@ -21,17 +21,17 @@
     </li>
 </ul>
 <div class="tab-content" id="myTabContent">
-    <div class="tab-panel fade show active" id="param" role="tabpanel" aria-labelledby="param-tab">
+    <div class="tab-pane fade show active" id="param" role="tabpanel" aria-labelledby="param-tab">
         <div id="paramContainer"></div>
     </div>
-    <div class="tab-panel fade" id="academicYear" role="tabpanel" aria-labelledby="academicYear-tab">
+    <div class="tab-pane fade" id="academicYear" role="tabpanel" aria-labelledby="academicYear-tab">
         <div id="academicYearContainer"></div>
     </div>
 
-    <div class="tab-panel fade" id="movementType" role="tabpanel" aria-labelledby="movementType-tab">
+    <div class="tab-pane fade" id="movementType" role="tabpanel" aria-labelledby="movementType-tab">
         <div id="movementTypeContainer"></div>
     </div>
-    <div class="tab-panel fade" id="orderType" role="tabpanel" aria-labelledby="orderType-tab">
+    <div class="tab-pane fade" id="orderType" role="tabpanel" aria-labelledby="orderType-tab">
         <div id="orderTypeContainer"></div>
     </div>
 </div>
@@ -39,26 +39,18 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Retrieve the last selected tab from local storage
             var lastTab = localStorage.getItem('lastTab');
 
-            // Check if the lastTab variable has a value
             if (lastTab) {
-                // Activate the last selected tab
                 $('a[href="' + lastTab + '"]').tab('show');
             } else {
-                // Open the #param tab by default
                 $('a[href="#param"]').tab('show');
             }
 
-            // Handle tab change event
             $('.nav-link').on('shown.bs.tab', function (e) {
-                var target = $(e.target).attr("href"); // Get the target tab ID
-
-                // Store the last selected tab in local storage
+                var target = $(e.target).attr("href"); 
                 localStorage.setItem('lastTab', target);
 
-                // Execute action based on the target tab
                 switch (target) {
                     case "#param":
                         $.ajax({
@@ -66,11 +58,10 @@
                             url: '@Url.Action("ParamList", "Option")',
                             success: function (response) {
                                 $('#paramContainer').html(response);
-                                $('#table').DataTable()
+                                $('#paramtable').DataTable()
                                 console.log(result)
                             },
                             error: function (xhr, status, error) {
-                                // Handle error if any
                                 console.error(xhr.responseText);
                             }
                         })
@@ -81,11 +72,10 @@
                             url: '@Url.Action("AcademicYearList", "Option")',
                             success: function (response) {
                                 $('#academicYearContainer').html(response);
-                                $('#table').DataTable()
+                                $('#academicYeartable').DataTable()
                                 console.log(result)
                             },
                             error: function (xhr, status, error) {
-                                // Handle error if any
                                 console.error(xhr.responseText);
                             }
                         })
@@ -93,20 +83,13 @@
                     case "#movementType":
                         $.ajax({
                             type: 'GET',
-                            url: '@Url.Action("GroupList", "Group")',
-                            contentType: 'application/json',
-                            data: {
-                                'facultyId': facultyId,
-                                'departmentId': departmentId,
-                                'academYearId': academYearId
-                            },
+                            url: '@Url.Action("MovementTypeList", "Option")',
                             success: function (response) {
-                                $('#dataContainer').html(response);
-                                $('#table').DataTable()
+                                $('#movementTypeContainer').html(response);
+                                $('#movementTypetable').DataTable()
                                 console.log(result)
                             },
                             error: function (xhr, status, error) {
-                                // Handle error if any
                                 console.error(xhr.responseText);
                             }
                         })
@@ -114,20 +97,13 @@
                     case "#orderType":
                         $.ajax({
                             type: 'GET',
-                            url: '@Url.Action("GroupList", "Group")',
-                            contentType: 'application/json',
-                            data: {
-                                'facultyId': facultyId,
-                                'departmentId': departmentId,
-                                'academYearId': academYearId
-                            },
+                            url: '@Url.Action("OrderTypeList", "Option")',
                             success: function (response) {
-                                $('#dataContainer').html(response);
+                                $('#orderTypeContainer').html(response);
                                 $('#table').DataTable()
                                 console.log(result)
                             },
                             error: function (xhr, status, error) {
-                                // Handle error if any
                                 console.error(xhr.responseText);
                             }
                         })

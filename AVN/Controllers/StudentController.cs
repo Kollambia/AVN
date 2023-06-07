@@ -35,7 +35,32 @@ namespace AVN.Web.Controllers
             return View();
         }
 
-        public async Task<ActionResult> StudentList(int facultyId = 0, int departmentId = 0, int directionId = 0, int groupId = 0)
+        [HttpGet]
+        public IActionResult Archived()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Graduated()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Expelled()
+        {
+            return View();
+        }
+        
+        [HttpGet]
+        public IActionResult AcademicLeaved()
+        {
+            return View();
+        }
+
+
+        public async Task<ActionResult> StudentList(int facultyId = 0, int departmentId = 0, int directionId = 0, int groupId = 0, int groupType = 0)
         {
             var students = await unitOfWork.StudentRepository.GetAllAsync();
             if (groupId > 0)
@@ -46,37 +71,11 @@ namespace AVN.Web.Controllers
                 students = students.Where(x => x.Group.Direction.DepartmentId == departmentId);
             else if (facultyId > 0)
                 students = students.Where(x => x.Group.Direction.Department.FacultyId == facultyId);
-
-            var mappedStudents = mapper.Map<Student, StudentVM>(students).ToList();
+            var mappedStudents = mapper.Map<Student, StudentVM>(students)
+                .Where(x => (int)x.Group.GroupType == groupType).ToList();
             return PartialView(mappedStudents);
         }
 
-
-        //[HttpPost]
-        //public async Task<IActionResult> Index(StudentsFilterVM filter)
-        //{
-        //    var students = await unitOfWork.StudentRepository.GetAllAsync();
-        //    if (filter.GroupId.HasValue)
-        //        students = students.Where(x => x.GroupId == filter.GroupId);
-        //    else if (filter.DirectionId.HasValue)
-        //        students = students.Where(x => x.Group.DirectionId == filter.DirectionId);
-        //    else if (filter.DepartmentId.HasValue)
-        //        students = students.Where(x => x.Group.Direction.DepartmentId == filter.DepartmentId);
-        //    else if (filter.FacultyId.HasValue)
-        //        students = students.Where(x => x.Group.Direction.Department.FacultyId == filter.FacultyId);
-
-
-        //    StudentsFilterVM filteredStudents = new()
-        //    {
-        //        //FacultyId= filter?.FacultyId,
-        //        //DepartmentId= filter?.DepartmentId,
-        //        //DirectionId= filter?.DirectionId,
-        //        //GroupId= filter?.GroupId,
-        //        //studentVMs = mapper.Map<Student, StudentVM>(students).ToList()
-        //    };
-
-        //    return View(filteredStudents);
-        //}
 
         // GET: Student/Details/5
         public async Task<IActionResult> Details(string id)

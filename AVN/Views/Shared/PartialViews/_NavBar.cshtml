@@ -1,5 +1,6 @@
 ﻿@using AVN.Utility;
 
+
 <ul class="navbar-nav flex-grow-1">
     @if (User.IsInRole(RoleConst.AdminRole))
     {
@@ -94,10 +95,23 @@
                 <span>Список групп</span>
             </a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Index">
+            <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Archived">
                 <i class="fas fa-archive mr-2" style="width: 20px;"></i>
                 <span>Архив</span>
             </a>
+            <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Graduated">
+                <i class="fas fa-graduation-cap mr-2" style="width: 20px;"></i>
+                <span>Окончившие</span>
+            </a>
+            <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="AcademicLeaved">
+                <i class="fas fa-plane mr-2" style="width: 20px;"></i>
+                <span>Академический отпуск</span>
+            </a>
+            <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Expelled">
+                <i class="fas fa-skull-crossbones mr-2" style="width: 20px;"></i>
+                <span>Отчисленные</span>
+            </a>
+            
         </div>
     </li>
     @*<li class="nav-item dropdown">

@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Студенты";
+    ViewData["Title"] = "Отчисленные";
 }
 
 @using (Html.BeginForm())
@@ -204,7 +204,7 @@
                     url: '@Url.Action("GetDirectionsByDepartment", "Direction")',
                     data: { departmentId: departmentId },
                     success: function (response) {
-  
+
                         $('#directionDropdown').empty();
                         $('#groupDropdown').empty();
 
@@ -270,7 +270,7 @@
             var departmentId = $("#departmentDropdown").val();
             var directionId = $("#directionDropdown").val();
             var groupId = $("#groupDropdown").val();
-            var groupType = @Html.Raw(Json.Serialize(GroupType.Students));
+            var groupType = @Html.Raw(Json.Serialize(GroupType.Graduated));
 
             $.ajax({
                 type: 'GET',

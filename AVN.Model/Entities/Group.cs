@@ -10,6 +10,7 @@ public class Group : BaseEntity<Group, int>
     public FormOfEducation StudingForm { get; set; }
     public AcademicDegree AcademicDegree { get; set; } 
     public TrainingPeriod TrainingPeriod { get; set; }
+    public GroupType GroupType { get; set; }
 
     public int? AcademicYearId { get; set; }
     public virtual AcademicYear? AcademicYear { get; set; }

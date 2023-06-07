@@ -34,6 +34,10 @@ namespace AVN.Models
         [DisplayName("Срок")]
         public TrainingPeriod? TrainingPeriod { get; set; }
 
+        [Required(ErrorMessage = "Выберите тип группы")]
+        [DisplayName("Тип группы")]
+        public GroupType? GroupType { get; set; }
+
         [Required(ErrorMessage = "Выберите уч. год")]
         [DisplayName("Уч. год")]
         public int? AcademicYearId { get; set; }

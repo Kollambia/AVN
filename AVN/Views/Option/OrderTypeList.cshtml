@@ -1,12 +1,12 @@
-﻿@model IEnumerable<AcademicYearVM>
+﻿@model IEnumerable<OrderTypeVM>
 
 @{
-    ViewData["Title"] = "Учебный год";
+    ViewData["Title"] = "Тип приказа";
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
 
-<div id="toolbar2">
-    <a asp-controller="Option" asp-action="CreateAcademicYear">
+<div id="toolbar4">
+    <a asp-controller="Option" asp-action="CreateOrderType">
         <input type="button" class="btn btn-success" value="Добавить" />
     </a>
 </div>
@@ -19,7 +19,7 @@
                     <div class="sparkline13-graph">
                         <div class="datatable-dashv1-list custom-datatable-overright">
                             <table class="table-striped"
-                                   id="academicYeartable"
+                                   id="movementTypetable"
                                    data-toggle="table"
                                    data-pagination="true"
                                    data-search="true"
@@ -33,7 +33,7 @@
                                    data-click-to-select="true"
                                    data-show-search-clear-button="true"
                                    data-filter-control="true"
-                                   data-toolbar="#toolbar2"
+                                   data-toolbar="#toolbar4"
                                    data-show-refresh="true"
                                    data-show-fullscreen="true"
                                    data-show-columns-toggle-all="true"
@@ -48,11 +48,8 @@
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="Name">
                                             @Html.DisplayNameFor(model => model.Name)
                                         </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="YearFrom">
-                                            @Html.DisplayNameFor(model => model.YearFrom)
-                                        </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="YearTo">
-                                            @Html.DisplayNameFor(model => model.YearTo)
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="MovementTypeId">
+                                            @Html.DisplayNameFor(model => model.MovementTypeId)
                                         </th>
                                         <th>
                                             Действие
@@ -67,14 +64,11 @@
                                                 @Html.DisplayFor(modelItem => item.Name)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.YearFrom)
+                                                @Html.DisplayFor(modelItem => item.MovementType.Name)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.YearTo)
-                                            </td>
-                                            <td>
-                                                <span> @Html.ActionLink("", "EditAcademicYear", "Option", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
-                                                <span> @Html.ActionLink("", "DeleteAcademicYear", "Option", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
+                                                <span> @Html.ActionLink("", "EditOrderType", "Option", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
+                                                <span> @Html.ActionLink("", "DeleteOrderType", "Option", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
                                             </td>
                                         </tr>
                                     }
