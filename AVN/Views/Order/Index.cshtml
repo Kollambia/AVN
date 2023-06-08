@@ -43,11 +43,19 @@
                 </div>
             </div>
         </div>
-
     </div>
 }
 <hr>
-<div id="dataContainer"></div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div id="LeftContainer"></div>
+    </div>
+    <div class="col-md-6">
+        <div id="RightContainer"></div>
+    </div>
+</div>
+
 
 
 @section Scripts {
@@ -112,19 +120,21 @@
             });
             $('#facultyFromDropdown').change(function () {
                 FillGroupFromDropdown();
-                FillGroupToDropdown();
             });
             $('#facultyToDropdown').change(function () {
-                FillGroupFromDropdown();
                 FillGroupToDropdown();
             });
             $('#academYearFirstDropdown').change(function () {
                 FillGroupFromDropdown();
-                FillGroupToDropdown();
             });
             $('#academYearSecondDropdown').change(function () {
-                FillGroupFromDropdown();
                 FillGroupToDropdown();
+            });
+            $('#groupFromDropdown').change(function () {
+                GetLeftStudentList();
+            });
+            $('#groupFromDropdown').change(function () {
+                GetRightStudentList();
             });
         });
 
@@ -138,7 +148,7 @@
 
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action("GetGroupsToOrder", "Group")',
+                url: '@Url.Action("GetGroupsToExport", "Group")',
                 contentType: 'application/json',
                 data: {
                     'facultyId': facultyId,
@@ -147,9 +157,14 @@
                 },
                 success: function (data) {
                     $('#groupFromDropdown').empty();
-                    $.each(data, function (i, group) {
-                        $('#groupFromDropdown').append($('<option></option>').val(group.value).text(group.text));
-                    });
+                    if (data.length === 0) {
+                        $('#groupFromDropdown').append($('<option>').text('Нет групп').val('0'));
+                    } else {
+                        $.each(data, function (i, group) {
+                            $('#groupFromDropdown').append($('<option></option>').val(group.value).text(group.text));
+                        });
+                    }
+                    GetLeftStudentList();
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -165,7 +180,7 @@
 
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action("GetGroupsToOrder", "Group")',
+                url: '@Url.Action("GetGroupsToImport", "Group")',
                 contentType: 'application/json',
                 data: {
                     'facultyId': facultyId,
@@ -174,9 +189,14 @@
                 },
                 success: function (data) {
                     $('#groupToDropdown').empty();
-                    $.each(data, function (i, group) {
-                        $('#groupToDropdown').append($('<option></option>').val(group.value).text(group.text));
-                    });
+                    if (data.length === 0) {
+                        $('#groupToDropdown').append($('<option>').text('Нет групп').val('0'));
+                    } else {
+                        $.each(data, function (i, group) {
+                            $('#groupToDropdown').append($('<option></option>').val(group.value).text(group.text));
+                        });
+                    }
+                    GetRightStudentList();
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -189,33 +209,46 @@
 
     <script type="text/javascript">
 
-        function GetList() {
-            var facultyId = $("#facultiesDropdown").val() || 0;
-            var departmentId = $("#departmentsDropdown").val();
-            var directionId = $("#directionsDropdown").val();
-            var groupId = $("#groupsDropdown").val();
+        function GetLeftStudentList() {
+            var groupId = $("#groupFromDropdown").val();
 
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action("StudentList", "Student")',
+                url: '@Url.Action("ExportStudentList", "Student")',
                 contentType: 'application/json',
                 data: {
-                    'facultyId': facultyId,
-                    'departmentId': departmentId,
-                    'directionId': directionId,
                     'groupId': groupId
                 },
                 success: function (response) {
-                    $('#dataContainer').html(response);
-                    $('#studentsTbl').DataTable()
+                    $('#LeftContainer').html(response);
+                    $('#exportTable').DataTable()
                     console.log(result)
                 },
                 error: function (xhr, status, error) {
-                    // Handle error if any
                     console.error(xhr.responseText);
                 }
             })
+        }
 
+        function GetRightStudentList() {
+            var groupId = $("#groupToDropdown").val();
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("ImportStudentList", "Student")',
+                contentType: 'application/json',
+                data: {
+                    'groupId': groupId
+                },
+                success: function (response) {
+                    $('#RightContainer').html(response);
+                    $('#importTable').DataTable()
+                    console.log(result)
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            })
         }
     </script>
 }

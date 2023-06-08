@@ -1,0 +1,30 @@
+﻿@model IEnumerable<StudentVM>
+
+<style>
+    .table-hover tr:hover {
+        background-color: #f5f5f5;
+    }
+</style>
+
+<table class="table table-bordered table-hover" id="exportTable">
+    <thead class="thead-light">
+        <tr>
+            <th>ФИО Студента</th>
+            <th>Зачетка</th>
+            <th>Группа</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var group in Model.GroupBy(item => item.Group))
+        {
+            @foreach (var item in group)
+            {
+                <tr data-id="@item.Id">
+                    <td>@item.SName @item.Name @item.PName</td>
+                    <td>@item.GradeBookNumber</td>
+                    <td>@item.Group.GroupName</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
