@@ -48,6 +48,9 @@
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="Name">
                                             @Html.DisplayNameFor(model => model.Name)
                                         </th>
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="MoveType">
+                                            @Html.DisplayNameFor(model => model.MoveType)
+                                        </th>
                                         <th>
                                             Действие
                                         </th>
@@ -59,6 +62,9 @@
                                         <tr>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.MoveType)
                                             </td>
                                             <td>
                                                 <span> @Html.ActionLink("", "EditMovementType", "Option", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AVN.Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace AVN.Model.Entities
     public class MovementType : BaseEntity<MovementType, int>
     {
         public string Name { get; set; }
+        public MoveType MoveType { get; set; }
 
         public virtual ICollection<OrderType>? OrderTypes { get; set; }
         public virtual ICollection<StudentMovement>? StudentMovements { get; set; }

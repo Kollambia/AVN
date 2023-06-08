@@ -57,7 +57,7 @@
                 url: '@Url.Action("GetFaculties", "Faculty")',
                 type: 'GET',
                 success: function (data) {
-      
+
                     $.each(data, function (i, faculty) {
                         $('#facultyFromDropdown').append($('<option></option>').val(faculty.value).text(faculty.text));
                     });
@@ -65,8 +65,6 @@
                     $.each(data, function (i, faculty) {
                         $('#facultyToDropdown').append($('<option></option>').val(faculty.value).text(faculty.text));
                     });
-
-                    FillGroupsDropdown()
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -80,12 +78,10 @@
                     $.each(data, function (i, academYear) {
                         $('#academYearFirstDropdown').append($('<option></option>').val(academYear.value).text(academYear.text));
                     });
-                    FillGroupFromDropdown()
 
                     $.each(data, function (i, academYear) {
                         $('#academYearSecondDropdown').append($('<option></option>').val(academYear.value).text(academYear.text));
                     });
-                    FillGroupToDropdown()
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -97,9 +93,11 @@
                 success: function (data) {
 
                     $.each(data, function (i, movementType) {
-                        $('#academYearFirstDropdown').append($('<option></option>').val(movementType.value).text(movementType.text));
+                        $('#movementTypeDropdown').append($('<option></option>').val(movementType.value).text(movementType.text));
                     });
                     // to do обработка выпадающего списка groupFromDropdown
+                    FillGroupFromDropdown();
+                    FillGroupToDropdown();
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -107,47 +105,86 @@
             });
         });
 
+        $(document).ready(function () {
+            $('#movementTypeDropdown').change(function () {
+                FillGroupFromDropdown();
+                FillGroupToDropdown();
+            });
+            $('#facultyFromDropdown').change(function () {
+                FillGroupFromDropdown();
+                FillGroupToDropdown();
+            });
+            $('#facultyToDropdown').change(function () {
+                FillGroupFromDropdown();
+                FillGroupToDropdown();
+            });
+            $('#academYearFirstDropdown').change(function () {
+                FillGroupFromDropdown();
+                FillGroupToDropdown();
+            });
+            $('#academYearSecondDropdown').change(function () {
+                FillGroupFromDropdown();
+                FillGroupToDropdown();
+            });
+        });
+
+
+
+
         function FillGroupFromDropdown() {
             var facultyId = $('#facultyFromDropdown').val();
+            var movementTypeId = $('#movementTypeDropdown').val();
+            var academicYearId = $('#academYearFirstDropdown').val();
 
             $.ajax({
-                url: '@Url.Action("GetGroupsByFaculty", "Group")',
                 type: 'GET',
-                data: { facultyId: facultyId },
+                url: '@Url.Action("GetGroupsToOrder", "Group")',
+                contentType: 'application/json',
+                data: {
+                    'facultyId': facultyId,
+                    'movementTypeId': movementTypeId,
+                    'academicYearId': academicYearId
+                },
                 success: function (data) {
-
+                    $('#groupFromDropdown').empty();
                     $.each(data, function (i, group) {
                         $('#groupFromDropdown').append($('<option></option>').val(group.value).text(group.text));
                     });
-        
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
                 }
-            });
+            })
+
         }
 
         function FillGroupToDropdown() {
             var facultyId = $('#facultyToDropdown').val();
+            var movementTypeId = $('#movementTypeDropdown').val();
+            var academicYearId = $('#academYearSecondDropdown').val();
 
             $.ajax({
-                url: '@Url.Action("GetGroupsByFaculty", "Group")',
                 type: 'GET',
-                data: { facultyId: facultyId },
+                url: '@Url.Action("GetGroupsToOrder", "Group")',
+                contentType: 'application/json',
+                data: {
+                    'facultyId': facultyId,
+                    'movementTypeId': movementTypeId,
+                    'academicYearId': academicYearId
+                },
                 success: function (data) {
-
+                    $('#groupToDropdown').empty();
                     $.each(data, function (i, group) {
                         $('#groupToDropdown').append($('<option></option>').val(group.value).text(group.text));
                     });
-
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
                 }
-            });
+            })
         }
 
- 
+
     </script>
 
     <script type="text/javascript">
