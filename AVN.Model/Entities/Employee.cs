@@ -21,6 +21,7 @@ namespace AVN.Model.Entities
         [MaxLength(50)]
         public string PName { get; set; }
 
+
         [Required]
         [DisplayName("Дата рождения")]
         [MaxLength(100)]
@@ -72,7 +73,7 @@ namespace AVN.Model.Entities
 
         public string GetFullName()
         {
-            return SName + Name + PName;
+            return SName + " " + Name + " " + PName;
         }
     }
 }

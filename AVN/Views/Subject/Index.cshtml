@@ -47,19 +47,19 @@
 
                                 <thead>
                                     <tr>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="GroupName">
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="Title">
                                             @Html.DisplayNameFor(x => x.Title)
                                         </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="Course">
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="Description">
                                             @Html.DisplayNameFor(x => x.Description)
                                         </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="DateCreate">
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="CreditHours">
                                             @Html.DisplayNameFor(x => x.CreditHours)
                                         </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="DirectionId">
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="Course">
                                             @Html.DisplayNameFor(x => x.Course)
                                         </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="DepartmentId">
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="EmployeeId">
                                             @Html.DisplayNameFor(x => x.EmployeeId)
                                         </th>
                                         <th>
@@ -81,7 +81,10 @@
                                                 @Html.DisplayFor(modelItem => item.CreditHours)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Employee.GetFullName())
+                                                @Html.DisplayFor(modelItem => item.Course)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Employee.Name)
                                             </td>
                                             <td>
                                                 <span> @Html.ActionLink("", "Edit", "Subject", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;

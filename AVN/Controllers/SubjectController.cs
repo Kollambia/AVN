@@ -48,11 +48,12 @@ namespace AVN.Web.Controllers
         // POST: Subject/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([FromForm] Subject subject)
+        public async Task<IActionResult> Create(SubjectVM subject)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await unitOfWork.SubjectRepository.CreateAsync(subject);
+                var mappedSubjects = mapper.Map<SubjectVM, Subject>(subject);
+                await unitOfWork.SubjectRepository.CreateAsync(mappedSubjects);
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
