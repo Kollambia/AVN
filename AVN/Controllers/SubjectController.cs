@@ -117,12 +117,5 @@ namespace AVN.Web.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
-        public async Task<List<SelectListItem>> GetEmployees()
-        {
-            var faculties = await unitOfWork.EmployeeRepository.GetAllAsync();
-            var facultyList = faculties.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GetFullName() }).ToList();
-            return facultyList;
-        }
     }
 }

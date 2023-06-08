@@ -5,6 +5,7 @@ using AVN.Models;
 using AVN.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AVN.Controllers
 {
@@ -121,6 +122,13 @@ namespace AVN.Controllers
             await unitOfWork.EmployeeRepository.DeleteAsync(employee);
             await unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<List<SelectListItem>> GetEmployees()
+        {
+            var faculties = await unitOfWork.EmployeeRepository.GetAllAsync();
+            var facultyList = faculties.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GetFullName() }).ToList();
+            return facultyList;
         }
     }
 }
