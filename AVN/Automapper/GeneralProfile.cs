@@ -20,6 +20,7 @@ namespace AVN.Automapper
             CreateMap<MovementType, MovementTypeVM>().ReverseMap();
             CreateMap<OrderType, OrderTypeVM>().ReverseMap();
             CreateMap<Subject, SubjectVM>().ReverseMap();
+            CreateMap<Employee, EmployeeVM>().ReverseMap();
         }
     }
 }
