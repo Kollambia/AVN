@@ -32,7 +32,26 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\" />
     <Folder Include="wwwroot\img\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Subject\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Employee\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Subject\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Subject\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Subject\Create.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Employee\Create.cshtml" />
   </ItemGroup>
 
 </Project>

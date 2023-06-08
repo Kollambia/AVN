@@ -1,28 +1,34 @@
-﻿using AVN.Data.UnitOfWorks;
+﻿using AVN.Automapper;
+using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
+using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AVN.Web.Controllers
 {
     public class SubjectController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;    
 
-        public SubjectController(IUnitOfWork unitOfWork)
+        public SubjectController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
         }
 
         // GET: Subject
         public async Task<IActionResult> Index()
         {
-            return View(await _unitOfWork.SubjectRepository.GetAllAsync());
+            var subjects = await unitOfWork.SubjectRepository.GetAllAsync();
+            var mappedSubjects = mapper.Map<Subject, SubjectVM>(subjects);
+            return View(mappedSubjects);
         }
 
         // GET: Subject/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            var subject = await _unitOfWork.SubjectRepository.GetByIdAsync(id);
+            var subject = await unitOfWork.SubjectRepository.GetByIdAsync(id);
 
             if (subject == null)
             {
@@ -45,8 +51,8 @@ namespace AVN.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _unitOfWork.SubjectRepository.CreateAsync(subject);
-                await _unitOfWork.SaveChangesAsync();
+                await unitOfWork.SubjectRepository.CreateAsync(subject);
+                await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
@@ -56,7 +62,7 @@ namespace AVN.Web.Controllers
         // GET: Subject/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var subject = await _unitOfWork.SubjectRepository.GetByIdAsync(id);
+            var subject = await unitOfWork.SubjectRepository.GetByIdAsync(id);
 
             if (subject == null)
             {
@@ -78,8 +84,8 @@ namespace AVN.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                await _unitOfWork.SubjectRepository.UpdateAsync(subject);
-                await _unitOfWork.SaveChangesAsync();
+                await unitOfWork.SubjectRepository.UpdateAsync(subject);
+                await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
@@ -89,7 +95,7 @@ namespace AVN.Web.Controllers
         // GET: Subject/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var subject = await _unitOfWork.SubjectRepository.GetByIdAsync(id);
+            var subject = await unitOfWork.SubjectRepository.GetByIdAsync(id);
 
             if (subject == null)
             {
@@ -104,9 +110,9 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var subject = await _unitOfWork.SubjectRepository.GetByIdAsync(id);
-            await _unitOfWork.SubjectRepository.DeleteAsync(subject);
-            await _unitOfWork.SaveChangesAsync();
+            var subject = await unitOfWork.SubjectRepository.GetByIdAsync(id);
+            await unitOfWork.SubjectRepository.DeleteAsync(subject);
+            await unitOfWork.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }

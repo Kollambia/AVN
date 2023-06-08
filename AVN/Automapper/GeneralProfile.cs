@@ -19,6 +19,7 @@ namespace AVN.Automapper
             CreateMap<AcademicYear, AcademicYearVM>().ReverseMap();
             CreateMap<MovementType, MovementTypeVM>().ReverseMap();
             CreateMap<OrderType, OrderTypeVM>().ReverseMap();
+            CreateMap<Subject, SubjectVM>().ReverseMap();
         }
     }
 }
