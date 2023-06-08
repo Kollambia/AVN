@@ -84,7 +84,7 @@
                                                 @Html.DisplayFor(modelItem => item.Course)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Employee.Name)
+                                                @Html.DisplayFor(modelItem => item.Employee.FullName)
                                             </td>
                                             <td>
                                                 <span> @Html.ActionLink("", "Edit", "Subject", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;

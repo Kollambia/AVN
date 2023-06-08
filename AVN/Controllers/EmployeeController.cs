@@ -126,9 +126,9 @@ namespace AVN.Controllers
 
         public async Task<List<SelectListItem>> GetEmployees()
         {
-            var faculties = await unitOfWork.EmployeeRepository.GetAllAsync();
-            var facultyList = faculties.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GetFullName() }).ToList();
-            return facultyList;
+            var employees= await unitOfWork.EmployeeRepository.GetAllAsync();
+            var employeeList = employees.Select(f => new SelectListItem { Value = f.Id, Text = f.GetFullName() }).ToList();
+            return employeeList;
         }
     }
 }

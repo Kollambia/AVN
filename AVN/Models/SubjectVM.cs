@@ -28,7 +28,9 @@ namespace AVN.Models
 
         [Required(ErrorMessage = "Выберите преподавателя для предмета")]
         [DisplayName("Преподаватели")]
-        public List<int> EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
         public Employee Employee { get; set; }
+
+        public EmployeeVM EmployeeVm { get; set; }
     }
 }
