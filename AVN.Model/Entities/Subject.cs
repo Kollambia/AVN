@@ -25,11 +25,8 @@ namespace AVN.Model.Entities
         public int? DepartmentId { get; set; }
         public virtual Department Department { get; set; }
 
-        public virtual ICollection<SubjectEmployee> SubjectEmployees { get; set; }
+        public string EmployeeId { get; set; }
+        public virtual Employee Employee { get; set; }
 
-        public Subject() 
-        { 
-            SubjectEmployees= new List<SubjectEmployee>();
-        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AVN.Common.Enums;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AVN.Model.Entities
 {
@@ -52,7 +53,7 @@ namespace AVN.Model.Entities
         public int? DepartmentId { get; set; }
         public virtual Department Department { get; set; }
 
-        public virtual ICollection<SubjectEmployee> SubjectEmployees { get; set; }
+        public virtual ICollection<Subject> Subjects { get; set; }
 
         //[Required]
         //[DataType(DataType.Password)]
@@ -65,14 +66,18 @@ namespace AVN.Model.Entities
         //[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         //public string ConfirmPassword { get; set; }
 
-        public Employee()
+        [NotMapped]
+        public string FullName
         {
-            SubjectEmployees = new List<SubjectEmployee>();
+            get
+            {
+                return this.GetFullName();
+            }
         }
 
         public string GetFullName()
         {
-            return SName + Name + PName;
+            return SName + " " + Name + " " + PName;
         }
     }
 }
