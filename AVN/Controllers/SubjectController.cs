@@ -3,7 +3,6 @@ using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AVN.Web.Controllers
 {
@@ -65,28 +64,29 @@ namespace AVN.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var subject = await unitOfWork.SubjectRepository.GetByIdAsync(id);
-
+            var mappedSubject = mapper.Map<Subject, SubjectVM>(subject);
             if (subject == null)
             {
                 return NotFound();
             }
 
-            return View(subject);
+            return View(mappedSubject);
         }
 
         // POST: Subject/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [FromForm] Subject subject)
+        public async Task<IActionResult> Edit(int id, SubjectVM subject)
         {
             if (id != subject.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await unitOfWork.SubjectRepository.UpdateAsync(subject);
+                var mappedSubjects = mapper.Map<SubjectVM, Subject>(subject);
+                await unitOfWork.SubjectRepository.UpdateAsync(mappedSubjects);
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

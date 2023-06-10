@@ -6,23 +6,23 @@ namespace AVN.Web.Controllers
 {
     public class SubjectEmployeeController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork unitOfWork;
 
         public SubjectEmployeeController(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = unitOfWork;
+            this.unitOfWork = unitOfWork;
         }
 
         // GET: SubjectEmployee
         public async Task<IActionResult> Index()
         {
-            return View(await _unitOfWork.SubjectEmployeeRepository.GetAllAsync());
+            return View(await unitOfWork.SubjectEmployeeRepository.GetAllAsync());
         }
 
         // GET: SubjectEmployee/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            var subjectEmployee = await _unitOfWork.SubjectEmployeeRepository.GetByIdAsync(id);
+            var subjectEmployee = await unitOfWork.SubjectEmployeeRepository.GetByIdAsync(id);
             if (subjectEmployee == null)
             {
                 return NotFound();
@@ -44,8 +44,8 @@ namespace AVN.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _unitOfWork.SubjectEmployeeRepository.CreateAsync(subjectEmployee);
-                await _unitOfWork.SaveChangesAsync();
+                await unitOfWork.SubjectEmployeeRepository.CreateAsync(subjectEmployee);
+                await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(subjectEmployee);
@@ -54,7 +54,7 @@ namespace AVN.Web.Controllers
         // GET: SubjectEmployee/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var subjectEmployee = await _unitOfWork.SubjectEmployeeRepository.GetByIdAsync(id);
+            var subjectEmployee = await unitOfWork.SubjectEmployeeRepository.GetByIdAsync(id);
             if (subjectEmployee == null)
             {
                 return NotFound();
@@ -74,8 +74,8 @@ namespace AVN.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                await _unitOfWork.SubjectEmployeeRepository.UpdateAsync(subjectEmployee);
-                await _unitOfWork.SaveChangesAsync();
+                await unitOfWork.SubjectEmployeeRepository.UpdateAsync(subjectEmployee);
+                await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(subjectEmployee);
@@ -84,7 +84,7 @@ namespace AVN.Web.Controllers
         // GET: SubjectEmployee/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var subjectEmployee = await _unitOfWork.SubjectEmployeeRepository.GetByIdAsync(id);
+            var subjectEmployee = await unitOfWork.SubjectEmployeeRepository.GetByIdAsync(id);
             if (subjectEmployee == null)
             {
                 return NotFound();
@@ -98,8 +98,8 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _unitOfWork.SubjectEmployeeRepository.DeleteByIdAsync(id);
-            await _unitOfWork.SaveChangesAsync();
+            await unitOfWork.SubjectEmployeeRepository.DeleteByIdAsync(id);
+            await unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

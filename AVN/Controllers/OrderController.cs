@@ -2,7 +2,6 @@
 using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
-using AVN.Models.FilterVM;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AVN.Web.Controllers

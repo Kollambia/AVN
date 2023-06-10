@@ -1,6 +1,4 @@
-﻿using AVN.Common.Enums;
-
-namespace AVN.Model.Entities
+﻿namespace AVN.Model.Entities
 {
     public class StudentMovement: BaseEntity<StudentMovement, int>
     {
