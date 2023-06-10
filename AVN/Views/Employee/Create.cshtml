@@ -69,7 +69,7 @@
                 @*end-second-row*@
 
                 @*start-third-row*@
-                <div class="col-sm-2 form-group">
+                <div class="col-sm-4 form-group">
                     <label class="font-weight-bold">@Html.DisplayNameFor(x => x.PhoneNumber)</label>
                     @Html.TextBoxFor(x => x.PhoneNumber, new { @class = "form-control phone", placeholder = "0(999)99-99-99" })
                     @Html.ValidationMessageFor(x => x.PhoneNumber, "", new { @class = "text-danger" })
@@ -80,6 +80,8 @@
                     @Html.EditorFor(x => x.Address, new { htmlAttributes = new { @class = "form-control", placeholder="Введите адрес." }})
                     @Html.ValidationMessageFor(x => x.Address, "", new { @class = "text-danger" })
                 </div>
+                
+
                 @*end-third-row*@
 
                 @*start-fourth-row*@
@@ -95,6 +97,17 @@
                 </div>
                 <div class="col-sm-4 form-group"></div>
 
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Password)*</label>
+                    @Html.EditorFor(x => x.Password, new { htmlAttributes = new { @class = "form-control", placeholder="Введите фамилию." }})
+                    @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.ConfirmPassword)*</label>
+                    @Html.EditorFor(x => x.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", placeholder="Введите фамилию." }})
+                    @Html.ValidationMessageFor(x => x.ConfirmPassword, "", new { @class = "text-danger" })
+                </div>
 
                 @*end-last-row*@
 

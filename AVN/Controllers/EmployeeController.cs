@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AVN.Areas.Identity.Pages.Account;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
@@ -55,9 +56,12 @@ namespace AVN.Controllers
             {
                 var newId = Guid.NewGuid().ToString();
                 employee.Id = newId;
-                var user = new AppUser() { UserName = employee.Name, Id = newId };
+
+                
+
+                var user = new AppUser() { UserName = employee.Email, Id = newId };
                 var mappedEmployee = mapper.Map<EmployeeVM, Employee>(employee);
-                var result = await userManager.CreateAsync(user);
+                var result = await userManager.CreateAsync(user, employee.Password);
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, RoleConst.Employee);
