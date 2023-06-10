@@ -30,5 +30,10 @@ namespace AVN.Models
         [DisplayName("Преподаватели")]
         public string EmployeeId { get; set; }
         public Employee Employee { get; set; }
+
+        [Required(ErrorMessage = "Выберите кафедру для предмета")]
+        [DisplayName("Кафедры")]
+        public string DepartmentId { get; set; }
+        public Department Department { get; set; }
     }
 }

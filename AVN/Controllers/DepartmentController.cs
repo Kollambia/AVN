@@ -119,5 +119,13 @@ namespace AVN.Web.Controllers
             var departmentList = departments.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.DepartmentName }).ToList();
             return departmentList;
         }
+
+        public async Task<List<SelectListItem>> GetDepartments()
+        {
+            var departments = await unitOfWork.DepartmentRepository.GetAllAsync();
+            var departmentList = departments.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.DepartmentName }).ToList();
+            return departmentList;
+        }
+
     }
 }
