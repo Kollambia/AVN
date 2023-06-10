@@ -6,10 +6,9 @@ namespace AVN.Common.Enums
     {
         [Display(Name = "Не указан")] NotSet = -1,
         [Display(Name = "Неопределённый")] Undefined = 0,
-        [Display(Name = "Администратор")] Administrator = 1,
-        [Display(Name = "Профессор")] Professor = 2,
-        [Display(Name = "Профессор")] Dean = 3,
-        [Display(Name = "Доцент")] AssociateProfessor = 4,
-        [Display(Name = "Преподователь")] Lecturer = 5
+        [Display(Name = "Профессор")] Professor = 1,
+        [Display(Name = "Декан")] Dean = 2,
+        [Display(Name = "Доцент")] AssociateProfessor = 3,
+        [Display(Name = "Преподователь")] Lecturer = 4
     }
 }
