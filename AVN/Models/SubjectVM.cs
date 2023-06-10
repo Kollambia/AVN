@@ -30,7 +30,5 @@ namespace AVN.Models
         [DisplayName("Преподаватели")]
         public string EmployeeId { get; set; }
         public Employee Employee { get; set; }
-
-        public EmployeeVM EmployeeVm { get; set; }
     }
 }
