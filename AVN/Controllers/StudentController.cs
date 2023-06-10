@@ -59,6 +59,14 @@ namespace AVN.Web.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult ActionName(string[] selectedItems)
+        {
+            // Process the selected items here
+            // You can perform database operations, update the model, etc.
+
+            return Json(new { success = true }); // Return a JSON response if needed
+        }
 
         public async Task<ActionResult> StudentList(int facultyId = 0, int departmentId = 0, int directionId = 0, int groupId = 0, int groupType = 0)
         {
@@ -87,13 +95,27 @@ namespace AVN.Web.Controllers
             if (groupId > 0)
                 students = students.Where(x => x.GroupId == groupId);
             else
-                return PartialView("ExportStudentList", new List<StudentVM>());
+                return PartialView("ExportStudentList", new List<TransferStudentVM>());
 
-            var mappedStudents = mapper.Map<Student, StudentVM>(students);
+            var mappedStudents = mapper.Map<Student, TransferStudentVM>(students);
             return PartialView("ExportStudentList", mappedStudents);
         }
 
-        public async Task<ActionResult> ImportStudentList(int groupId)
+        [HttpPost]
+        public async Task<ActionResult> ExportStudentList(List<TransferStudentVM> students)
+        {
+            //var students = await unitOfWork.StudentRepository.GetAllAsync();
+            //if (groupId > 0)
+            //    students = students.Where(x => x.GroupId == groupId);
+            //else
+            //    return PartialView("ExportStudentList", new List<TransferStudentVM>());
+
+            //var mappedStudents = mapper.Map<Student, TransferStudentVM>(students);
+            //return PartialView("ExportStudentList", mappedStudents);
+            return null;
+        }
+
+        public async Task<IActionResult> ImportStudentList(int groupId)
         {
             var students = await unitOfWork.StudentRepository.GetAllAsync();
             if (groupId > 0)
@@ -135,13 +157,13 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(StudentVM student)
         {
-
+            student.Status = StudentStatus.Enrollee;
             if (ModelState.IsValid)
             {
                 var newId = Guid.NewGuid().ToString();
                 var mappedStudent = mapper.Map<StudentVM, Student>(student);
                 mappedStudent.Id = newId;
-
+                
                 var user = new AppUser() { UserName = student.GradeBookNumber, Id = newId };
                 var result = await userManager.CreateAsync(user);
 

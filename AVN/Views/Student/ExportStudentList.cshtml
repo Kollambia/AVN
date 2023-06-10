@@ -1,30 +1,81 @@
-﻿@model IEnumerable<StudentVM>
+﻿@model IEnumerable<TransferStudentVM>
+@{
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
 
 <style>
     .table-hover tr:hover {
         background-color: #f5f5f5;
     }
+
+    .green-check {
+        color: green;
+    }
 </style>
 
-<table class="table table-bordered table-hover" id="exportTable">
-    <thead class="thead-light">
-        <tr>
-            <th>ФИО Студента</th>
-            <th>Зачетка</th>
-            <th>Группа</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var group in Model.GroupBy(item => item.Group))
-        {
-            @foreach (var item in group)
+<form method="post" action="/Student/ImportStudentList">
+    <table class="table table-bordered table-hover" id="exportTable">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    <input type="checkbox" id="selectAllCheckbox">
+                </th>
+                <th>@Html.DisplayNameFor(model => model.FullName)</th>
+                <th>@Html.DisplayNameFor(model => model.GradeBookNumber)</th>
+                <th>@Html.DisplayNameFor(model => model.GroupId)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
             {
                 <tr data-id="@item.Id">
-                    <td>@item.SName @item.Name @item.PName</td>
+                    <td>
+                        <input type="checkbox" asp-for="@item.Selected" class="selector-checkbox">
+                    </td>
+                    <td>
+                        @if (item.Transfered)
+                        {
+                            <i class="fas fa-running green-check"></i>  @item.FullName <!-- Icon for true -->
+                        }
+                        else
+                        {
+                            <i class="fas fa-running"></i>  @item.FullName <!-- Icon for false -->
+                        }
+                    </td>
                     <td>@item.GradeBookNumber</td>
                     <td>@item.Group.GroupName</td>
                 </tr>
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+    <button type="submit">Отправить</button>
+</form>
+@*<button id="submitButton" class="btn btn-primary">Отправить</button>*@
+
+
+
+@section Scripts {
+    @* --- Jquery --- *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    @* --- Bootstrap --- *@
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @* --- Скрипт таблицы --- *@
+    <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/bootstrap-table-locale-all.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#selectAllCheckbox').change(function () {
+                var isChecked = $(this).is(':checked');
+                $('.selector-checkbox').prop('checked', isChecked);
+            });
+        });
+
+    </script>
+
+}
