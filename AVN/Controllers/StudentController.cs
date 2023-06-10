@@ -5,7 +5,6 @@ using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
-using AVN.Models.FilterVM;
 using AVN.PdfGenerator;
 using AVN.Utility;
 using Microsoft.AspNetCore.Identity;

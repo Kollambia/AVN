@@ -1,7 +1,6 @@
 ﻿using AVN.Common.Enums;
 using AVN.Model.Entities;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace AVN.Models
 {

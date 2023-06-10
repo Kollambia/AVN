@@ -1,5 +1,4 @@
-﻿using AVN.Common.Enums;
-using AVN.Data;
+﻿using AVN.Data;
 using AVN.Model.Entities;
 using Microsoft.EntityFrameworkCore;
 
