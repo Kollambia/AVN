@@ -1,4 +1,5 @@
 ﻿using AVN.Automapper;
+using AVN.Common.Enums;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
