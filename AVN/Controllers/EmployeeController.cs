@@ -51,7 +51,7 @@ namespace AVN.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(EmployeeVM employee)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var newId = Guid.NewGuid().ToString();
                 employee.Id = newId;
