@@ -24,6 +24,11 @@
                                         @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @class = "form-control" }})
                                         @Html.ValidationMessageFor(x => x.Name, "", new { @class = "text-danger" })
                                     </div>
+                                    <div class="form-group">
+                                        <label class="font-weight-bold">@Html.DisplayNameFor(x => x.MoveType)</label>
+                                        @Html.DropDownListFor(x => x.MoveType, Html.GetEnumSelectList(typeof(MoveType)), "Не выбрано", new {@class = "form-control"})
+                                        @Html.ValidationMessageFor(x => x.MoveType, "", new { @class = "text-danger" })
+                                    </div>
                                     <hr>
                                     <div class="form-group row">
                                         <div class="col-md-6">

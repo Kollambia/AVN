@@ -136,9 +136,68 @@ namespace AVN.Web.Controllers
             return groupList;
         }
 
-        public async Task<List<SelectListItem>> GetGroupsByFaculty(int facultyId)
+        public async Task<List<SelectListItem>> GetGroupsToExport(int facultyId, int movementTypeId, int academicYearId)
         {
-            var groups = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x => x.Direction.Department.FacultyId == facultyId);
+            if (facultyId == 0 && academicYearId == 0 && movementTypeId == 0)
+                return new List<SelectListItem>();
+
+            var groups = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x => 
+                    x.Direction.Department.FacultyId == facultyId && x.AcademicYearId == academicYearId);
+
+            var movement = await unitOfWork.MovementTypeRepository.GetByIdAsync(movementTypeId);
+            switch (movement.MoveType)
+            {
+                case MoveType.Enlisted: //Зачисление
+                    groups = groups.Where(x => x.GroupType == GroupType.Enrolled); //c абитуриентов
+                    break;
+
+                case MoveType.Translated: //Перевод
+                    groups = groups.Where(x => x.GroupType == GroupType.Students); // с студентов
+                    break;
+
+
+                case MoveType.Graduated: //Окончание
+                    groups = groups.Where(x => x.GroupType == GroupType.Graduated);
+                    break;
+
+                default:
+                    // Handle any other move types here, if needed
+                    break;
+            }
+            // to do доделать
+            var groupList = groups.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GroupName }).ToList();
+            return groupList;
+        }
+
+        public async Task<List<SelectListItem>> GetGroupsToImport(int facultyId, int movementTypeId, int academicYearId)
+        {
+            if (facultyId == 0 && academicYearId == 0 && movementTypeId == 0)
+                return new List<SelectListItem>();
+
+            var groups = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x =>
+                    x.Direction.Department.FacultyId == facultyId && x.AcademicYearId == academicYearId);
+
+            var movement = await unitOfWork.MovementTypeRepository.GetByIdAsync(movementTypeId);
+            switch (movement.MoveType)
+            {
+                case MoveType.Enlisted: //Зачисление
+                    groups = groups.Where(x => x.GroupType == GroupType.Students); // к студентам
+                    break;
+
+                case MoveType.Translated: //Перевод
+                    groups = groups.Where(x => x.GroupType == GroupType.Students); // к студентов
+                    break;
+
+
+                case MoveType.Graduated: //Окончание
+                    groups = groups.Where(x => x.GroupType == GroupType.Graduated);
+                    break;
+
+                default:
+                    // Handle any other move types here, if needed
+                    break;
+            }
+            // to do доделать
             var groupList = groups.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GroupName }).ToList();
             return groupList;
         }

@@ -1,15 +1,5 @@
 ﻿@model IEnumerable<StudentPaymentVM>
-@functions {
-    public static string GetEnumDisplayName(Enum value)
-    {
-        var displayAttribute = value.GetType()
-            .GetField(value.ToString())
-            .GetCustomAttributes(typeof(DisplayAttribute), false)
-            .FirstOrDefault() as DisplayAttribute;
 
-        return displayAttribute?.Name ?? value.ToString();
-    }
-}
 <style>
     /* CSS for hover effect */
     .table-hover tr:hover {

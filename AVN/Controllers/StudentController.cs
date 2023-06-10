@@ -70,11 +70,41 @@ namespace AVN.Web.Controllers
                 students = students.Where(x => x.Group.Direction.DepartmentId == departmentId);
             else if (facultyId > 0)
                 students = students.Where(x => x.Group.Direction.Department.FacultyId == facultyId);
-            var mappedStudents = mapper.Map<Student, StudentVM>(students)
-                .Where(x => (int)x.Group.GroupType == groupType).ToList();
+
+            var mappedStudents = mapper.Map<Student, StudentVM>(students);
+            if (groupType > 0)
+                mappedStudents = mappedStudents.Where(x => (int)x.Group.GroupType == groupType).ToList();
+            else if (facultyId == 0 && departmentId == 0 && directionId == 0 && groupId == 0 && groupType == 0)
+                return PartialView(new List<StudentVM>());
+
             return PartialView(mappedStudents);
         }
 
+        public async Task<ActionResult> ExportStudentList(int groupId)
+        {
+            var students = await unitOfWork.StudentRepository.GetAllAsync();
+            if (groupId > 0)
+                students = students.Where(x => x.GroupId == groupId);
+            else
+                return PartialView("ExportStudentList", new List<StudentVM>());
+
+            var mappedStudents = mapper.Map<Student, StudentVM>(students);
+            return PartialView("ExportStudentList", mappedStudents);
+        }
+
+        public async Task<ActionResult> ImportStudentList(int groupId)
+        {
+            var students = await unitOfWork.StudentRepository.GetAllAsync();
+            if (groupId > 0)
+                students = students.Where(x => x.GroupId == groupId);
+            else
+                return PartialView("ImportStudentList", new List<StudentVM>());
+
+            var mappedStudents = mapper.Map<Student, StudentVM>(students);
+            return PartialView("ImportStudentList", mappedStudents);
+        }
+
+       
 
         // GET: Student/Details/5
         public async Task<IActionResult> Details(string id)

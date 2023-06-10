@@ -4,6 +4,7 @@ using AVN.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AVN.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230607211938_addColumnMoveTypeToMovementType")]
+    partial class addColumnMoveTypeToMovementType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -647,10 +649,6 @@ namespace AVN.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EmployeeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -658,8 +656,6 @@ namespace AVN.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
-
-                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Subjects");
                 });
@@ -994,27 +990,19 @@ namespace AVN.Data.Migrations
                         .WithMany("Subjects")
                         .HasForeignKey("DepartmentId");
 
-                    b.HasOne("AVN.Model.Entities.Employee", "Employee")
-                        .WithMany("Subjects")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Department");
-
-                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("AVN.Model.Entities.SubjectEmployee", b =>
                 {
                     b.HasOne("AVN.Model.Entities.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("SubjectEmployees")
                         .HasForeignKey("EmployeeId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AVN.Model.Entities.Subject", "Subject")
-                        .WithMany()
+                        .WithMany("SubjectEmployees")
                         .HasForeignKey("SubjectId");
 
                     b.Navigation("Employee");
@@ -1100,7 +1088,7 @@ namespace AVN.Data.Migrations
 
             modelBuilder.Entity("AVN.Model.Entities.Employee", b =>
                 {
-                    b.Navigation("Subjects");
+                    b.Navigation("SubjectEmployees");
                 });
 
             modelBuilder.Entity("AVN.Model.Entities.Faculty", b =>
@@ -1141,6 +1129,11 @@ namespace AVN.Data.Migrations
             modelBuilder.Entity("AVN.Model.Entities.StudentPayment", b =>
                 {
                     b.Navigation("PaymentDetails");
+                });
+
+            modelBuilder.Entity("AVN.Model.Entities.Subject", b =>
+                {
+                    b.Navigation("SubjectEmployees");
                 });
 #pragma warning restore 612, 618
         }
