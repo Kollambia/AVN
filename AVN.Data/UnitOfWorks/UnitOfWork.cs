@@ -11,7 +11,7 @@ public class UnitOfWork : IUnitOfWork
     private IRepository<Student, string> _studentRepository;
     private IRepository<Faculty, int> _facultyRepository;
     private IRepository<Department, int> _departmentRepository;
-    private IRepository<Group, int> _groupRepository;
+    private IRepository<Group, string> _groupRepository;
     private IRepository<Employee, string> _employeeRepository;
     private IRepository<Direction, int> _directionRepository;
     private IRepository<Subject, int> _subjectRepository;
@@ -59,12 +59,12 @@ public class UnitOfWork : IUnitOfWork
         }
     }
     
-    public IRepository<Group, int> GroupRepository
+    public IRepository<Group, string> GroupRepository
     {
         get
         {
             if (_groupRepository == null)
-                _groupRepository = new DbRepository<Group, int>(_context);
+                _groupRepository = new DbRepository<Group, string>(_context);
             return _groupRepository;
         }
     }

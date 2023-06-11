@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AVN.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230607185510_addColumnGroupTypeToGroups")]
-    partial class addColumnGroupTypeToGroups
+    [Migration("20230611105556_WholeDb")]
+    partial class WholeDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -52,33 +52,12 @@ namespace AVN.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("AcademicDegree")
-                        .HasColumnType("int");
-
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Citizenship")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DirectionId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EducationalLine")
-                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -87,26 +66,11 @@ namespace AVN.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("FacultyId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Gender")
-                        .HasColumnType("int");
-
-                    b.Property<string>("GradeBookNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -115,9 +79,6 @@ namespace AVN.Data.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -128,17 +89,8 @@ namespace AVN.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("SName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StudingForm")
-                        .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -148,8 +100,6 @@ namespace AVN.Data.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GroupId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -309,11 +259,8 @@ namespace AVN.Data.Migrations
 
             modelBuilder.Entity("AVN.Model.Entities.Group", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AcademicDegree")
                         .HasColumnType("int");
@@ -352,6 +299,31 @@ namespace AVN.Data.Migrations
                     b.ToTable("Groups");
                 });
 
+            modelBuilder.Entity("AVN.Model.Entities.GroupEmployee", b =>
+                {
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EmployeeId1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("GroupId1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("GroupId", "EmployeeId");
+
+                    b.HasIndex("EmployeeId1");
+
+                    b.HasIndex("GroupId1");
+
+                    b.ToTable("GroupEmployee");
+                });
+
             modelBuilder.Entity("AVN.Model.Entities.MovementType", b =>
                 {
                     b.Property<int>("Id")
@@ -359,6 +331,9 @@ namespace AVN.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("MoveType")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -389,6 +364,9 @@ namespace AVN.Data.Migrations
                     b.Property<int?>("GroupId")
                         .HasColumnType("int");
 
+                    b.Property<string>("GroupId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("MovementTypeId")
                         .HasColumnType("int");
 
@@ -409,7 +387,7 @@ namespace AVN.Data.Migrations
 
                     b.HasIndex("AcademicYearId");
 
-                    b.HasIndex("GroupId");
+                    b.HasIndex("GroupId1");
 
                     b.HasIndex("MovementTypeId");
 
@@ -470,6 +448,9 @@ namespace AVN.Data.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
+                    b.Property<string>("GroupId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<bool>("IsHasDebt")
                         .HasColumnType("bit");
 
@@ -492,12 +473,15 @@ namespace AVN.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId");
+                    b.HasIndex("GroupId1");
 
                     b.ToTable("Students");
                 });
@@ -569,6 +553,9 @@ namespace AVN.Data.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
+                    b.Property<string>("GroupId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<decimal>("Payed")
                         .HasColumnType("decimal(18,2)");
 
@@ -582,7 +569,7 @@ namespace AVN.Data.Migrations
 
                     b.HasIndex("AcademicYearId");
 
-                    b.HasIndex("GroupId");
+                    b.HasIndex("GroupId1");
 
                     b.HasIndex("StudentId");
 
@@ -646,6 +633,9 @@ namespace AVN.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -653,6 +643,8 @@ namespace AVN.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
+
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Subjects");
                 });
@@ -820,15 +812,6 @@ namespace AVN.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AVN.Model.Entities.AppUser", b =>
-                {
-                    b.HasOne("AVN.Model.Entities.Group", "Group")
-                        .WithMany()
-                        .HasForeignKey("GroupId");
-
-                    b.Navigation("Group");
-                });
-
             modelBuilder.Entity("AVN.Model.Entities.Department", b =>
                 {
                     b.HasOne("AVN.Model.Entities.Faculty", "Faculty")
@@ -871,6 +854,25 @@ namespace AVN.Data.Migrations
                     b.Navigation("Direction");
                 });
 
+            modelBuilder.Entity("AVN.Model.Entities.GroupEmployee", b =>
+                {
+                    b.HasOne("AVN.Model.Entities.Employee", "Employee")
+                        .WithMany("GroupEmployees")
+                        .HasForeignKey("EmployeeId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AVN.Model.Entities.Group", "Group")
+                        .WithMany("GroupEmployees")
+                        .HasForeignKey("GroupId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Group");
+                });
+
             modelBuilder.Entity("AVN.Model.Entities.Order", b =>
                 {
                     b.HasOne("AVN.Model.Entities.AcademicYear", "AcademicYear")
@@ -879,7 +881,7 @@ namespace AVN.Data.Migrations
 
                     b.HasOne("AVN.Model.Entities.Group", "Group")
                         .WithMany("Orders")
-                        .HasForeignKey("GroupId");
+                        .HasForeignKey("GroupId1");
 
                     b.HasOne("AVN.Model.Entities.MovementType", "MovementType")
                         .WithMany("Orders")
@@ -921,9 +923,7 @@ namespace AVN.Data.Migrations
                 {
                     b.HasOne("AVN.Model.Entities.Group", "Group")
                         .WithMany("Students")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GroupId1");
 
                     b.Navigation("Group");
                 });
@@ -957,9 +957,7 @@ namespace AVN.Data.Migrations
 
                     b.HasOne("AVN.Model.Entities.Group", "Group")
                         .WithMany()
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GroupId1");
 
                     b.HasOne("AVN.Model.Entities.Student", "Student")
                         .WithMany("StudentPayments")
@@ -987,19 +985,25 @@ namespace AVN.Data.Migrations
                         .WithMany("Subjects")
                         .HasForeignKey("DepartmentId");
 
+                    b.HasOne("AVN.Model.Entities.Employee", "Employee")
+                        .WithMany("Subjects")
+                        .HasForeignKey("EmployeeId");
+
                     b.Navigation("Department");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("AVN.Model.Entities.SubjectEmployee", b =>
                 {
                     b.HasOne("AVN.Model.Entities.Employee", "Employee")
-                        .WithMany("SubjectEmployees")
+                        .WithMany()
                         .HasForeignKey("EmployeeId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AVN.Model.Entities.Subject", "Subject")
-                        .WithMany("SubjectEmployees")
+                        .WithMany()
                         .HasForeignKey("SubjectId");
 
                     b.Navigation("Employee");
@@ -1085,7 +1089,9 @@ namespace AVN.Data.Migrations
 
             modelBuilder.Entity("AVN.Model.Entities.Employee", b =>
                 {
-                    b.Navigation("SubjectEmployees");
+                    b.Navigation("GroupEmployees");
+
+                    b.Navigation("Subjects");
                 });
 
             modelBuilder.Entity("AVN.Model.Entities.Faculty", b =>
@@ -1095,6 +1101,8 @@ namespace AVN.Data.Migrations
 
             modelBuilder.Entity("AVN.Model.Entities.Group", b =>
                 {
+                    b.Navigation("GroupEmployees");
+
                     b.Navigation("Orders");
 
                     b.Navigation("Students");
@@ -1126,11 +1134,6 @@ namespace AVN.Data.Migrations
             modelBuilder.Entity("AVN.Model.Entities.StudentPayment", b =>
                 {
                     b.Navigation("PaymentDetails");
-                });
-
-            modelBuilder.Entity("AVN.Model.Entities.Subject", b =>
-                {
-                    b.Navigation("SubjectEmployees");
                 });
 #pragma warning restore 612, 618
         }

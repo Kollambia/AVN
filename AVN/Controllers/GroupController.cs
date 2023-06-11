@@ -64,7 +64,9 @@ namespace AVN.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                var newId = Guid.NewGuid().ToString();
                 var mappedGroup = mapper.Map<GroupVM, Group>(group);
+                mappedGroup.Id = newId;
                 await unitOfWork.GroupRepository.CreateAsync(mappedGroup);
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
