@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AVN.Models
 {
-    public class GroupVM : BasicVM<int>
+    public class GroupVM : BasicVM<string>
     {
         [Required(ErrorMessage = "Поле не заполнено")]
         [DisplayName("Группа")]

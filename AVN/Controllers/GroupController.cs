@@ -93,7 +93,7 @@ namespace AVN.Web.Controllers
         // POST: Group/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, GroupVM group)
+        public async Task<IActionResult> Edit(string id, GroupVM group)
         {
             if (id != group.Id)
             {

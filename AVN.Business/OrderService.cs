@@ -76,7 +76,7 @@ public class OrderService
         return student;
     }
 
-    public StudentStatus GetStudentStatusByGroupId(int groupId)
+    public StudentStatus GetStudentStatusByGroupId(string groupId)
     {
         GroupType groupType = _dbContext.Groups.SingleOrDefault(x => x.Id == groupId).GroupType;
         StudentStatus studentStatus = groupType switch

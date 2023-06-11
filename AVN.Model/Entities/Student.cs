@@ -21,7 +21,7 @@ public class Student : BaseEntity<Student, string>
 
     public int Score { get; set; }
 
-    public int GroupId { get; set; }
+    public string GroupId { get; set; }
     public virtual Group? Group { get; set; }
 
     public virtual ICollection<StudentPayment>? StudentPayments { get; set; }

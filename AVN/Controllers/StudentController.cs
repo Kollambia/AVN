@@ -22,8 +22,8 @@ namespace AVN.Web.Controllers
         private readonly UserManager<AppUser> userManager;
         private static List<TransferStudentVM> _transferExportStudents = new(); //временное рещение
         private static List<TransferStudentVM> _transferImportStudents = new(); //временное решение
-        private static int _exportGroupId; //временное решение
-        private static int _importGroupId; //временное решение
+        private static string _exportGroupId; //временное решение
+        private static string _importGroupId; //временное решение
         public StudentController(IUnitOfWork unitOfWork, IMapper mapper, AppDbContext context, UserManager<AppUser> userManager)
         {
             this.unitOfWork = unitOfWork;
@@ -72,10 +72,10 @@ namespace AVN.Web.Controllers
             return Json(new { success = true }); // Return a JSON response if needed
         }
 
-        public async Task<ActionResult> StudentList(int facultyId = 0, int departmentId = 0, int directionId = 0, int groupId = 0, int groupType = 0)
+        public async Task<ActionResult> StudentList(int facultyId = 0, int departmentId = 0, int directionId = 0, string groupId = null, int groupType = 0)
         {
             var students = await unitOfWork.StudentRepository.GetAllAsync();
-            if (groupId > 0)
+            if (groupId != null)
                 students = students.Where(x => x.GroupId == groupId);
             else if (directionId > 0)
                 students = students.Where(x => x.Group.DirectionId == directionId);
@@ -87,17 +87,17 @@ namespace AVN.Web.Controllers
             var mappedStudents = mapper.Map<Student, StudentVM>(students);
             if (groupType > 0)
                 mappedStudents = mappedStudents.Where(x => (int)x.Group.GroupType == groupType).ToList();
-            else if (facultyId == 0 && departmentId == 0 && directionId == 0 && groupId == 0 && groupType == 0)
+            else if (facultyId == 0 && departmentId == 0 && directionId == 0 && groupId == null && groupType == 0)
                 return PartialView(new List<StudentVM>());
 
             return PartialView(mappedStudents);
         }
 
         [HttpGet]
-        public async Task<ActionResult> ExportStudentList(int groupId)
+        public async Task<ActionResult> ExportStudentList(string groupId)
         {
             var students = await unitOfWork.StudentRepository.GetAllAsync();
-            if (groupId > 0)
+            if (groupId != null)
                 students = students.Where(x => x.GroupId == groupId);
             else
                 return PartialView("ExportStudentList", new List<TransferStudentVM>());
@@ -135,10 +135,10 @@ namespace AVN.Web.Controllers
             return RedirectToAction("Index", "Order");
         }
 
-        public async Task<ActionResult> ImportStudentList(int groupId)
+        public async Task<ActionResult> ImportStudentList(string groupId)
         {
             var students = await unitOfWork.StudentRepository.GetAllAsync();
-            if (groupId > 0)
+            if (groupId != null)
                 students = students.Where(x => x.GroupId == groupId);
             else
                 return PartialView("ImportStudentList", new List<TransferStudentVM>());
@@ -244,7 +244,7 @@ namespace AVN.Web.Controllers
                 mappedStudent.Id = newId;
                 
                 var user = new AppUser() { UserName = student.GradeBookNumber, Id = newId };
-                var result = await userManager.CreateAsync(user, student.Password);
+                var result = await userManager.CreateAsync(user, student.GradeBookNumber);
 
                 if (result.Succeeded)
                 {
@@ -326,7 +326,7 @@ namespace AVN.Web.Controllers
         {
 
                 var studentTask = unitOfWork.StudentRepository.GetByIdAsync(id);
-                var groupTask = unitOfWork.GroupRepository.GetByIdAsync((int)studentTask.Result.GroupId);
+                var groupTask = unitOfWork.GroupRepository.GetByIdAsync(studentTask.Result.GroupId);
                 var directionTask = unitOfWork.DirectionRepository.GetByIdAsync((int)groupTask.Result.DirectionId);
                 var departmentTask = unitOfWork.DepartmentRepository.GetByIdAsync((int)directionTask.Result.DepartmentId);
                 var facultyTask = unitOfWork.FacultyRepository.GetByIdAsync((int)departmentTask.Result.FacultyId);

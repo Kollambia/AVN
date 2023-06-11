@@ -20,7 +20,6 @@
             </div>
             <br>
             <div class="form-group row mb-1">
-
                 <div class="col-md-2 text-center">
                     <label class="font-weight-bold">Учебный год</label>
                     <select id="academYearFirstDropdown" name="academYearFirstDropdown" class="form-control"></select>
@@ -62,73 +61,53 @@
 
 @section Scripts {
     <script>
-        var lastSelectedfacultyFromDropdown = localStorage.getItem('facultyFromDropdown');
-        var lastSelectedfacultyToDropdown = localStorage.getItem('facultyToDropdown');
-        var lastSelectedacademYearFirstDropdown = localStorage.getItem('academYearFirstDropdown');
-        var lastSelectedacademYearSecondDropdown = localStorage.getItem('academYearSecondDropdown');
-        var lastSelectedgroupFromDropdown = localStorage.getItem('groupFromDropdown');
-        var lastSelectedgroupToDropdown = localStorage.getItem('groupToDropdown');
-        var lastSelectedmovementTypeDropdown = localStorage.getItem('movementTypeDropdown');
-
         $(document).ready(function () {
+            loadDropdownData();
+
+            $('#movementTypeDropdown, #facultyFromDropdown, #facultyToDropdown, #academYearFirstDropdown, #academYearSecondDropdown').change(function () {
+                FillGroupFromDropdown();
+                FillGroupToDropdown();
+            });
+
+            $('#groupFromDropdown').change(function () {
+                GetLeftStudentList();
+            });
+
+            $('#groupToDropdown').change(function () {
+                GetRightStudentList();
+            });
+        });
+
+        function loadDropdownData() {
             $.ajax({
                 url: '@Url.Action("GetFaculties", "Faculty")',
                 type: 'GET',
                 success: function (data) {
-
-                    $.each(data, function (i, faculty) {
-                        $('#facultyFromDropdown').append($('<option></option>').val(faculty.value).text(faculty.text));
-                    });
-                    if (lastSelectedfacultyFromDropdown) {
-                        $('#facultyFromDropdown').val(lastSelectedfacultyFromDropdown);
-                    }
-
-                    $.each(data, function (i, faculty) {
-                        $('#facultyToDropdown').append($('<option></option>').val(faculty.value).text(faculty.text));
-                    });
-                    if (lastSelectedfacultyToDropdown) {
-                        $('#facultyToDropdown').val(lastSelectedfacultyToDropdown);
-                    }
+                    populateDropdown(data, 'facultyFromDropdown');
+                    populateDropdown(data, 'facultyToDropdown');
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
                 }
             });
+
             $.ajax({
-                url: '@Url.Action("GetAcademicYears", "Option")', //to do перенести в контроллер Option
+                url: '@Url.Action("GetAcademicYears", "Option")',
                 type: 'GET',
                 success: function (data) {
-
-                    $.each(data, function (i, academYear) {
-                        $('#academYearFirstDropdown').append($('<option></option>').val(academYear.value).text(academYear.text));
-                    });
-                    if (lastSelectedacademYearFirstDropdown) {
-                        $('#academYearFirstDropdown').val(lastSelectedacademYearFirstDropdown);
-                    }
-
-                    $.each(data, function (i, academYear) {
-                        $('#academYearSecondDropdown').append($('<option></option>').val(academYear.value).text(academYear.text));
-                    });
-                    if (lastSelectedacademYearSecondDropdown) {
-                        $('#academYearSecondDropdown').val(lastSelectedacademYearSecondDropdown);
-                    }
+                    populateDropdown(data, 'academYearFirstDropdown');
+                    populateDropdown(data, 'academYearSecondDropdown');
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
                 }
             });
+
             $.ajax({
                 url: '@Url.Action("GetMovementTypes", "Option")',
                 type: 'GET',
                 success: function (data) {
-
-                    $.each(data, function (i, movementType) {
-                        $('#movementTypeDropdown').append($('<option></option>').val(movementType.value).text(movementType.text));
-                    });
-                    if (lastSelectedmovementTypeDropdown) {
-                        $('#movementTypeDropdown').val(lastSelectedmovementTypeDropdown);
-                    }
-                    // to do обработка выпадающего списка groupFromDropdown
+                    populateDropdown(data, 'movementTypeDropdown');
                     FillGroupFromDropdown();
                     FillGroupToDropdown();
                 },
@@ -136,49 +115,38 @@
                     console.error(xhr.responseText);
                 }
             });
-        });
+        }
 
-        $(document).ready(function () {
-            $('#movementTypeDropdown').change(function () {
-                var selectedValue = $(this).val();
-                localStorage.setItem('movementTypeDropdown', selectedValue);
-                FillGroupToDropdown();
-                FillGroupFromDropdown();
-            });
-            $('#facultyFromDropdown').change(function () {
-                var selectedValue = $(this).val();
-                localStorage.setItem('facultyFromDropdown', selectedValue);
-                FillGroupFromDropdown();
-            });
-            $('#facultyToDropdown').change(function () {
-                var selectedValue = $(this).val();
-                localStorage.setItem('facultyToDropdown', selectedValue);
-                FillGroupToDropdown();
-            });
-            $('#academYearFirstDropdown').change(function () {
-                var selectedValue = $(this).val();
-                localStorage.setItem('academYearFirstDropdown', selectedValue);
-                FillGroupFromDropdown();
-            });
-            $('#academYearSecondDropdown').change(function () {
-                var selectedValue = $(this).val();
-                localStorage.setItem('academYearSecondDropdown', selectedValue);
-                FillGroupToDropdown();
-            });
-            $('#groupFromDropdown').change(function () {
-                var selectedValue = $(this).val();
-                localStorage.setItem('groupFromDropdown', selectedValue);
-                GetLeftStudentList();
-            });
-            $('#groupToDropdown').change(function () {
-                var selectedValue = $(this).val();
-                localStorage.setItem('groupToDropdown', selectedValue);
-                GetRightStudentList();
-            });
-        });
+        function populateDropdown(data, dropdownId) {
+            var dropdown = $('#' + dropdownId);
+            dropdown.empty();
 
+            if (data.length === 0) {
+                dropdown.append($('<option>').text('Нет данных').val('0'));
+            } else {
+                $.each(data, function (i, item) {
+                    dropdown.append($('<option></option>').val(item.value).text(item.text));
+                });
+            }
 
+            loadSelectedValue(dropdownId);
+        }
 
+        function saveSelectedValue(dropdownId) {
+            var selectedValue = $('#' + dropdownId).val();
+            if (selectedValue) {
+                localStorage.setItem(dropdownId, selectedValue);
+            } else {
+                localStorage.removeItem(dropdownId);
+            }
+        }
+
+        function loadSelectedValue(dropdownId) {
+            var selectedValue = localStorage.getItem(dropdownId);
+            if (selectedValue) {
+                $('#' + dropdownId).val(selectedValue);
+            }
+        }
 
         function FillGroupFromDropdown() {
             var facultyId = $('#facultyFromDropdown').val();
@@ -195,28 +163,13 @@
                     'academicYearId': academicYearId
                 },
                 success: function (data) {
-                    $('#groupFromDropdown').empty();
-                    if (data.length === 0) {
-                        $('#groupFromDropdown').append($('<option>').text('Нет групп').val('0'));
-                    } else {
-                        $.each(data, function (i, group) {
-                            $('#groupFromDropdown').append($('<option></option>').val(group.value).text(group.text));
-                        });
-                        if (lastSelectedgroupFromDropdown) {
-                            $('#groupFromDropdown').val(lastSelectedgroupFromDropdown);
-                        }
-                        else{
-                            $('#groupFromDropdown').val(group.value).text('Далбаеб');
-                        }
-                        //$('#groupFromDropdown').val(lastSelectedgroupFromDropdown);
-                    }
+                    populateGroupDropdown(data, 'groupFromDropdown');
                     GetLeftStudentList();
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
                 }
-            })
-
+            });
         }
 
         function FillGroupToDropdown() {
@@ -234,32 +187,32 @@
                     'academicYearId': academicYearId
                 },
                 success: function (data) {
-                    $('#groupToDropdown').empty();
-                    if (data.length === 0) {
-                        $('#groupToDropdown').append($('<option>').text('Нет групп').val('0'));
-                    } else {
-                        $.each(data, function (i, group) {
-                            $('#groupToDropdown').append($('<option></option>').val(group.value).text(group.text));
-                        });
-                        if (lastSelectedgroupToDropdown) {
-                            $('#groupToDropdown').val(lastSelectedgroupToDropdown);
-                        }
-                    }
+                    populateGroupDropdown(data, 'groupToDropdown');
                     GetRightStudentList();
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
                 }
-            })
+            });
         }
 
+        function populateGroupDropdown(data, dropdownId) {
+            var dropdown = $('#' + dropdownId);
+            dropdown.empty();
 
-    </script>
+            if (data.length === 0) {
+                dropdown.append($('<option>').text('Нет групп').val('0'));
+            } else {
+                $.each(data, function (i, group) {
+                    dropdown.append($('<option></option>').val(group.value).text(group.text));
+                });
+            }
 
-    <script type="text/javascript">
+            loadSelectedValue(dropdownId);
+        }
 
         function GetLeftStudentList() {
-            var groupId = $("#groupFromDropdown").val();
+            var groupId = $('#groupFromDropdown').val();
 
             $.ajax({
                 type: 'GET',
@@ -270,17 +223,16 @@
                 },
                 success: function (response) {
                     $('#LeftContainer').html(response);
-                    $('#exportTable').DataTable()
-                    alert(result)
+                    $('#exportTable').DataTable();
                 },
                 error: function (xhr, status, error) {
-                    alert(xhr.responseText);
+                    console.error(xhr.responseText);
                 }
-            })
+            });
         }
 
         function GetRightStudentList() {
-            var groupId = $("#groupToDropdown").val();
+            var groupId = $('#groupToDropdown').val();
 
             $.ajax({
                 type: 'GET',
@@ -291,14 +243,12 @@
                 },
                 success: function (response) {
                     $('#RightContainer').html(response);
-                    $('#importTable').DataTable()
-                    console.log(result)
+                    $('#importTable').DataTable();
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
                 }
-            })
+            });
         }
     </script>
-
 }
