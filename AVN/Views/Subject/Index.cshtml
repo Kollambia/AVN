@@ -59,6 +59,9 @@
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="Course">
                                             @Html.DisplayNameFor(x => x.Course)
                                         </th>
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="DepartmentId">
+                                            @Html.DisplayNameFor(x => x.DepartmentId)
+                                        </th>
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="EmployeeId">
                                             @Html.DisplayNameFor(x => x.EmployeeId)
                                         </th>
@@ -84,6 +87,9 @@
                                                 @Html.DisplayFor(modelItem => item.Course)
                                             </td>
                                             <td>
+                                                @Html.DisplayFor(modelItem => item.Department.DepartmentName)
+                                            </td>
+                                            <td>
                                                 @Html.DisplayFor(modelItem => item.Employee.FullName)
                                             </td>
                                             <td>
@@ -101,10 +107,3 @@
         </div>
     </div>
 </div>
-
-
-
-@section Scripts {
-    <script>
-    </script>
-}

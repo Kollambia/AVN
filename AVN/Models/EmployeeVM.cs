@@ -22,9 +22,9 @@ namespace AVN.Models
         [MaxLength(50)]
         public string PName { get; set; }
 
-        [Required]
-        [DisplayName("Дата рождения")]
-        [MaxLength(100)]
+        [DateMinimumAge(16, ErrorMessage = "{0} должен быть кем-то в возрасте не менее {1} лет.")]
+        [DisplayName("Дата рожд.")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DateOfBirth { get; set; }
 
         [Required]
@@ -45,12 +45,24 @@ namespace AVN.Models
         [MaxLength(300)]
         public string Address { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Поле не заполнено")]
         [DisplayName("Номер телефона")]
-        [MaxLength(30)]
+        [RegularExpression(@"^0\(\d{3}\)\d{2}-\d{2}-\d{2}$", ErrorMessage = "Неправильный номер телефона.")]
         public string PhoneNumber { get; set; }
 
+        [DisplayName("Кафедра")]
         public int? DepartmentId { get; set; }
         public virtual Department Department { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
     }
 }

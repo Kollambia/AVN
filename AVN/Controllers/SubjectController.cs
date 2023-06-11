@@ -49,6 +49,7 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SubjectVM subject)
         {
+            // валидация работает эту хуйню не трогать
             if (!ModelState.IsValid)
             {
                 var mappedSubjects = mapper.Map<SubjectVM, Subject>(subject);
@@ -64,11 +65,12 @@ namespace AVN.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var subject = await unitOfWork.SubjectRepository.GetByIdAsync(id);
-            var mappedSubject = mapper.Map<Subject, SubjectVM>(subject);
             if (subject == null)
             {
                 return NotFound();
             }
+
+            var mappedSubject = mapper.Map<Subject, SubjectVM>(subject);
 
             return View(mappedSubject);
         }
@@ -83,6 +85,7 @@ namespace AVN.Web.Controllers
                 return NotFound();
             }
 
+            // валидация работает эту хуйню не трогать
             if (!ModelState.IsValid)
             {
                 var mappedSubjects = mapper.Map<SubjectVM, Subject>(subject);
@@ -103,13 +106,12 @@ namespace AVN.Web.Controllers
             {
                 return NotFound();
             }
-
+            
             return View(subject);
         }
 
         // POST: Subject/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var subject = await unitOfWork.SubjectRepository.GetByIdAsync(id);

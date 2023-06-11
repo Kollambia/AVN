@@ -23,19 +23,29 @@
                                     @Html.AntiForgeryToken()
                                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                                     <div class="form-group">
-                                        <label>@Html.DisplayNameFor(model => model.Title)</label>
+                                        <label>@Html.DisplayNameFor(x => x.Title)</label>
                                         @Html.EditorFor(x => x.Title, new { htmlAttributes = new { @class = "form-control" }})
                                         @Html.ValidationMessageFor(x => x.Title, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group">
-                                        <label>@Html.DisplayNameFor(model => model.Description)</label>
+                                        <label>@Html.DisplayNameFor(x => x.Description)</label>
                                         @Html.EditorFor(x => x.Description, new { htmlAttributes = new { @class = "form-control" }})
                                         @Html.ValidationMessageFor(x => x.Description, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group">
-                                        <label>@Html.DisplayNameFor(model => model.CreditHours)</label>
+                                        <label>@Html.DisplayNameFor(x => x.CreditHours)</label>
                                         @Html.EditorFor(x => x.CreditHours, new { htmlAttributes = new { @class = "form-control" }})
                                         @Html.ValidationMessageFor(x => x.CreditHours, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.DisplayNameFor(x => x.Course)</label>
+                                        @Html.DropDownListFor(x => x.Course, Html.GetEnumSelectList(typeof(Course)), "Не выбрано", new {@class = "form-control"})
+                                        @Html.ValidationMessageFor(x => x.Course, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.DisplayNameFor(x => x.DepartmentId)</label>
+                                        @Html.DropDownListFor(x => x.DepartmentId, new List<SelectListItem>(), new { @class = "form-control", id = "departmentDropdown" })
+                                        @Html.ValidationMessageFor(x => x.DepartmentId, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group">
                                         <label>@Html.DisplayNameFor(x => x.EmployeeId)</label>
@@ -45,7 +55,7 @@
                                     <hr>
                                     <div class="form-group row">
                                         <div class="col-md-6">
-                                            <a href="/Faculty/Index" class="btn btn-secondary btn-lg btn-block" type="button">Отмена</a>
+                                            <a href="/Department/Index" class="btn btn-secondary btn-lg btn-block" type="button">Отмена</a>
                                         </div>
                                         <div class="col-md-6">
                                             <button class="btn btn-success btn-lg btn-block" type="submit">Сохранить</button>
@@ -63,8 +73,29 @@
     <!--/container-->
 }
 
-@section Scripts{
+@section Scripts {
     <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetDepartments", "Department")',
+                type: 'GET',
+                success: function (data) {
+                    // Add new options
+                    $.each(data, function (i, department) {
+                        $('#departmentDropdown').append($('<option></option>').val(department.value).text(department.text));
+                    });
+
+                    // Set the selected value based on FacultyId
+                    var departmentId = '@Model.DepartmentId'; // Assuming FacultyId is an integer property
+                    $('#departmentDropdown').val(departmentId);
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
         $(document).ready(function () {
             $.ajax({
                 url: '@Url.Action("GetEmployees", "Employee")',
@@ -74,6 +105,10 @@
                     $.each(data, function (i, employee) {
                         $('#employeesDropdown').append($('<option></option>').val(employee.value).text(employee.text));
                     });
+
+                    // Set the selected value based on FacultyId
+                    var employeeId = '@Model.EmployeeId'; // Assuming FacultyId is an integer property
+                    $('#employeesDropdown').val(employeeId);
                 },
                 error: function (xhr, status, error) {
                     // Handle error if any

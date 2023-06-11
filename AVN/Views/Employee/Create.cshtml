@@ -1,55 +1,149 @@
-﻿@page
-@model EmployeeVM
-
+﻿@model EmployeeVM
 @{
     ViewBag.Title = "Регистрация";
 }
 
 @using (Html.BeginForm())
 {
-    <div class="container py-3">
-        <div class="row">
-            <div class="col-md-12">
-                <h2 class="text-center mb-2">Регистрация предмета</h2>
-                <hr class="mb-4">
+    <div class="container mt-3">
+        <form>
+            <div class="row jumbotron box8">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="col-sm-12 mx-t3 mb-4">
+                    <h2 class="text-center text-info">Регистрация нового работника</h2>
+                </div>
+                @*start-first-row*@
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.SName)*</label>
+                    @Html.EditorFor(x => x.SName, new { htmlAttributes = new { @class = "form-control", placeholder="Введите фамилию." }})
+                    @Html.ValidationMessageFor(x => x.SName, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Name)*</label>
+                    @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @class = "form-control", placeholder="Введите имя." }})
+                    @Html.ValidationMessageFor(x => x.Name, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.PName)*</label>
+                    @Html.EditorFor(x => x.PName, new { htmlAttributes = new { @class = "form-control", placeholder="Введите Отчество."}})
+                    @Html.ValidationMessageFor(x => x.PName, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.DateOfBirth)</label>
+                    @Html.EditorFor(x => x.DateOfBirth, new { htmlAttributes = new { @class = "form-control datetimepicker" }})
+                    @Html.ValidationMessageFor(x => x.DateOfBirth, "", new { @class = "text-danger" })
+                </div>
+                @*end-first-row*@
 
-                <div class="row justify-content-center">
-                    <div class="col-md-6">
-                        <span class="anchor" id="formPayment"></span>
-                        <div class="card card-outline-secondary">
-                            <div class="card-body">
-                                <h3 class="text-center">Форма регистрации</h3>
-                                <hr>
-                                <form autocomplete="off" class="form" role="form">
-                                    @Html.AntiForgeryToken()
-                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(model => model.SName)</label>
-                                        @Html.EditorFor(x => x.SName, new { htmlAttributes = new { @class = "form-control" }})
-                                        @Html.ValidationMessageFor(x => x.SName, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="form-group">
-                                        <label>@Html.DisplayNameFor(model => model.Name)</label>
-                                        @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @class = "form-control" }})
-                                        @Html.ValidationMessageFor(x => x.Name, "", new { @class = "text-danger" })
-                                    </div>
-                                    <hr>
-                                    <div class="form-group row">
-                                        <div class="col-md-6">
-                                            <a href="/Faculty/Index" class="btn btn-secondary btn-lg btn-block" type="button">Отмена</a>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <button class="btn btn-success btn-lg btn-block" type="submit">Добавить</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div><!-- /form card cc payment -->
+                @*start-second-row*@
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Email)*</label>
+                    @Html.EditorFor(x => x.Email, new { htmlAttributes = new { @class = "form-control", placeholder="Введите почту." }})
+                    @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-3 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Gender):</label>
+                    <div class="radio-buttons">
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label" style="margin-right: 5px;">@Gender.Male.GetShortName()</label>
+                            @Html.RadioButtonFor(m => m.Gender, Gender.Male, new { @class = "form-check-input" })
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label" style="margin-right: 5px;">@Gender.Female.GetShortName()</label>
+                            @Html.RadioButtonFor(m => m.Gender, Gender.Female, new { @class = "form-check-input" })
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label" style="margin-right: 5px;">@Gender.Undefined.GetShortName()</label>
+                            @Html.RadioButtonFor(m => m.Gender, Gender.Undefined, new { @class = "form-check-input"})
+                        </div>
                     </div>
-                </div><!--/row-->
-            </div><!--/col-->
-        </div><!--/row-->
-    </div>
+                    @Html.ValidationMessageFor(x => x.Gender, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Position)*</label>
+                    @Html.DropDownListFor(x => x.Position, Html.GetEnumSelectList(typeof(EmployeePosition)), "Не выбрано", new {@class = "form-control"})
+                    @Html.ValidationMessageFor(x => x.Position, "", new { @class = "text-danger" })
+                </div>
 
-    <!--/container-->
+                @*end-second-row*@
+
+                @*start-third-row*@
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.PhoneNumber)</label>
+                    @Html.TextBoxFor(x => x.PhoneNumber, new { @class = "form-control phone", placeholder = "0(999)99-99-99" })
+                    @Html.ValidationMessageFor(x => x.PhoneNumber, "", new { @class = "text-danger" })
+                </div>
+                
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Address)*</label>
+                    @Html.EditorFor(x => x.Address, new { htmlAttributes = new { @class = "form-control", placeholder="Введите адрес." }})
+                    @Html.ValidationMessageFor(x => x.Address, "", new { @class = "text-danger" })
+                </div>
+                
+
+                @*end-third-row*@
+
+                @*start-fourth-row*@
+
+                @*end-fourth-row*@
+
+                @*start-last-row*@
+
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.DepartmentId)*</label>
+                    @Html.DropDownListFor(x => x.DepartmentId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "departmentDropdown" })
+                    @Html.ValidationMessageFor(x => x.DepartmentId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-4 form-group"></div>
+
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Password)*</label>
+                    @Html.EditorFor(x => x.Password, new { htmlAttributes = new { @class = "form-control", placeholder="Введите фамилию." }})
+                    @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.ConfirmPassword)*</label>
+                    @Html.EditorFor(x => x.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", placeholder="Введите фамилию." }})
+                    @Html.ValidationMessageFor(x => x.ConfirmPassword, "", new { @class = "text-danger" })
+                </div>
+
+                @*end-last-row*@
+
+
+                <div class="col-sm-12 row">
+                    <div class="col-sm-9"></div>
+                    <div class="col-sm-3">
+                        <a href="/Group/Index" class="btn btn-secondary btn-lg btn-block-inline" type="button">Назад</a>
+                        <button class="btn btn-success btn-lg btn-block-inline" type="submit">Добавить</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetDepartments", "Department")',
+                type: 'GET',
+                success: function (data) {
+                    // Add new options
+                    $.each(data, function (i, department) {
+                        $('#departmentDropdown').append($('<option></option>').val(department.value).text(department.text));
+                    });
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    </script>
 }
