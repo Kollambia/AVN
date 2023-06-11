@@ -10,6 +10,7 @@ using AVN.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.Xml;
 
 namespace AVN.Web.Controllers
 {
@@ -19,6 +20,10 @@ namespace AVN.Web.Controllers
         private readonly IMapper mapper;
         private readonly AppDbContext context;
         private readonly UserManager<AppUser> userManager;
+        private static List<TransferStudentVM> _transferExportStudents = new(); //временное рещение
+        private static List<TransferStudentVM> _transferImportStudents = new(); //временное решение
+        private static int _exportGroupId; //временное решение
+        private static int _importGroupId; //временное решение
         public StudentController(IUnitOfWork unitOfWork, IMapper mapper, AppDbContext context, UserManager<AppUser> userManager)
         {
             this.unitOfWork = unitOfWork;
@@ -88,6 +93,7 @@ namespace AVN.Web.Controllers
             return PartialView(mappedStudents);
         }
 
+        [HttpGet]
         public async Task<ActionResult> ExportStudentList(int groupId)
         {
             var students = await unitOfWork.StudentRepository.GetAllAsync();
@@ -97,36 +103,78 @@ namespace AVN.Web.Controllers
                 return PartialView("ExportStudentList", new List<TransferStudentVM>());
 
             var mappedStudents = mapper.Map<Student, TransferStudentVM>(students);
-            return PartialView("ExportStudentList", mappedStudents);
+            if (_exportGroupId != groupId)
+            {
+                _exportGroupId = groupId;
+                _transferExportStudents.Clear();
+                _transferImportStudents.Clear();
+            }
+            if (_transferExportStudents.Count() == 0 && _transferImportStudents.Count() == 0) 
+                _transferExportStudents = mappedStudents.ToList();
+
+            return PartialView("ExportStudentList", _transferExportStudents);
         }
 
         [HttpPost]
-        public async Task<ActionResult> ExportStudentList(List<TransferStudentVM> students)
+        public async Task<ActionResult> ExportStudentList(List<TransferStudentVM> transferStudents)
         {
-            //var students = await unitOfWork.StudentRepository.GetAllAsync();
-            //if (groupId > 0)
-            //    students = students.Where(x => x.GroupId == groupId);
-            //else
-            //    return PartialView("ExportStudentList", new List<TransferStudentVM>());
-
-            //var mappedStudents = mapper.Map<Student, TransferStudentVM>(students);
-            //return PartialView("ExportStudentList", mappedStudents);
-            return null;
+            var idsToRemove = new List<string>();
+            foreach (var student in transferStudents)
+            {
+                var studentGroup = await unitOfWork.GroupRepository.GetByIdAsync(student.GroupId);
+                student.Group = studentGroup;
+                if (student.Selected == true)
+                {
+                    student.Transfered = true;
+                    student.Selected = false;
+                    idsToRemove.Add(student.Id);
+                    _transferImportStudents.Add(student);
+                }
+            }
+            _transferExportStudents.RemoveAll(exStudent => idsToRemove.Contains(exStudent.Id));
+            return RedirectToAction("Index", "Order");
         }
 
-        public async Task<IActionResult> ImportStudentList(int groupId)
+        public async Task<ActionResult> ImportStudentList(int groupId)
         {
             var students = await unitOfWork.StudentRepository.GetAllAsync();
             if (groupId > 0)
                 students = students.Where(x => x.GroupId == groupId);
             else
-                return PartialView("ImportStudentList", new List<StudentVM>());
+                return PartialView("ImportStudentList", new List<TransferStudentVM>());
 
-            var mappedStudents = mapper.Map<Student, StudentVM>(students);
-            return PartialView("ImportStudentList", mappedStudents);
+            var mappedStudents = mapper.Map<Student, TransferStudentVM>(students);
+            if (_importGroupId != groupId)
+            {
+                _importGroupId = groupId;
+                _transferExportStudents.Clear();
+                _transferImportStudents.Clear();
+            }
+            if (_transferImportStudents.Count == 0)
+                _transferImportStudents = mappedStudents.ToList();
+
+            return PartialView("ImportStudentList", _transferImportStudents);
         }
 
-       
+        [HttpPost]
+        public async Task<ActionResult> RevertTransferStudents(List<TransferStudentVM> transferStudents)
+        {
+            var idsToRemove = new List<string>();
+            foreach (var student in transferStudents)
+            {
+                var studentGroup = await unitOfWork.GroupRepository.GetByIdAsync(student.GroupId);
+                student.Group = studentGroup;
+                if (student.Selected == true)
+                {
+                    student.Transfered = false;
+                    student.Selected = false;
+                    idsToRemove.Add(student.Id);
+                    _transferExportStudents.Add(student);
+                }
+            }
+            _transferImportStudents.RemoveAll(exStudent => idsToRemove.Contains(exStudent.Id));
+            return RedirectToAction("Index", "Order");
+        }
 
         // GET: Student/Details/5
         public async Task<IActionResult> Details(string id)

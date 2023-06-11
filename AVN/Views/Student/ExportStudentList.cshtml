@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TransferStudentVM>
+﻿@model IList<TransferStudentVM>
 @{
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
@@ -13,44 +13,73 @@
     }
 </style>
 
-<form method="post" action="/Student/ImportStudentList">
-    <table class="table table-bordered table-hover" id="exportTable">
-        <thead class="thead-light">
-            <tr>
-                <th>
-                    <input type="checkbox" id="selectAllCheckbox">
-                </th>
-                <th>@Html.DisplayNameFor(model => model.FullName)</th>
-                <th>@Html.DisplayNameFor(model => model.GradeBookNumber)</th>
-                <th>@Html.DisplayNameFor(model => model.GroupId)</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr data-id="@item.Id">
-                    <td>
-                        <input type="checkbox" asp-for="@item.Selected" class="selector-checkbox">
-                    </td>
-                    <td>
-                        @if (item.Transfered)
+<form method="post" action="/Student/ExportStudentList" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-right">
+                <button type="submit" class="btn btn-primary mb-3">
+                    <i class="fas fa-angle-double-right"></i>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-bordered table-hover" id="exportTable">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="selectAllCheckbox">
+                            </th>
+                            <th>@Html.DisplayNameFor(model => model[0].FullName)</th>
+                            <th>@Html.DisplayNameFor(model => model[0].GradeBookNumber)</th>
+                            <th>@Html.DisplayNameFor(model => model[0].GroupId)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
                         {
-                            <i class="fas fa-running green-check"></i>  @item.FullName <!-- Icon for true -->
+                            for (var i = 0; i < Model.Count; i++)
+                            {
+                                <tr>
+                                    @Html.HiddenFor(m => Model[i].Id)
+                                    @Html.HiddenFor(m => Model[i].GroupId)
+                                    @Html.HiddenFor(m => Model[i].SName)
+                                    @Html.HiddenFor(m => Model[i].Name)
+                                    @Html.HiddenFor(m => Model[i].PName)
+                                    @Html.HiddenFor(m => Model[i].FullName)
+                                    @Html.HiddenFor(m => Model[i].GradeBookNumber)
+                                    @Html.HiddenFor(m => Model[i].Transfered)
+                                    <td>
+                                        <input type="checkbox" asp-for="@Model[i].Selected" class="selector-checkbox">
+                                    </td>
+                                    <td>
+                                        @if (Model[i].Transfered)
+                                        {
+                                            <i class="fas fa-running green-check"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-running"></i>
+                                        }
+                                        @Model[i].FullName
+                                    </td>
+                                    <td>@Model[i].GradeBookNumber</td>
+                                    <td>@Model[i].Group.GroupName</td>
+                                </tr>
+                            }
                         }
-                        else
-                        {
-                            <i class="fas fa-running"></i>  @item.FullName <!-- Icon for false -->
-                        }
-                    </td>
-                    <td>@item.GradeBookNumber</td>
-                    <td>@item.Group.GroupName</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <button type="submit">Отправить</button>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+   
 </form>
-@*<button id="submitButton" class="btn btn-primary">Отправить</button>*@
+
+
+
+
 
 
 
