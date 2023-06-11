@@ -10,7 +10,6 @@ using AVN.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography.Xml;
 
 namespace AVN.Web.Controllers
 {
@@ -63,6 +62,12 @@ namespace AVN.Web.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Enrolled()
+        {
+            return View();
+        }
+
         [HttpPost]
         public IActionResult ActionName(string[] selectedItems)
         {
@@ -109,14 +114,14 @@ namespace AVN.Web.Controllers
                 _transferExportStudents.Clear();
                 _transferImportStudents.Clear();
             }
-            if (_transferExportStudents.Count() == 0 || _transferImportStudents.Count() == 0) 
+            if (_transferExportStudents.Count() == 0 && _transferImportStudents.Count() == 0) 
                 _transferExportStudents = mappedStudents.ToList();
 
             return PartialView("ExportStudentList", _transferExportStudents);
         }
 
         [HttpPost]
-        public async Task<ActionResult> ExportStudentList(List<TransferStudentVM> transferStudents)
+        public async Task<ActionResult> ExportStudentList(List<TransferStudentVM> transferStudents) // to do make sync method
         {
             var idsToRemove = new List<string>();
             foreach (var student in transferStudents)
@@ -231,6 +236,7 @@ namespace AVN.Web.Controllers
             var updatedStudent = studentOrderService.SetStudentStatusAndGradeBookNumber(student);
             var mappedStudent = mapper.Map<Student, StudentVM>(updatedStudent);
             mappedStudent.Login = mappedStudent.GradeBookNumber;
+            mappedStudent.RecruitmentYear = DateTime.Now.Year;
             return View(mappedStudent);
         }
 
@@ -255,7 +261,7 @@ namespace AVN.Web.Controllers
 
                     await unitOfWork.StudentRepository.CreateAsync(mappedStudent);
                     await unitOfWork.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Enrolled", "Student");
                 }
             }
             return View(student);

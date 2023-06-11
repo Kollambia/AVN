@@ -91,12 +91,12 @@ namespace AVN.Web.Controllers
             {
                 return NotFound();
             }
-            //var mappedGroup = mapper.Map<Group, GroupVM>(group);
-            //mappedGroup.FacultyId = group.Direction?.Department?.FacultyId;
-            //mappedGroup.DepartmentId = group.Direction?.DepartmentId;
-            //mappedGroup.DirectionId = group.DirectionId;
-            //mappedGroup.DateCreate = group.DateCreate.Date;
-            return View();
+            var mappedGroup = mapper.Map<Group, GroupVM>(group);
+            mappedGroup.FacultyId = group.Direction?.Department?.FacultyId;
+            mappedGroup.DepartmentId = group.Direction?.DepartmentId;
+            mappedGroup.DirectionId = group.DirectionId;
+            mappedGroup.DateCreate = group.DateCreate.Date;
+            return View(mappedGroup);
         }
 
         // POST: Group/Edit/5
@@ -144,6 +144,13 @@ namespace AVN.Web.Controllers
         public async Task<List<SelectListItem>> GetGroupsByDirection(int directionId)
         {
             var groups = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x => x.DirectionId == directionId);
+            var groupList = groups.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GroupName }).ToList();
+            return groupList;
+        }
+
+        public async Task<List<SelectListItem>> GetEnrolledGroupsByDirection(int directionId)
+        {
+            var groups = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x => x.DirectionId == directionId).Where(x => x.GroupType == GroupType.Enrolled);
             var groupList = groups.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GroupName }).ToList();
             return groupList;
         }

@@ -65,16 +65,20 @@
             loadDropdownData();
 
             $('#movementTypeDropdown, #facultyFromDropdown, #facultyToDropdown, #academYearFirstDropdown, #academYearSecondDropdown').change(function () {
-                FillGroupFromDropdown();
-                FillGroupToDropdown();
+                FillGroupFromDropdown2();
+                FillGroupToDropdown2();
             });
 
             $('#groupFromDropdown').change(function () {
                 GetLeftStudentList();
+                //FillGroupFromDropdown();
+                saveSelectedValue('groupFromDropdown')
             });
 
             $('#groupToDropdown').change(function () {
                 GetRightStudentList();
+                //FillGroupToDropdown();
+                saveSelectedValue('groupToDropdown')
             });
         });
 
@@ -151,12 +155,12 @@
                 },
                 success: function (data) {
                     populateDropdown(data, 'groupFromDropdown');
-                    //loadSelectedValue('groupFromDropdown');
+                    loadSelectedValue('groupFromDropdown');
                     GetLeftStudentList();
                     saveSelectedValue('facultyFromDropdown');
                     saveSelectedValue('movementTypeDropdown');
                     saveSelectedValue('academYearFirstDropdown');
-                    saveSelectedValue('groupFromDropdown');
+                    //saveSelectedValue('groupFromDropdown');
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -180,7 +184,63 @@
                 },
                 success: function (data) {
                     populateDropdown(data, 'groupToDropdown');
-                    //loadSelectedValue('groupToDropdown');
+                    loadSelectedValue('groupToDropdown');
+                    GetRightStudentList();
+                    saveSelectedValue('facultyToDropdown');
+                    saveSelectedValue('movementTypeDropdown');
+                    saveSelectedValue('academYearSecondDropdown');
+                    //saveSelectedValue('groupToDropdown');
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+        function FillGroupFromDropdown2() {
+            var facultyId = $('#facultyFromDropdown').val();
+            var movementTypeId = $('#movementTypeDropdown').val();
+            var academicYearId = $('#academYearFirstDropdown').val();
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetGroupsToExport", "Group")',
+                contentType: 'application/json',
+                data: {
+                    'facultyId': facultyId,
+                    'movementTypeId': movementTypeId,
+                    'academicYearId': academicYearId
+                },
+                success: function (data) {
+                    populateDropdown(data, 'groupFromDropdown');
+                    GetLeftStudentList();
+                    saveSelectedValue('facultyFromDropdown');
+                    saveSelectedValue('movementTypeDropdown');
+                    saveSelectedValue('academYearFirstDropdown');
+                    saveSelectedValue('groupFromDropdown');
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+        function FillGroupToDropdown2() {
+            var facultyId = $('#facultyToDropdown').val();
+            var movementTypeId = $('#movementTypeDropdown').val();
+            var academicYearId = $('#academYearSecondDropdown').val();
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetGroupsToImport", "Group")',
+                contentType: 'application/json',
+                data: {
+                    'facultyId': facultyId,
+                    'movementTypeId': movementTypeId,
+                    'academicYearId': academicYearId
+                },
+                success: function (data) {
+                    populateDropdown(data, 'groupToDropdown');
                     GetRightStudentList();
                     saveSelectedValue('facultyToDropdown');
                     saveSelectedValue('movementTypeDropdown');

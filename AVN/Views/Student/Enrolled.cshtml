@@ -1,0 +1,298 @@
+﻿@{
+    ViewData["Title"] = "Абитуриенты";
+}
+
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-md-7">
+            <div class="form-group row mb-1">
+
+                <div class="col-md-2">
+                    <label class="font-weight-bold">Факультет</label>
+                </div>
+                <div class="col-md-10">
+                    <select id="facultyDropdown" name="facultyDropdown" class="form-control"></select>
+
+                </div>
+            </div>
+            <div class="form-group row mb-1">
+
+                <div class="col-md-2">
+                    <label class="font-weight-bold">Кафедра</label>
+                </div>
+                <div class="col-md-10">
+                    <select id="departmentDropdown" name="departmentDropdown" class="form-control"></select>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group row mb-1">
+
+                <div class="col-md-3">
+                    <label class="font-weight-bold">Направление</label>
+                </div>
+                <div class="col-md-9">
+                    <select id="directionDropdown" name="directionDropdown" class="form-control"></select>
+
+                </div>
+            </div>
+            <div class="form-group row mb-1">
+
+                <div class="col-md-3">
+                    <label class="font-weight-bold">Группа</label>
+                </div>
+                <div class="col-md-9">
+                    <select id="groupDropdown" name="groupDropdown" class="form-control"></select>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<hr>
+<div id="dataContainer"></div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetFaculties", "Faculty")',
+                type: 'GET',
+                success: function (data) {
+
+                    $.each(data, function (i, faculty) {
+                        $('#facultyDropdown').append($('<option></option>').val(faculty.value).text(faculty.text));
+                    });
+
+                    FillDepartmentsDropdown();
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+            GetList()
+        });
+
+        function FillDepartmentsDropdown() {
+            // Your code logic here
+            var facultyId = $('#facultyDropdown').val();
+            $.ajax({
+                url: '@Url.Action("GetDepartmentsByFaculty", "Department")',
+                type: 'GET',
+                data: { facultyId: facultyId },
+                success: function (data) {
+
+                    $('#departmentDropdown').append($('<option>').text('Все').val('0'));
+
+                    $.each(data, function (i, department) {
+                        $('#departmentDropdown').append($('<option></option>').val(department.value).text(department.text));
+                    });
+
+                    FillDirectionsDropdown();
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+        function FillDirectionsDropdown() {
+            var departmentId = $('#departmentDropdown').val();
+
+            $.ajax({
+                url: '@Url.Action("GetDirectionsByDepartment", "Direction")',
+                type: 'GET',
+                data: { departmentId: departmentId },
+                success: function (data) {
+
+                    $('#directionDropdown').append($('<option>').text('Все').val('0'));
+
+                    $.each(data, function (i, direction) {
+                        $('#directionDropdown').append($('<option></option>').val(direction.value).text(direction.text));
+                    });
+
+                    FillGroupsDropdown();
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+        function FillGroupsDropdown() {
+            var directionId = $('#directionDropdown').val();
+
+            $.ajax({
+                url: '@Url.Action("GetGroupsByDirection", "Group")',
+                type: 'GET',
+                data: { directionId: directionId },
+                success: function (data) {
+                    $('#groupDropdown').append($('<option>').text('Все').val('0'));
+
+                    $.each(data, function (i, group) {
+                        $('#groupDropdown').append($('<option></option>').val(group.value).text(group.text));
+                    });
+
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('#facultyDropdown').change(function () {
+                var facultyId = $(this).val();
+                if (facultyId == 0) {
+                    // Clear departments dropdown
+                    $('#departmentDropdown').empty();
+                    $('#directionDropdown').empty();
+                    $('#groupDropdown').empty();
+
+                    // Add "select item" option
+                    $('#departmentDropdown').append($('<option>').text('Все').val('0'));
+                    $('#directionDropdown').append($('<option>').text('Все').val('0'));
+                    $('#groupDropdown').append($('<option>').text('Все').val('0'));
+                }
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetDepartmentsByFaculty", "Department")',
+                    data: { facultyId: facultyId },
+                    success: function (response) {
+
+                        $('#departmentDropdown').empty();
+                        $('#directionDropdown').empty();
+                        $('#groupDropdown').empty();
+
+                        $('#departmentDropdown').append($('<option>').text('Все').val('0'));
+                        $('#directionDropdown').append($('<option>').text('Все').val('0'));
+                        $('#groupDropdown').append($('<option>').text('Все').val('0'));
+                        // Add new options
+                        $.each(response, function (i, department) {
+                            $('#departmentDropdown').append($('<option></option>').val(department.value).text(department.text));
+                        });
+
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error if any
+                        console.error(xhr.responseText);
+                    }
+                })
+                GetList()
+            });
+        });
+
+        $(document).ready(function () {
+            $('#departmentDropdown').change(function () {
+                var departmentId = $(this).val();
+                if (departmentId == 0) {
+                    // Clear departments dropdown
+                    $('#directionDropdown').empty();
+                    $('#groupDropdown').empty();
+
+                    // Add "select item" option
+                    $('#directionDropdown').append($('<option>').text('Все').val('0'));
+                    $('#groupDropdown').append($('<option>').text('Все').val('0'));
+                }
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetDirectionsByDepartment", "Direction")',
+                    data: { departmentId: departmentId },
+                    success: function (response) {
+
+                        $('#directionDropdown').empty();
+                        $('#groupDropdown').empty();
+
+                        $('#directionDropdown').append($('<option>').text('Все').val('0'));
+                        $('#groupDropdown').append($('<option>').text('Все').val('0'));
+
+                        $.each(response, function (i, direction) {
+                            $('#directionDropdown').append($('<option></option>').val(direction.value).text(direction.text));
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+                GetList()
+            });
+        });
+
+        $(document).ready(function () {
+            $('#directionDropdown').change(function () {
+                var directionId = $(this).val();
+                if (directionId == 0) {
+                    $('#groupDropdown').empty();
+                    $('#groupDropdown').append($('<option>').text('Все').val('0'));
+                }
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetGroupsByDirection", "Group")',
+                    data: { directionId: directionId },
+                    success: function (response) {
+                        // Clear previous options
+                        $('#groupDropdown').empty();
+
+                        // Add "select item" option
+                        $('#groupDropdown').append($('<option>').text('Все').val('0'));
+
+                        // Add new options
+                        $.each(response, function (i, group) {
+                            $('#groupDropdown').append($('<option></option>').val(group.value).text(group.text));
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error if any
+                        console.error(xhr.responseText);
+                    }
+                });
+                GetList()
+            });
+        });
+
+        $(document).ready(function () {
+            $('#groupDropdown').change(function () {
+                GetList()
+            });
+        });
+
+    </script>
+
+    <script type="text/javascript">
+
+        function GetList() {
+            var facultyId = $("#facultyDropdown").val() || 0;
+            var departmentId = $("#departmentDropdown").val();
+            var directionId = $("#directionDropdown").val();
+            var groupId = $("#groupDropdown").val();
+            var groupType = @Html.Raw(Json.Serialize(GroupType.Enrolled));
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("StudentList", "Student")',
+                contentType: 'application/json',
+                data: {
+                    'facultyId': facultyId,
+                    'departmentId': departmentId,
+                    'directionId': directionId,
+                    'groupId': groupId,
+                    'groupType': groupType
+                },
+                success: function (response) {
+                    $('#dataContainer').html(response);
+                    $('#table').DataTable()
+                    console.log(result)
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            })
+        }
+    </script>
+}
