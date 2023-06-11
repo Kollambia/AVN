@@ -2,7 +2,7 @@
 
 namespace AVN.Model.Entities;
 
-public class Group : BaseEntity<Group, int>
+public class Group : BaseEntity<Group, string>
 {
     public string GroupName { get; set; }
     public Course Course { get; set; }
@@ -20,9 +20,11 @@ public class Group : BaseEntity<Group, int>
 
     public virtual ICollection<Student>? Students { get; set; }
     public virtual ICollection<Order>? Orders { get; set; }
+    public virtual ICollection<GroupEmployee>? GroupEmployees { get; set; }
 
     public Group()
     {
+        GroupEmployees = new List<GroupEmployee>();
         Students = new List<Student>();
         Orders = new List<Order>();
     }

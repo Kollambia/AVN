@@ -55,6 +55,12 @@ namespace AVN.Model.Entities
 
         public virtual ICollection<Subject> Subjects { get; set; }
 
+        public virtual ICollection<GroupEmployee>? GroupEmployees { get; set; }
+        public Employee()
+        {
+            GroupEmployees = new List<GroupEmployee>();
+        }
+
         [NotMapped]
         public string FullName
         {

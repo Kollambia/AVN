@@ -1,4 +1,5 @@
-﻿using AVN.Common.Enums;
+﻿using System.Threading.Tasks.Sources;
+using AVN.Common.Enums;
 
 namespace AVN.Model.Entities;
 
@@ -17,6 +18,8 @@ public class Student : BaseEntity<Student, string>
     public string PhoneNumber { get; set; }
     public int RecruitmentYear{ get; set; }
     public bool IsHasDebt { get; set; }
+
+    public int Score { get; set; }
 
     public int GroupId { get; set; }
     public virtual Group? Group { get; set; }

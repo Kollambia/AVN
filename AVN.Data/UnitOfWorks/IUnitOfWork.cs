@@ -8,7 +8,7 @@ public interface IUnitOfWork : IDisposable
     IRepository<Student, string> StudentRepository { get; }
     IRepository<Faculty, int> FacultyRepository { get;  }
     IRepository<Department, int> DepartmentRepository { get;  }
-    IRepository<Group, int> GroupRepository { get; }
+    IRepository<Group, string> GroupRepository { get; }
     IRepository<Employee, string> EmployeeRepository { get; }
     IRepository<Direction, int> DirectionRepository { get; }
     IRepository<Subject, int> SubjectRepository { get; }

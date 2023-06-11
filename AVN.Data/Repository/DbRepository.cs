@@ -83,5 +83,18 @@ namespace AVN.Data.Repository
         {
             return await _context.Set<T>().Where(expression).ToListAsync();
         }
+
+        public async Task<IEnumerable<Group>> GetGroupsByEmployeeIdAsync(int employeeId)
+        {
+            return await _context.Set<GroupEmployee>()
+                .Where(ge => ge.EmployeeId == employeeId)
+                .Select(ge => ge.Group)
+                .ToListAsync();
+        }
+
+        public void Update(T entity)
+        {
+            _context.Entry(entity).State = EntityState.Modified;
+        }
     }
 }

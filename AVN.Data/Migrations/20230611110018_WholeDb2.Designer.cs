@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AVN.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230602084428_smallchanges")]
-    partial class smallchanges
+    [Migration("20230611110018_WholeDb2")]
+    partial class WholeDb2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,38 +24,40 @@ namespace AVN.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("AVN.Model.Entities.AcademicYear", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("YearFrom")
+                        .HasColumnType("int");
+
+                    b.Property<int>("YearTo")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AcademicYears");
+                });
+
             modelBuilder.Entity("AVN.Model.Entities.AppUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("AcademicDegree")
-                        .HasColumnType("int");
-
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Citizenship")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DirectionId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EducationalLine")
-                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -64,26 +66,11 @@ namespace AVN.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("FacultyId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Gender")
-                        .HasColumnType("int");
-
-                    b.Property<string>("GradeBookNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -92,9 +79,6 @@ namespace AVN.Data.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -105,17 +89,8 @@ namespace AVN.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("SName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StudingForm")
-                        .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -125,8 +100,6 @@ namespace AVN.Data.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GroupId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -173,6 +146,9 @@ namespace AVN.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("AcademicDegree")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("CreditCost")
                         .HasColumnType("decimal(18,2)");
 
@@ -183,6 +159,7 @@ namespace AVN.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DirectionName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DirectionNumber")
@@ -190,6 +167,9 @@ namespace AVN.Data.Migrations
 
                     b.Property<string>("DirectionShortName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TrainingPeriod")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -279,11 +259,14 @@ namespace AVN.Data.Migrations
 
             modelBuilder.Entity("AVN.Model.Entities.Group", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AcademicDegree")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<int?>("AcademicYearId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Course")
                         .HasColumnType("int");
@@ -298,11 +281,66 @@ namespace AVN.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("GroupType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudingForm")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainingPeriod")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AcademicYearId");
 
                     b.HasIndex("DirectionId");
 
                     b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("AVN.Model.Entities.GroupEmployee", b =>
+                {
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EmployeeId1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("GroupId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("GroupId", "EmployeeId");
+
+                    b.HasIndex("EmployeeId1");
+
+                    b.HasIndex("GroupId1");
+
+                    b.ToTable("GroupEmployees");
+                });
+
+            modelBuilder.Entity("AVN.Model.Entities.MovementType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("MoveType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MovementTypes");
                 });
 
             modelBuilder.Entity("AVN.Model.Entities.Order", b =>
@@ -313,24 +351,32 @@ namespace AVN.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int?>("AcademicYearId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Course")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("GroupId")
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("GroupId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("MovementTypeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Number")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrderType")
+                    b.Property<int>("OrderTypeId")
                         .HasColumnType("int");
 
                     b.Property<string>("StudentId")
@@ -338,18 +384,45 @@ namespace AVN.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AcademicYearId");
+
+                    b.HasIndex("GroupId1");
+
+                    b.HasIndex("MovementTypeId");
+
+                    b.HasIndex("OrderTypeId");
+
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("AVN.Model.Entities.OrderType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("MovementTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MovementTypeId");
+
+                    b.ToTable("OrderTypes");
                 });
 
             modelBuilder.Entity("AVN.Model.Entities.Student", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AcademicDegree")
-                        .HasColumnType("int");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -374,6 +447,12 @@ namespace AVN.Data.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
+                    b.Property<string>("GroupId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsHasDebt")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -386,21 +465,68 @@ namespace AVN.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("RecruitmentYear")
+                        .HasColumnType("int");
+
                     b.Property<string>("SName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("Score")
                         .HasColumnType("int");
 
-                    b.Property<int>("StudingForm")
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId");
+                    b.HasIndex("GroupId1");
 
                     b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("AVN.Model.Entities.StudentMovement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("AcademicYearId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("MovementDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("MovementTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NewGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OldGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OrderNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AcademicYearId");
+
+                    b.HasIndex("MovementTypeId");
+
+                    b.HasIndex("StudentId1");
+
+                    b.ToTable("StudentMovements");
                 });
 
             modelBuilder.Entity("AVN.Model.Entities.StudentPayment", b =>
@@ -411,7 +537,7 @@ namespace AVN.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AcademicYear")
+                    b.Property<int?>("AcademicYearId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Contract")
@@ -426,13 +552,23 @@ namespace AVN.Data.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
+                    b.Property<string>("GroupId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<decimal>("Payed")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("RecruitmentYear")
+                        .HasColumnType("int");
 
                     b.Property<string>("StudentId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AcademicYearId");
+
+                    b.HasIndex("GroupId1");
 
                     b.HasIndex("StudentId");
 
@@ -496,6 +632,9 @@ namespace AVN.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -503,6 +642,8 @@ namespace AVN.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
+
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Subjects");
                 });
@@ -670,15 +811,6 @@ namespace AVN.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AVN.Model.Entities.AppUser", b =>
-                {
-                    b.HasOne("AVN.Model.Entities.Group", "Group")
-                        .WithMany()
-                        .HasForeignKey("GroupId");
-
-                    b.Navigation("Group");
-                });
-
             modelBuilder.Entity("AVN.Model.Entities.Department", b =>
                 {
                     b.HasOne("AVN.Model.Entities.Faculty", "Faculty")
@@ -708,38 +840,129 @@ namespace AVN.Data.Migrations
 
             modelBuilder.Entity("AVN.Model.Entities.Group", b =>
                 {
+                    b.HasOne("AVN.Model.Entities.AcademicYear", "AcademicYear")
+                        .WithMany("Groups")
+                        .HasForeignKey("AcademicYearId");
+
                     b.HasOne("AVN.Model.Entities.Direction", "Direction")
                         .WithMany("Groups")
                         .HasForeignKey("DirectionId");
 
+                    b.Navigation("AcademicYear");
+
                     b.Navigation("Direction");
+                });
+
+            modelBuilder.Entity("AVN.Model.Entities.GroupEmployee", b =>
+                {
+                    b.HasOne("AVN.Model.Entities.Employee", "Employee")
+                        .WithMany("GroupEmployees")
+                        .HasForeignKey("EmployeeId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AVN.Model.Entities.Group", "Group")
+                        .WithMany("GroupEmployees")
+                        .HasForeignKey("GroupId1");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("AVN.Model.Entities.Order", b =>
                 {
+                    b.HasOne("AVN.Model.Entities.AcademicYear", "AcademicYear")
+                        .WithMany("Orders")
+                        .HasForeignKey("AcademicYearId");
+
+                    b.HasOne("AVN.Model.Entities.Group", "Group")
+                        .WithMany("Orders")
+                        .HasForeignKey("GroupId1");
+
+                    b.HasOne("AVN.Model.Entities.MovementType", "MovementType")
+                        .WithMany("Orders")
+                        .HasForeignKey("MovementTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AVN.Model.Entities.OrderType", "OrderType")
+                        .WithMany("Orders")
+                        .HasForeignKey("OrderTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("AVN.Model.Entities.Student", "Student")
                         .WithMany("Orders")
                         .HasForeignKey("StudentId");
 
+                    b.Navigation("AcademicYear");
+
+                    b.Navigation("Group");
+
+                    b.Navigation("MovementType");
+
+                    b.Navigation("OrderType");
+
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("AVN.Model.Entities.OrderType", b =>
+                {
+                    b.HasOne("AVN.Model.Entities.MovementType", "MovementType")
+                        .WithMany("OrderTypes")
+                        .HasForeignKey("MovementTypeId");
+
+                    b.Navigation("MovementType");
                 });
 
             modelBuilder.Entity("AVN.Model.Entities.Student", b =>
                 {
                     b.HasOne("AVN.Model.Entities.Group", "Group")
                         .WithMany("Students")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GroupId1");
 
                     b.Navigation("Group");
                 });
 
+            modelBuilder.Entity("AVN.Model.Entities.StudentMovement", b =>
+                {
+                    b.HasOne("AVN.Model.Entities.AcademicYear", "AcademicYear")
+                        .WithMany("StudentMovements")
+                        .HasForeignKey("AcademicYearId");
+
+                    b.HasOne("AVN.Model.Entities.MovementType", "MovementType")
+                        .WithMany("StudentMovements")
+                        .HasForeignKey("MovementTypeId");
+
+                    b.HasOne("AVN.Model.Entities.Student", "Student")
+                        .WithMany("StudentMovements")
+                        .HasForeignKey("StudentId1");
+
+                    b.Navigation("AcademicYear");
+
+                    b.Navigation("MovementType");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("AVN.Model.Entities.StudentPayment", b =>
                 {
+                    b.HasOne("AVN.Model.Entities.AcademicYear", "AcademicYear")
+                        .WithMany("StudentPayments")
+                        .HasForeignKey("AcademicYearId");
+
+                    b.HasOne("AVN.Model.Entities.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId1");
+
                     b.HasOne("AVN.Model.Entities.Student", "Student")
                         .WithMany("StudentPayments")
                         .HasForeignKey("StudentId");
+
+                    b.Navigation("AcademicYear");
+
+                    b.Navigation("Group");
 
                     b.Navigation("Student");
                 });
@@ -759,19 +982,25 @@ namespace AVN.Data.Migrations
                         .WithMany("Subjects")
                         .HasForeignKey("DepartmentId");
 
+                    b.HasOne("AVN.Model.Entities.Employee", "Employee")
+                        .WithMany("Subjects")
+                        .HasForeignKey("EmployeeId");
+
                     b.Navigation("Department");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("AVN.Model.Entities.SubjectEmployee", b =>
                 {
                     b.HasOne("AVN.Model.Entities.Employee", "Employee")
-                        .WithMany("SubjectEmployees")
+                        .WithMany()
                         .HasForeignKey("EmployeeId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AVN.Model.Entities.Subject", "Subject")
-                        .WithMany("SubjectEmployees")
+                        .WithMany()
                         .HasForeignKey("SubjectId");
 
                     b.Navigation("Employee");
@@ -830,6 +1059,17 @@ namespace AVN.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("AVN.Model.Entities.AcademicYear", b =>
+                {
+                    b.Navigation("Groups");
+
+                    b.Navigation("Orders");
+
+                    b.Navigation("StudentMovements");
+
+                    b.Navigation("StudentPayments");
+                });
+
             modelBuilder.Entity("AVN.Model.Entities.Department", b =>
                 {
                     b.Navigation("Directions");
@@ -846,7 +1086,9 @@ namespace AVN.Data.Migrations
 
             modelBuilder.Entity("AVN.Model.Entities.Employee", b =>
                 {
-                    b.Navigation("SubjectEmployees");
+                    b.Navigation("GroupEmployees");
+
+                    b.Navigation("Subjects");
                 });
 
             modelBuilder.Entity("AVN.Model.Entities.Faculty", b =>
@@ -856,12 +1098,32 @@ namespace AVN.Data.Migrations
 
             modelBuilder.Entity("AVN.Model.Entities.Group", b =>
                 {
+                    b.Navigation("GroupEmployees");
+
+                    b.Navigation("Orders");
+
                     b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("AVN.Model.Entities.MovementType", b =>
+                {
+                    b.Navigation("OrderTypes");
+
+                    b.Navigation("Orders");
+
+                    b.Navigation("StudentMovements");
+                });
+
+            modelBuilder.Entity("AVN.Model.Entities.OrderType", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("AVN.Model.Entities.Student", b =>
                 {
                     b.Navigation("Orders");
+
+                    b.Navigation("StudentMovements");
 
                     b.Navigation("StudentPayments");
                 });
@@ -869,11 +1131,6 @@ namespace AVN.Data.Migrations
             modelBuilder.Entity("AVN.Model.Entities.StudentPayment", b =>
                 {
                     b.Navigation("PaymentDetails");
-                });
-
-            modelBuilder.Entity("AVN.Model.Entities.Subject", b =>
-                {
-                    b.Navigation("SubjectEmployees");
                 });
 #pragma warning restore 612, 618
         }
