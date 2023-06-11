@@ -135,6 +135,7 @@ namespace AVN.Web.Controllers
             return RedirectToAction("Index", "Order");
         }
 
+        [HttpGet]
         public async Task<ActionResult> ImportStudentList(string groupId)
         {
             var students = await unitOfWork.StudentRepository.GetAllAsync();
@@ -224,10 +225,12 @@ namespace AVN.Web.Controllers
         // GET: Student/Create
         public IActionResult Create()
         {
+            // to do переделать этот кошмар
             var studentOrderService = new OrderService(context);
             Student student = new Student();
             var updatedStudent = studentOrderService.SetStudentStatusAndGradeBookNumber(student);
             var mappedStudent = mapper.Map<Student, StudentVM>(updatedStudent);
+            mappedStudent.Login = mappedStudent.GradeBookNumber;
             return View(mappedStudent);
         }
 
@@ -236,15 +239,15 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(StudentVM student)
         {
-            student.Status = StudentStatus.Enrollee;
             if (ModelState.IsValid)
             {
-                var newId = Guid.NewGuid().ToString();
                 var mappedStudent = mapper.Map<StudentVM, Student>(student);
+
+                var newId = Guid.NewGuid().ToString();
                 mappedStudent.Id = newId;
                 
-                var user = new AppUser() { UserName = student.GradeBookNumber, Id = newId };
-                var result = await userManager.CreateAsync(user, student.GradeBookNumber);
+                var user = new AppUser() { UserName = student.Login, Id = newId };
+                var result = await userManager.CreateAsync(user, student.Password);
 
                 if (result.Succeeded)
                 {

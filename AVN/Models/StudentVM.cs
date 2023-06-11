@@ -81,16 +81,21 @@ namespace AVN.Models
         public string? GroupId { get; set; }
         public Group? Group { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Введите логин")]
+        [Display(Name = "Логин")]
+        [StringLength(15, MinimumLength = 5, ErrorMessage = "Поле должно содержать от 5 до 15 символов.")]
+        public string? Login { get; set; }
+
+        [Required(ErrorMessage = "Введите пароль")]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
-        public string Password { get; set; }
+        [Display(Name = "Пароль")]
+        public string? Password { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; }
+        [Display(Name = "Подтвердите пароль")]
+        [Compare("Password", ErrorMessage = "Пароль и подтверждения пароля не совпадают.")]
+        public string? ConfirmPassword { get; set; }
 
     }
 
