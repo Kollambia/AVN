@@ -85,6 +85,8 @@
                 success: function (data) {
                     populateDropdown(data, 'facultyFromDropdown');
                     populateDropdown(data, 'facultyToDropdown');
+                    loadSelectedValue('facultyFromDropdown');
+                    loadSelectedValue('facultyToDropdown');
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -97,6 +99,8 @@
                 success: function (data) {
                     populateDropdown(data, 'academYearFirstDropdown');
                     populateDropdown(data, 'academYearSecondDropdown');
+                    loadSelectedValue('academYearFirstDropdown');
+                    loadSelectedValue('academYearSecondDropdown');
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -108,6 +112,7 @@
                 type: 'GET',
                 success: function (data) {
                     populateDropdown(data, 'movementTypeDropdown');
+                    loadSelectedValue('movementTypeDropdown');
                     FillGroupFromDropdown();
                     FillGroupToDropdown();
                 },
@@ -128,24 +133,6 @@
                     dropdown.append($('<option></option>').val(item.value).text(item.text));
                 });
             }
-
-            loadSelectedValue(dropdownId);
-        }
-
-        function saveSelectedValue(dropdownId) {
-            var selectedValue = $('#' + dropdownId).val();
-            if (selectedValue) {
-                localStorage.setItem(dropdownId, selectedValue);
-            } else {
-                localStorage.removeItem(dropdownId);
-            }
-        }
-
-        function loadSelectedValue(dropdownId) {
-            var selectedValue = localStorage.getItem(dropdownId);
-            if (selectedValue) {
-                $('#' + dropdownId).val(selectedValue);
-            }
         }
 
         function FillGroupFromDropdown() {
@@ -163,8 +150,13 @@
                     'academicYearId': academicYearId
                 },
                 success: function (data) {
-                    populateGroupDropdown(data, 'groupFromDropdown');
+                    populateDropdown(data, 'groupFromDropdown');
+                    //loadSelectedValue('groupFromDropdown');
                     GetLeftStudentList();
+                    saveSelectedValue('facultyFromDropdown');
+                    saveSelectedValue('movementTypeDropdown');
+                    saveSelectedValue('academYearFirstDropdown');
+                    saveSelectedValue('groupFromDropdown');
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -187,8 +179,13 @@
                     'academicYearId': academicYearId
                 },
                 success: function (data) {
-                    populateGroupDropdown(data, 'groupToDropdown');
+                    populateDropdown(data, 'groupToDropdown');
+                    //loadSelectedValue('groupToDropdown');
                     GetRightStudentList();
+                    saveSelectedValue('facultyToDropdown');
+                    saveSelectedValue('movementTypeDropdown');
+                    saveSelectedValue('academYearSecondDropdown');
+                    saveSelectedValue('groupToDropdown');
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -196,19 +193,16 @@
             });
         }
 
-        function populateGroupDropdown(data, dropdownId) {
-            var dropdown = $('#' + dropdownId);
-            dropdown.empty();
-
-            if (data.length === 0) {
-                dropdown.append($('<option>').text('Нет групп').val('0'));
-            } else {
-                $.each(data, function (i, group) {
-                    dropdown.append($('<option></option>').val(group.value).text(group.text));
-                });
+        function loadSelectedValue(dropdownId) {
+            var selectedValue = sessionStorage.getItem(dropdownId);
+            if (selectedValue) {
+                $('#' + dropdownId).val(selectedValue);
             }
+        }
 
-            loadSelectedValue(dropdownId);
+        function saveSelectedValue(dropdownId) {
+            var selectedValue = $('#' + dropdownId).val();
+            sessionStorage.setItem(dropdownId, selectedValue);
         }
 
         function GetLeftStudentList() {

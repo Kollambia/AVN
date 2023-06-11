@@ -105,7 +105,7 @@
                         </div>
                         <div class="col-sm-3 form-group">
                             <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Status)</label>
-                            @Html.DropDownListFor(x => x.Status, Html.GetEnumSelectList(typeof(StudentStatus)), "Не выбрано", new {@class = "form-control", disabled = "disabled" })
+                            @Html.DropDownListFor(x => x.Status, Html.GetEnumSelectList(typeof(StudentStatus)), new {@class = "form-control", disabled = "disabled" })
                             @Html.HiddenFor(x => x.Status, new { id = "StatusHidden" })
                             @Html.ValidationMessageFor(x => x.Status, "", new { @class = "text-danger" })
                         </div>

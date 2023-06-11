@@ -78,7 +78,7 @@ namespace AVN.Models
 
         [Required(ErrorMessage = "Выберите группу")]
         [DisplayName("Группа")]
-        public int? GroupId { get; set; }
+        public string? GroupId { get; set; }
         public Group? Group { get; set; }
 
         [Required]
