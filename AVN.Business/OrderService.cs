@@ -1,4 +1,5 @@
-﻿using AVN.Data;
+﻿using AVN.Common.Enums;
+using AVN.Data;
 using AVN.Model.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -73,5 +74,21 @@ public class OrderService
         //student.Status = StudentStatus.Enlisted;
 
         return student;
+    }
+
+    public StudentStatus GetStudentStatusByGroupId(int groupId)
+    {
+        GroupType groupType = _dbContext.Groups.SingleOrDefault(x => x.Id == groupId).GroupType;
+        StudentStatus studentStatus = groupType switch
+        {
+            GroupType.Students => StudentStatus.Active,
+            GroupType.Enrolled => StudentStatus.Enrollee,
+            GroupType.Archived => StudentStatus.Transfer,
+            GroupType.Graduated => StudentStatus.Graduated,
+            GroupType.Expelled => StudentStatus.Expelled,
+            GroupType.AcademicLeaved => StudentStatus.LeaveOfAbsence,
+            _ => StudentStatus.Inactive
+        };
+        return studentStatus;
     }
 }

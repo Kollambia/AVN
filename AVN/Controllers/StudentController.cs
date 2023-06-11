@@ -109,7 +109,7 @@ namespace AVN.Web.Controllers
                 _transferExportStudents.Clear();
                 _transferImportStudents.Clear();
             }
-            if (_transferExportStudents.Count() == 0 && _transferImportStudents.Count() == 0) 
+            if (_transferExportStudents.Count() == 0 || _transferImportStudents.Count() == 0) 
                 _transferExportStudents = mappedStudents.ToList();
 
             return PartialView("ExportStudentList", _transferExportStudents);
@@ -173,6 +173,38 @@ namespace AVN.Web.Controllers
                 }
             }
             _transferImportStudents.RemoveAll(exStudent => idsToRemove.Contains(exStudent.Id));
+            return RedirectToAction("Index", "Order");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SaveImportedStudents(List<TransferStudentVM> transferStudents)
+        {
+            var studentOrderService = new OrderService(context);
+            foreach (var student in transferStudents)
+            {
+                if (student.Transfered == true)
+                {
+                    var changedStudent = await unitOfWork.StudentRepository.GetByIdAsync(student.Id);
+                    changedStudent.GroupId = _importGroupId;
+                    changedStudent.Status = studentOrderService.GetStudentStatusByGroupId(_importGroupId);
+                    await unitOfWork.StudentRepository.UpdateAsync(changedStudent);
+                    await unitOfWork.SaveChangesAsync();
+                    _transferExportStudents.Clear();
+                    _transferImportStudents.Clear();
+                }
+
+            }
+            return RedirectToAction("Index", "Order");
+        }
+
+        public IActionResult CancelImportStudents()
+        {
+            bool isNeedToCancel = _transferImportStudents.Any(x => x.Transfered);
+            if (isNeedToCancel)
+            {
+                _transferExportStudents.Clear();
+                _transferImportStudents.Clear();
+            }
             return RedirectToAction("Index", "Order");
         }
 

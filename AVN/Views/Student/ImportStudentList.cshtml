@@ -13,16 +13,23 @@
     }
 </style>
 
-<form method="post" id="importForm" action="/Student/ImportStudentList">
+<form method="post" id="importForm">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12 text-left">
-                <button type="submit" class="btn btn-primary mb-3" onclick="revertTransferStudents()">
-                    <i class="fas fa-angle-double-left"></i>
-                </button>
-               @* <button type="button" class="btn btn-danger mb-3">
-                    Revert Transfer
-                </button>*@
+            <div class="col-lg-12">
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary mb-3" onclick="revertTransferStudents()">
+                        <i class="fas fa-angle-double-left"></i>
+                    </button>
+                    <div>
+                        <button type="submit" class="btn btn-success mb-3 mr-3" onclick="saveImportedStudents()">
+                            <i class="fas fa-save"></i>
+                        </button>
+                        <button type="submit" class="btn btn-danger mb-3" onclick="cancelImportStudents()">
+                            <i class="fas fa-window-close"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -119,7 +126,16 @@
             importForm.action = "/Student/RevertTransferStudents";
             importForm.submit();
         }
-        
+        function saveImportedStudents() {
+            var importForm = document.getElementById("importForm");
+            importForm.action = "/Student/SaveImportedStudents";
+            importForm.submit();
+        }
+        function cancelImportStudents() {
+            var importForm = document.getElementById("importForm");
+            importForm.action = "/Student/CancelImportStudents";
+            importForm.submit();
+        }
     </script>
 
 }

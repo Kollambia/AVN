@@ -140,40 +140,40 @@
 
         $(document).ready(function () {
             $('#movementTypeDropdown').change(function () {
-                FillGroupFromDropdown();
-                FillGroupToDropdown();
                 var selectedValue = $(this).val();
                 localStorage.setItem('movementTypeDropdown', selectedValue);
+                FillGroupToDropdown();
+                FillGroupFromDropdown();
             });
             $('#facultyFromDropdown').change(function () {
-                FillGroupFromDropdown();
                 var selectedValue = $(this).val();
                 localStorage.setItem('facultyFromDropdown', selectedValue);
+                FillGroupFromDropdown();
             });
             $('#facultyToDropdown').change(function () {
-                FillGroupToDropdown();
                 var selectedValue = $(this).val();
                 localStorage.setItem('facultyToDropdown', selectedValue);
+                FillGroupToDropdown();
             });
             $('#academYearFirstDropdown').change(function () {
-                FillGroupFromDropdown();
                 var selectedValue = $(this).val();
                 localStorage.setItem('academYearFirstDropdown', selectedValue);
+                FillGroupFromDropdown();
             });
             $('#academYearSecondDropdown').change(function () {
-                FillGroupToDropdown();
                 var selectedValue = $(this).val();
                 localStorage.setItem('academYearSecondDropdown', selectedValue);
+                FillGroupToDropdown();
             });
             $('#groupFromDropdown').change(function () {
-                GetLeftStudentList();
                 var selectedValue = $(this).val();
                 localStorage.setItem('groupFromDropdown', selectedValue);
+                GetLeftStudentList();
             });
             $('#groupToDropdown').change(function () {
-                GetRightStudentList();
                 var selectedValue = $(this).val();
                 localStorage.setItem('groupToDropdown', selectedValue);
+                GetRightStudentList();
             });
         });
 
@@ -202,10 +202,13 @@
                         $.each(data, function (i, group) {
                             $('#groupFromDropdown').append($('<option></option>').val(group.value).text(group.text));
                         });
-                        //if (lastSelectedgroupFromDropdown) {
-                        //    alert(lastSelectedgroupFromDropdown);
-                        //    $('#groupFromDropdown').val(lastSelectedgroupFromDropdown);
-                        //}
+                        if (lastSelectedgroupFromDropdown) {
+                            $('#groupFromDropdown').val(lastSelectedgroupFromDropdown);
+                        }
+                        else{
+                            $('#groupFromDropdown').val(group.value).text('Далбаеб');
+                        }
+                        //$('#groupFromDropdown').val(lastSelectedgroupFromDropdown);
                     }
                     GetLeftStudentList();
                 },
@@ -268,10 +271,10 @@
                 success: function (response) {
                     $('#LeftContainer').html(response);
                     $('#exportTable').DataTable()
-                    console.log(result)
+                    alert(result)
                 },
                 error: function (xhr, status, error) {
-                    console.error(xhr.responseText);
+                    alert(xhr.responseText);
                 }
             })
         }
