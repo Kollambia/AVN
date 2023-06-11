@@ -164,7 +164,7 @@ namespace AVN.Web.Controllers
                 mappedStudent.Id = newId;
                 
                 var user = new AppUser() { UserName = student.GradeBookNumber, Id = newId };
-                var result = await userManager.CreateAsync(user);
+                var result = await userManager.CreateAsync(user, student.Password);
 
                 if (result.Succeeded)
                 {
@@ -241,7 +241,6 @@ namespace AVN.Web.Controllers
             await unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
 
         public async Task<IActionResult> GeneratePaymentInvoice(string id)
         {
