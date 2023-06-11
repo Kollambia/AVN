@@ -12,12 +12,12 @@ namespace AVN.Business
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<Group>> GetGroupsByEmployeeIdAsync(int employeeId)
+        public async Task<IEnumerable<Group>> GetGroupsByEmployeeIdAsync(string employeeId)
         {
             return await _unitOfWork.GroupRepository.GetGroupsByEmployeeIdAsync(employeeId);
         }
 
-        public async Task<IEnumerable<Student>> GetStudentsByGroupIdAsync(int groupId)
+        public async Task<IEnumerable<Student>> GetStudentsByGroupIdAsync(string groupId)
         {
             var group = await _unitOfWork.GroupRepository.GetByIdAsync(groupId);
             if (group == null)
@@ -28,7 +28,7 @@ namespace AVN.Business
             return group.Students;
         }
 
-        public async Task AssignScoreToStudentAsync(int studentId, int score)
+        public async Task AssignScoreToStudentAsync(string studentId, int score)
         {
             var student = await _unitOfWork.StudentRepository.GetByIdAsync(studentId);
             if (student == null)

@@ -2,8 +2,8 @@
 {
     public class StudentMovement: BaseEntity<StudentMovement, int>
     {
-        public int OldGroupId { get; set; }
-        public int NewGroupId { get; set; }
+        public string OldGroupId { get; set; }
+        public string NewGroupId { get; set; }
         public DateTime MovementDate { get; set; }
         public string OrderNumber { get; set; }
         public int? MovementTypeId { get; set; }

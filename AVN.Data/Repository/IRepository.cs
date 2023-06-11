@@ -17,6 +17,6 @@ namespace AVN.Data.Repository
 
         Task<IEnumerable<T>> FindByConditionAsync(Expression<Func<T, bool>> expression);
 
-        Task<IEnumerable<Group>> GetGroupsByEmployeeIdAsync(int employeeId);
+        Task<IEnumerable<Group>> GetGroupsByEmployeeIdAsync(string employeeId);
     }
 }

@@ -15,6 +15,6 @@ namespace AVN.Models.FilterVM
         public int? DirectionId { get; set; }
 
         [DisplayName("Группа")]
-        public int? GroupId { get; set; }
+        public string? GroupId { get; set; }
     }
 }

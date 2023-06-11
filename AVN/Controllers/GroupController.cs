@@ -1,10 +1,12 @@
 ﻿using AVN.Automapper;
 using AVN.Common.Enums;
+using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Web.Controllers
 {
@@ -12,10 +14,12 @@ namespace AVN.Web.Controllers
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
-        public GroupController(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly AppDbContext appDbContext;
+        public GroupController(IUnitOfWork unitOfWork, IMapper mapper, AppDbContext appDbContext)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.appDbContext = appDbContext;
         }
 
         // GET: Group
@@ -39,7 +43,7 @@ namespace AVN.Web.Controllers
         }
 
         // GET: Group/Details/5
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(string id)
         {
             var group = await unitOfWork.GroupRepository.GetByIdAsync(id);
 
@@ -75,19 +79,24 @@ namespace AVN.Web.Controllers
         }
 
         // GET: Group/Edit/5
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var group = await unitOfWork.GroupRepository.GetByIdAsync(id);
+            var group = await appDbContext.Groups
+                .Include(g => g.AcademicYear)
+                .Include(g => g.Direction)
+                .ThenInclude(d => d.Department)
+                .FirstOrDefaultAsync(g => g.Id == id);
+
             if (group == null)
             {
                 return NotFound();
             }
-            var mappedGroup = mapper.Map<Group, GroupVM>(group);
-            mappedGroup.FacultyId = group.Direction?.Department?.FacultyId;
-            mappedGroup.DepartmentId = group.Direction?.DepartmentId;
-            mappedGroup.DirectionId = group.DirectionId;
+            //var mappedGroup = mapper.Map<Group, GroupVM>(group);
+            //mappedGroup.FacultyId = group.Direction?.Department?.FacultyId;
+            //mappedGroup.DepartmentId = group.Direction?.DepartmentId;
+            //mappedGroup.DirectionId = group.DirectionId;
             //mappedGroup.DateCreate = group.DateCreate.Date;
-            return View(mappedGroup);
+            return View();
         }
 
         // POST: Group/Edit/5
@@ -112,7 +121,7 @@ namespace AVN.Web.Controllers
         }
 
         // GET: Group/Delete/5
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
             var group = await unitOfWork.GroupRepository.GetByIdAsync(id);
             if (group == null)
@@ -124,7 +133,7 @@ namespace AVN.Web.Controllers
         }
 
         // POST: Group/Delete/5
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var group = await unitOfWork.GroupRepository.GetByIdAsync(id);
             await unitOfWork.GroupRepository.DeleteAsync(group);

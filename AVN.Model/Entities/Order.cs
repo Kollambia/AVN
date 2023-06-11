@@ -18,7 +18,7 @@ namespace AVN.Model.Entities
         public int? AcademicYearId { get; set; }
         public virtual AcademicYear? AcademicYear { get; set; }
 
-        public int? GroupId { get; set; }
+        public string? GroupId { get; set; }
         public virtual Group? Group { get; set; }
 
         public string? StudentId { get; set; }

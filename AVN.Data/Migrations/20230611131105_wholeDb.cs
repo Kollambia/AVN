@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AVN.Data.Migrations
 {
-    public partial class WholeDb : Migration
+    public partial class wholeDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -347,26 +347,24 @@ namespace AVN.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GroupEmployee",
+                name: "GroupEmployees",
                 columns: table => new
                 {
-                    GroupId = table.Column<int>(type: "int", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false),
-                    GroupId1 = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    EmployeeId1 = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    GroupId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GroupEmployee", x => new { x.GroupId, x.EmployeeId });
+                    table.PrimaryKey("PK_GroupEmployees", x => new { x.GroupId, x.EmployeeId });
                     table.ForeignKey(
-                        name: "FK_GroupEmployee_Employees_EmployeeId1",
-                        column: x => x.EmployeeId1,
+                        name: "FK_GroupEmployees_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
                         principalTable: "Employees",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GroupEmployee_Groups_GroupId1",
-                        column: x => x.GroupId1,
+                        name: "FK_GroupEmployees_Groups_GroupId",
+                        column: x => x.GroupId,
                         principalTable: "Groups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -391,17 +389,17 @@ namespace AVN.Data.Migrations
                     RecruitmentYear = table.Column<int>(type: "int", nullable: false),
                     IsHasDebt = table.Column<bool>(type: "bit", nullable: false),
                     Score = table.Column<int>(type: "int", nullable: false),
-                    GroupId = table.Column<int>(type: "int", nullable: false),
-                    GroupId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    GroupId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Students", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Students_Groups_GroupId1",
-                        column: x => x.GroupId1,
+                        name: "FK_Students_Groups_GroupId",
+                        column: x => x.GroupId,
                         principalTable: "Groups",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -444,8 +442,7 @@ namespace AVN.Data.Migrations
                     MovementTypeId = table.Column<int>(type: "int", nullable: false),
                     OrderTypeId = table.Column<int>(type: "int", nullable: false),
                     AcademicYearId = table.Column<int>(type: "int", nullable: true),
-                    GroupId = table.Column<int>(type: "int", nullable: true),
-                    GroupId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    GroupId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     StudentId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
@@ -457,8 +454,8 @@ namespace AVN.Data.Migrations
                         principalTable: "AcademicYears",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Orders_Groups_GroupId1",
-                        column: x => x.GroupId1,
+                        name: "FK_Orders_Groups_GroupId",
+                        column: x => x.GroupId,
                         principalTable: "Groups",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -486,8 +483,8 @@ namespace AVN.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OldGroupId = table.Column<int>(type: "int", nullable: false),
-                    NewGroupId = table.Column<int>(type: "int", nullable: false),
+                    OldGroupId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NewGroupId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MovementDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     OrderNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MovementTypeId = table.Column<int>(type: "int", nullable: true),
@@ -527,8 +524,7 @@ namespace AVN.Data.Migrations
                     Course = table.Column<int>(type: "int", nullable: false),
                     RecruitmentYear = table.Column<int>(type: "int", nullable: false),
                     AcademicYearId = table.Column<int>(type: "int", nullable: true),
-                    GroupId = table.Column<int>(type: "int", nullable: false),
-                    GroupId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    GroupId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     StudentId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
@@ -540,10 +536,11 @@ namespace AVN.Data.Migrations
                         principalTable: "AcademicYears",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_StudentPayments_Groups_GroupId1",
-                        column: x => x.GroupId1,
+                        name: "FK_StudentPayments_Groups_GroupId",
+                        column: x => x.GroupId,
                         principalTable: "Groups",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_StudentPayments_Students_StudentId",
                         column: x => x.StudentId,
@@ -629,14 +626,9 @@ namespace AVN.Data.Migrations
                 column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GroupEmployee_EmployeeId1",
-                table: "GroupEmployee",
-                column: "EmployeeId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GroupEmployee_GroupId1",
-                table: "GroupEmployee",
-                column: "GroupId1");
+                name: "IX_GroupEmployees_EmployeeId",
+                table: "GroupEmployees",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Groups_AcademicYearId",
@@ -654,9 +646,9 @@ namespace AVN.Data.Migrations
                 column: "AcademicYearId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_GroupId1",
+                name: "IX_Orders_GroupId",
                 table: "Orders",
-                column: "GroupId1");
+                column: "GroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_MovementTypeId",
@@ -704,9 +696,9 @@ namespace AVN.Data.Migrations
                 column: "AcademicYearId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentPayments_GroupId1",
+                name: "IX_StudentPayments_GroupId",
                 table: "StudentPayments",
-                column: "GroupId1");
+                column: "GroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudentPayments_StudentId",
@@ -714,9 +706,9 @@ namespace AVN.Data.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_GroupId1",
+                name: "IX_Students_GroupId",
                 table: "Students",
-                column: "GroupId1");
+                column: "GroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SubjectEmployees_EmployeeId1",
@@ -757,7 +749,7 @@ namespace AVN.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "GroupEmployee");
+                name: "GroupEmployees");
 
             migrationBuilder.DropTable(
                 name: "Orders");
