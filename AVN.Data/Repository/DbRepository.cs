@@ -84,7 +84,7 @@ namespace AVN.Data.Repository
             return await _context.Set<T>().Where(expression).ToListAsync();
         }
 
-        public async Task<IEnumerable<Group>> GetGroupsByEmployeeIdAsync(int employeeId)
+        public async Task<IEnumerable<Group>> GetGroupsByEmployeeIdAsync(string employeeId)
         {
             return await _context.Set<GroupEmployee>()
                 .Where(ge => ge.EmployeeId == employeeId)
