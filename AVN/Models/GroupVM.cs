@@ -54,5 +54,8 @@ namespace AVN.Models
         [DisplayName("Специальность")]
         public int? DirectionId { get; set; }
         public Direction? Direction { get; set; }
+
+        public string StudentId { get; set; }
+        public Student Student { get; set; }
     }
 }

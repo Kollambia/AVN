@@ -25,6 +25,7 @@ namespace AVN.Data
         public DbSet<MovementType> MovementTypes { get; set; }
         public DbSet<OrderType> OrderTypes { get; set; }
         public DbSet<GroupEmployee> GroupEmployees { get; set; }
+        public DbSet<Grade> Grades { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> context) : base(context)
         {

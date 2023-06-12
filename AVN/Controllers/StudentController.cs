@@ -231,6 +231,7 @@ namespace AVN.Web.Controllers
         public IActionResult Create()
         {
             // to do переделать этот кошмар
+            // оставляй как есть)
             var studentOrderService = new OrderService(context);
             Student student = new Student();
             var updatedStudent = studentOrderService.SetStudentStatusAndGradeBookNumber(student);
