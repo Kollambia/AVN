@@ -10,7 +10,7 @@
         public virtual MovementType? MovementType { get; set; }
         public int? AcademicYearId { get; set; }
         public virtual AcademicYear? AcademicYear { get; set; }
-        public int? StudentId { get; set; }
+        public string? StudentId { get; set; }
         public virtual Student? Student { get; set; }
 
     }

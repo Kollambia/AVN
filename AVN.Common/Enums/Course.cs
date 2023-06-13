@@ -4,10 +4,12 @@ namespace AVN.Common.Enums
 {
     public enum Course
     {
-        [Display(Name = "1")] First = 0,
-        [Display(Name = "2")] Second = 1,
-        [Display(Name = "3")] Third = 2,
-        [Display(Name = "4")] Fourth = 3,
+        [Display(Name = "1")] First = 1,
+        [Display(Name = "2")] Second = 2,
+        [Display(Name = "3")] Third = 3,
+        [Display(Name = "4")] Fourth = 4,
+        [Display(Name = "5")] Fifth = 5,
+        [Display(Name = "6")] Sixth = 6
     }
 
     public static class CourseExtensions
@@ -27,6 +29,12 @@ namespace AVN.Common.Enums
 
                 case Course.Fourth:
                     return "4-курс";
+
+                case Course.Fifth:
+                    return "5-курс";
+
+                case Course.Sixth:
+                    return "6-курс";
 
                 default:
                     return string.Empty;

@@ -1,26 +1,56 @@
-﻿using AVN.Business;
+﻿using AutoMapper;
+using AVN.Business;
 using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
+using AVN.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using AVN.Controllers;
+using AVN.Common.Customs;
 
 namespace AVN.Web.Controllers
 {
     public class OrderController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
         private readonly AppDbContext context;
+        private readonly UserManager<AppUser> userManager;
 
-        public OrderController(IUnitOfWork unitOfWork, AppDbContext context)
+        public OrderController(IUnitOfWork unitOfWork, IMapper mapper, AppDbContext context, UserManager<AppUser> userManager)
         {
             this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
             this.context = context;
+            this.userManager = userManager;
         }
 
         public IActionResult Index()
         {
             return View();
-            //return PartialView("PartialViews/_StudentFilters", new StudentsFilterVM());
+        }
+
+        [HttpPost]
+        public IActionResult Index(OrderVM orderInfo)
+        {
+            if (ModelState.IsValid)
+            {
+                var mappedOrder = mapper.Map<OrderVM, Order>(orderInfo);
+                var transferImportStudentIds = StudentController.TransferImportStudents
+                    .Where(x => x.Transfered == true).Select(x => x.Id).ToList();
+
+                var studentOrderService = new OrderService(context);
+                OperationResult result = studentOrderService.CreateStudentOrder(mappedOrder, transferImportStudentIds);
+                //to to alert
+                if (result.Success)
+                {
+                    StudentController.TransferImportStudents.Clear();
+                    StudentController.TransferExportStudents.Clear();
+                }
+                return View();
+            }
+            return View(orderInfo);
         }
 
         public IActionResult Create()
@@ -38,12 +68,12 @@ namespace AVN.Web.Controllers
                 await unitOfWork.SaveChangesAsync();
 
                 var studentOrderService = new OrderService(context);
-                studentOrderService.AddOrder(order);
+                //studentOrderService.AddOrder(order);
 
-                if (studentOrderService.AddOrder(order))
-                {
-                    // возвращаться сообщение
-                }
+                //if (studentOrderService.AddOrder(order))
+                //{
+                //    // возвращаться сообщение
+                //}
 
                 return RedirectToAction(nameof(Index));
 

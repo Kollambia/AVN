@@ -268,5 +268,13 @@ namespace AVN.Controllers
             var entityList = await unitOfWork.OrderTypeRepository.GetAllAsync();
             return entityList.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.Name }).ToList();
         }
+
+        public async Task<List<SelectListItem>> GetOrderTypeByMovement(int movementTypeId)
+        {
+            if (movementTypeId == 0)
+                return new List<SelectListItem>();
+            var entityList = (await unitOfWork.OrderTypeRepository.GetAllAsync()).Where(x => x.MovementTypeId == movementTypeId);
+            return entityList.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.Name }).ToList();
+        }
     }
 }

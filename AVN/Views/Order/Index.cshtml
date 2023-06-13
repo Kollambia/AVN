@@ -1,83 +1,153 @@
-﻿@{
+﻿@model OrderVM
+@{
     ViewData["Title"] = "Приказы";
 }
-
 @using (Html.BeginForm())
 {
-
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="form-group row mb-1">
-                <div class="col-lg-5">
-                    <select id="facultyFromDropdown" name="facultyFromDropdown" class="form-control"></select>
+    <form method="post" id="orderForm">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group row mb-1">
+                    <div class="col-lg-5">
+                        <select id="facultyFromDropdown" name="facultyFromDropdown" class="form-control"></select>
+                    </div>
+                    <div class="col-lg-2  text-center">
+                        <label class="font-weight-bold">- ФАКУЛЬТЕТЫ -</label>
+                    </div>
+                    <div class="col-lg-5">
+                        <select id="facultyToDropdown" name="facultyToDropdown" class="form-control"></select>
+                    </div>
                 </div>
-                <div class="col-lg-2  text-center">
-                    <label class="font-weight-bold">- ФАКУЛЬТЕТЫ -</label>
-                </div>
-                <div class="col-lg-5">
-                    <select id="facultyToDropdown" name="facultyToDropdown" class="form-control"></select>
-                </div>
-            </div>
-            <br>
-            <div class="form-group row mb-1">
-                <div class="col-md-2 text-center">
-                    <label class="font-weight-bold">Учебный год</label>
-                    <select id="academYearFirstDropdown" name="academYearFirstDropdown" class="form-control"></select>
-                </div>
-                <div class="col-md-2 text-center">
-                    <label class="font-weight-bold">Из группы</label>
-                    <select id="groupFromDropdown" name="groupFromDropdown" class="form-control"></select>
-                </div>
-                <div class="col-md-4 text-center">
-                    <label class="font-weight-bold">Тип перемещения</label>
-                    <select id="movementTypeDropdown" name="movementTypeDropdown" class="form-control"></select>
-                </div>
-                <div class="col-md-2 text-center">
-                    <label class="font-weight-bold">В группу</label>
-                    <select id="groupToDropdown" name="groupToDropdown" class="form-control"></select>
-                </div>
-                <div class="col-md-2 text-center">
-                    <label class="font-weight-bold">Учебный год</label>
-                    <select id="academYearSecondDropdown" name="academYearSecondDropdown" class="form-control"></select>
+                <br>
+                <div class="form-group row mb-1">
+                    <div class="col-md-2 text-center">
+                        <label class="font-weight-bold">Учебный год</label>
+                        <select id="academYearFirstDropdown" name="academYearFirstDropdown" class="form-control"></select>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <label class="font-weight-bold">Из группы</label>
+                        <select id="groupFromDropdown" name="groupFromDropdown" class="form-control"></select>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <label class="font-weight-bold">Тип перемещения</label>
+                        @*<select id="movementTypeDropdown" name="movementTypeDropdown" class="form-control"></select>*@
+                        @Html.DropDownListFor(x => x.MovementTypeId, new List<SelectListItem>(), new { @class = "form-control", id = "movementTypeDropdown" })
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <label class="font-weight-bold">В группу</label>
+                        @*<select id="groupToDropdown" name="groupToDropdown" class="form-control"></select>*@
+                        @Html.DropDownListFor(x => x.GroupId, new List<SelectListItem>(), new { @class = "form-control", id = "groupToDropdown" })
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <label class="font-weight-bold">Учебный год</label>
+                        @*<select id="academYearSecondDropdown" name="academYearSecondDropdown" class="form-control"></select>*@
+                        @Html.DropDownListFor(x => x.AcademicYearId, new List<SelectListItem>(), new { @class = "form-control", id = "academYearSecondDropdown" })
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div id="LeftContainer">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="RightContainer">
+                </div>
+            </div>
+        </div>
+        <hr />
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-md-6">
+                        <div id="LeftContainer">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="RightContainer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 row">
+                    @Html.HiddenFor(x => x.MovementTypeId)
+                    @Html.HiddenFor(x => x.AcademicYearId)
+                    @Html.HiddenFor(x => x.GroupId)
+                    <div class="col-md-2 form-group">
+                        <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Date)</label>
+                        @Html.TextBoxFor(x => x.Date, "{0:yyyy-MM-dd}", new { @class = "form-control",@type = "date"})
+                        @Html.ValidationMessageFor(x => x.Date, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-2 form-group">
+                        <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Number)</label>
+                        @Html.EditorFor(x => x.Number, new { htmlAttributes = new { @class = "form-control" }})
+                        @Html.ValidationMessageFor(x => x.Number, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label class="font-weight-bold">@Html.DisplayNameFor(x => x.OrderTypeId)</label>
+                        @Html.DropDownListFor(x => x.OrderTypeId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "orderTypeDropdown" })
+                        @Html.ValidationMessageFor(x => x.OrderTypeId, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-1 form-group"></div>
+                    <div class="col-md-3 form-group">
+                        <br />
+                        <div class="row">
+                            <button type="submit" class="btn btn-success mb-3 mr-3">
+                                <i class="fas fa-save"></i> <span> Сохранить</span>
+                            </button>
+                            <button type="submit" class="btn btn-info mb-3" onclick="cancelImportStudents()">
+                                <i class="fas fa-reply-all"></i> <span> Отменить</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-5 form-group">
+                        <label>@Html.DisplayNameFor(x => x.Note)</label>
+                        @Html.TextAreaFor(x => x.Note, new { @class = "form-control", rows = "4"})
+                        @Html.ValidationMessageFor(x => x.Note, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 }
-<hr>
-
-<div class="row">
-    <div class="col-md-6">
-        <div id="LeftContainer">
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div id="RightContainer">
-        </div>
-    </div>
-</div>
 
 
 
 @section Scripts {
     <script>
+        function saveImportedStudents() {
+            var importForm = document.getElementById("orderForm");
+            importForm.action = "/Order/SaveImportedStudents";
+            importForm.submit();
+        }
+        function cancelImportStudents() {
+            var importForm = document.getElementById("orderForm");
+            importForm.action = "/Order/CancelImportStudents";
+            importForm.submit();
+        }
+
         $(document).ready(function () {
             loadDropdownData();
 
             $('#movementTypeDropdown, #facultyFromDropdown, #facultyToDropdown, #academYearFirstDropdown, #academYearSecondDropdown').change(function () {
                 FillGroupFromDropdown2();
                 FillGroupToDropdown2();
+                FillOrderTypeDropdown();
             });
 
             $('#groupFromDropdown').change(function () {
                 GetLeftStudentList();
-                //FillGroupFromDropdown();
                 saveSelectedValue('groupFromDropdown')
             });
 
             $('#groupToDropdown').change(function () {
                 GetRightStudentList();
-                //FillGroupToDropdown();
                 saveSelectedValue('groupToDropdown')
             });
         });
@@ -119,6 +189,7 @@
                     loadSelectedValue('movementTypeDropdown');
                     FillGroupFromDropdown();
                     FillGroupToDropdown();
+                    FillOrderTypeDropdown();
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -246,6 +317,26 @@
                     saveSelectedValue('movementTypeDropdown');
                     saveSelectedValue('academYearSecondDropdown');
                     saveSelectedValue('groupToDropdown');
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+        function FillOrderTypeDropdown() {
+            var movementTypeId = $('#movementTypeDropdown').val();
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetOrderTypeByMovement", "Option")',
+                contentType: 'application/json',
+                data: {
+                    'movementTypeId': movementTypeId
+                },
+                success: function (data) {
+                    populateDropdown(data, 'orderTypeDropdown');
+                    saveSelectedValue('orderTypeDropdown');
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);

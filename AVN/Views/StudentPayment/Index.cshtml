@@ -10,7 +10,7 @@
 <table class="table table-bordered table-hover" id="firstTable">
     <thead class="thead-light">
         <tr>
-            <th>@Html.DisplayNameFor(model => model.AcademicYear)</th>
+            @*<th>@Html.DisplayNameFor(model => model.AcademicYear)</th>*@
             <th>@Html.DisplayNameFor(model => model.Contract)</th>
             <th>@Html.DisplayNameFor(model => model.Payed)</th>
             <th>@Html.DisplayNameFor(model => model.Debt)</th>
@@ -26,7 +26,7 @@
             @foreach (var item in group)
             {
                 <tr data-id="@item.Id">
-                    <td>@item.AcademicYear</td>
+                    @*<td>@item.AcademicYear</td>*@
                     <td>@item.Contract</td>
                     <td>@item.Payed</td>
                     <td>@item.Debt</td>

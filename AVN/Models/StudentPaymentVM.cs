@@ -7,7 +7,11 @@ namespace AVN.Models
     public class StudentPaymentVM: BasicVM<int>
     {
         [DisplayName("Учебный год")]
-        public int? AcademicYear { get; set; } // В формате 2022
+        public int? AcademicYearId { get; set; } // В формате 2022
+        public AcademicYear? AcademicYear { get; set; }
+
+        [DisplayName("Год создания договора")]
+        public int RecruitmentYear { get; set; } // год создания договора
 
         [DisplayName("Контракт")]
         public decimal? Contract { get; set; }

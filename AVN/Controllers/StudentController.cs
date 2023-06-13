@@ -23,12 +23,21 @@ namespace AVN.Web.Controllers
         private static List<TransferStudentVM> _transferImportStudents = new(); //временное решение
         private static string _exportGroupId; //временное решение
         private static string _importGroupId; //временное решение
+
         public StudentController(IUnitOfWork unitOfWork, IMapper mapper, AppDbContext context, UserManager<AppUser> userManager)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
             this.context = context;
             this.userManager = userManager;
+        }
+        public static List<TransferStudentVM> TransferImportStudents
+        {
+            get { return _transferImportStudents; }
+        }
+        public static List<TransferStudentVM> TransferExportStudents
+        {
+            get { return _transferExportStudents; }
         }
 
         // GET: Student
@@ -68,14 +77,6 @@ namespace AVN.Web.Controllers
             return View();
         }
 
-        [HttpPost]
-        public IActionResult ActionName(string[] selectedItems)
-        {
-            // Process the selected items here
-            // You can perform database operations, update the model, etc.
-
-            return Json(new { success = true }); // Return a JSON response if needed
-        }
 
         public async Task<ActionResult> StudentList(int facultyId = 0, int departmentId = 0, int directionId = 0, string groupId = null, int groupType = 0)
         {
@@ -114,7 +115,8 @@ namespace AVN.Web.Controllers
                 _transferExportStudents.Clear();
                 _transferImportStudents.Clear();
             }
-            if (_transferExportStudents.Count() == 0 && _transferImportStudents.Count() == 0) 
+            if (_transferExportStudents.Count() == 0 && (_transferImportStudents.Count() == 0 
+                || _transferImportStudents.All(x => x.Transfered == false))) 
                 _transferExportStudents = mappedStudents.ToList();
 
             return PartialView("ExportStudentList", _transferExportStudents);
@@ -132,8 +134,11 @@ namespace AVN.Web.Controllers
                 {
                     student.Transfered = true;
                     student.Selected = false;
-                    idsToRemove.Add(student.Id);
-                    _transferImportStudents.Add(student);
+                    if (!_transferImportStudents.Select(x => x.Id).Contains(student.Id))
+                    {
+                        idsToRemove.Add(student.Id);
+                        _transferImportStudents.Add(student);
+                    }
                 }
             }
             _transferExportStudents.RemoveAll(exStudent => idsToRemove.Contains(exStudent.Id));
@@ -201,6 +206,11 @@ namespace AVN.Web.Controllers
 
             }
             return RedirectToAction("Index", "Order");
+        }
+
+        public List<TransferStudentVM> GetImportedStudents()
+        {
+            return _transferImportStudents;
         }
 
         public IActionResult CancelImportStudents()
