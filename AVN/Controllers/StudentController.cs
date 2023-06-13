@@ -99,9 +99,9 @@ namespace AVN.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> ExportStudentList(string groupId)
+        public IActionResult ExportStudentList(string groupId)
         {
-            var students = await unitOfWork.StudentRepository.GetAllAsync();
+            var students = unitOfWork.StudentRepository.GetAll();
             if (groupId != null)
                 students = students.Where(x => x.GroupId == groupId);
             else
@@ -121,12 +121,12 @@ namespace AVN.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> ExportStudentList(List<TransferStudentVM> transferStudents) // to do make sync method
+        public IActionResult ExportStudentList(List<TransferStudentVM> transferStudents) 
         {
             var idsToRemove = new List<string>();
             foreach (var student in transferStudents)
             {
-                var studentGroup = await unitOfWork.GroupRepository.GetByIdAsync(student.GroupId);
+                var studentGroup = unitOfWork.GroupRepository.GetById(student.GroupId);
                 student.Group = studentGroup;
                 if (student.Selected == true)
                 {
@@ -141,9 +141,9 @@ namespace AVN.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> ImportStudentList(string groupId)
+        public IActionResult ImportStudentList(string groupId)
         {
-            var students = await unitOfWork.StudentRepository.GetAllAsync();
+            var students = unitOfWork.StudentRepository.GetAll();
             if (groupId != null)
                 students = students.Where(x => x.GroupId == groupId);
             else
@@ -163,12 +163,12 @@ namespace AVN.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> RevertTransferStudents(List<TransferStudentVM> transferStudents)
+        public IActionResult RevertTransferStudents(List<TransferStudentVM> transferStudents)
         {
             var idsToRemove = new List<string>();
             foreach (var student in transferStudents)
             {
-                var studentGroup = await unitOfWork.GroupRepository.GetByIdAsync(student.GroupId);
+                var studentGroup = unitOfWork.GroupRepository.GetById(student.GroupId);
                 student.Group = studentGroup;
                 if (student.Selected == true)
                 {

@@ -27,6 +27,11 @@ namespace AVN.Data.Repository
             return updatedEntity.Entity;
         }
 
+        public IEnumerable<T> GetAll()
+        {
+            return  _context.Set<T>().ToList();
+        }
+
         public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _context.Set<T>().ToListAsync();
@@ -44,10 +49,23 @@ namespace AVN.Data.Repository
         //    return await query.ToListAsync();
         //}
 
+        public T GetById(int id)
+        {
+            return  _context.Set<T>()
+                .FirstOrDefault(x => x.Id.Equals(id));
+        }
+
         public async Task<T> GetByIdAsync(int id)
         {
             return await _context.Set<T>()
                 .FirstOrDefaultAsync(x => x.Id.Equals(id));
+        }
+
+        public T GetById(string id)
+        {
+            return _context.Set<T>()
+                .AsNoTracking()
+                .FirstOrDefault(en => en.Id.Equals(id));
         }
 
         public async Task<T> GetByIdAsync(string id)
