@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using AVN.Areas.Identity.Pages.Account;
+using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
@@ -7,6 +7,7 @@ using AVN.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Controllers
 {
@@ -15,18 +16,20 @@ namespace AVN.Controllers
         private readonly IUnitOfWork unitOfWork;
         private readonly UserManager<AppUser> userManager;
         private readonly IMapper mapper;
+        private readonly AppDbContext appDbContext;
 
-        public EmployeeController(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, IMapper mapper)
+        public EmployeeController(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, IMapper mapper, AppDbContext appDbContext)
         {
             this.unitOfWork = unitOfWork;
             this.userManager = userManager;
             this.mapper = mapper;
+            this.appDbContext = appDbContext;
         }
 
         // GET: Employee
-        public async Task<IActionResult> Index()
+        public  IActionResult Index()
         {
-            var employees = await unitOfWork.EmployeeRepository.GetAllAsync();
+            var employees = unitOfWork.EmployeeRepository.GetAll();
             return View(employees);
         }
 
@@ -66,41 +69,45 @@ namespace AVN.Controllers
 
                     await unitOfWork.EmployeeRepository.CreateAsync(mappedEmployee);
                     await unitOfWork.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    
                 }
+                return RedirectToAction(nameof(Index));
             }
-
             return View(employee);
         }
 
         // GET: Employee/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            var employee = await unitOfWork.EmployeeRepository.GetByIdAsync(id);
+            var employee = await appDbContext.Employees
+                .Include(d => d.Department)
+                .FirstOrDefaultAsync(e => e.Id == id);
+            var mappedEmployee = mapper.Map<Employee, EmployeeVM>(employee);
             if (employee == null)
             {
                 return NotFound();
             }
-            return View(employee);
+            return View(mappedEmployee);
         }
 
         // POST: Employee/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, Employee employee)
+        public async Task<IActionResult> Edit(string id, EmployeeVM employeeVM)
         {
-            if (id != employee.Id)
+            if (id != employeeVM.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await unitOfWork.EmployeeRepository.UpdateAsync(employee);
+                var mappedEmployee = mapper.Map<EmployeeVM, Employee>(employeeVM);
+                await unitOfWork.EmployeeRepository.UpdateAsync(mappedEmployee);
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
+            return View(employeeVM);
         }
 
         // GET: Employee/Delete/5
@@ -116,8 +123,6 @@ namespace AVN.Controllers
         }
 
         // POST: Employee/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var employee = await unitOfWork.EmployeeRepository.GetByIdAsync(id);
