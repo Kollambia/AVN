@@ -41,6 +41,8 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Views\Employee\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Employee\Delete.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Employee\Edit.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Subject\Create.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Subject\Index.cshtml" />
   </ItemGroup>
@@ -51,6 +53,14 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Views\Employee\Create.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Employee\Delete.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Employee\Edit.cshtml" />
   </ItemGroup>
 
 </Project>

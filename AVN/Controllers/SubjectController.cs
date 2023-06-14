@@ -111,7 +111,6 @@ namespace AVN.Web.Controllers
         }
 
         // POST: Subject/Delete/5
-        
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var subject = await unitOfWork.SubjectRepository.GetByIdAsync(id);

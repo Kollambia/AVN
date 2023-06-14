@@ -1,7 +1,5 @@
 ﻿@model EmployeeVM
-@{
-    ViewBag.Title = "Регистрация";
-}
+
 
 @using (Html.BeginForm())
 {
@@ -11,7 +9,7 @@
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="col-sm-12 mx-t3 mb-4">
-                    <h2 class="text-center text-info">Регистрация нового работника</h2>
+                    <h2 class="text-center text-info">Редактирование работника</h2>
                 </div>
                 @*start-first-row*@
                 <div class="col-sm-4 form-group">
@@ -74,13 +72,13 @@
                     @Html.TextBoxFor(x => x.PhoneNumber, new { @class = "form-control phone", placeholder = "0(999)99-99-99" })
                     @Html.ValidationMessageFor(x => x.PhoneNumber, "", new { @class = "text-danger" })
                 </div>
-                
+
                 <div class="col-sm-4 form-group">
                     <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Address)*</label>
                     @Html.EditorFor(x => x.Address, new { htmlAttributes = new { @class = "form-control", placeholder="Введите адрес." }})
                     @Html.ValidationMessageFor(x => x.Address, "", new { @class = "text-danger" })
                 </div>
-                
+
 
                 @*end-third-row*@
 
@@ -116,8 +114,8 @@
                 <div class="col-sm-12 row">
                     <div class="col-sm-9"></div>
                     <div class="col-sm-3">
-                        <a href="/Group/Index" class="btn btn-secondary btn-lg btn-block-inline" type="button">Назад</a>
-                        <button class="btn btn-success btn-lg btn-block-inline" type="submit">Добавить</button>
+                        <a href="/Employee/Index" class="btn btn-secondary btn-lg btn-block-inline" type="button">Назад</a>
+                        <button class="btn btn-success btn-lg btn-block-inline" type="submit">Обновить</button>
                     </div>
                 </div>
             </div>
