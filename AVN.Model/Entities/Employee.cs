@@ -49,7 +49,7 @@ namespace AVN.Model.Entities
         [DisplayName("Номер телефона")]
         [MaxLength(30)]
         public string PhoneNumber { get; set; }
-
+        [DisplayName("Кафедра")]
         public int? DepartmentId { get; set; }
         public virtual Department Department { get; set; }
 
