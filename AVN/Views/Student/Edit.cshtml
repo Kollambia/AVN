@@ -29,15 +29,15 @@
 </ul>
 <div class="tab-content" id="myTabContent">
     
-    <div class="tab-panel fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
+    <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
         @using (Html.BeginForm())
         {
-           
             <div class="container mt-3">
                 <form>
                     <div class="row jumbotron box8">
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(x => x.Id)
                         <div class="col-sm-12 mx-t3 mb-4">
                             <h2 class="text-center text-info">Редакция студента</h2>
                         </div>
@@ -193,64 +193,51 @@
 
     </div>
 
-    <div class="tab-panel fade" id="history" role="tabpanel" aria-labelledby="history-tab">
-        <div id="movementContainer"></div>
+    <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+        <div id="movementContainer">
+          
+        </div>
     </div>
+
 </div>
 
 
 
 @section Scripts {
     <script>
-        //var lastTab = localStorage.getItem('lastTab');
+        var lastTab = localStorage.getItem('lastTab');
 
-        //if (lastTab) {
-        //    $('a[href="' + lastTab + '"]').tab('show');
-        //} else {
-        //    $('a[href="#main"]').tab('show');
-        //}
+        if (lastTab) {
+            $('a[href="' + lastTab + '"]').tab('show');
+        } else {
+            $('a[href="#main"]').tab('show');
+        }
 
-        //$('.nav-link').on('shown.bs.tab', function (e) {
-        //    var target = $(e.target).attr("href");
-        //    localStorage.setItem('lastTab', target);
+        $('.nav-link').on('shown.bs.tab', function (e) {
+            var target = $(e.target).attr("href");
+            localStorage.setItem('lastTab', target);
 
-        //    switch (target) {
-        //        case "#history":
-        //            var studentId = @Model.Id;
-        //            alert(studentId);
-        //            $.ajax({
-        //                type: 'GET',
-        //                url: '@Url.Action("StudentMovementList", "Student")',
-        //                data: { studentId: studentId },
-        //                success: function (response) {
-        //                    $('#movementContainer').html(response);
-        //                    $('#movementTable').DataTable()
-        //                },
-        //                error: function (xhr, status, error) {
-        //                    alert(xhr.responseText);
-        //                }
-        //            })
-        //            break;
+            switch (target) {
+                case "#history":
+                    var studentId = '@Model.Id';
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("StudentMovementList", "Student")',
+                        data: { studentId: studentId },
+                        success: function (response) {
+                            $('#movementContainer').html(response);
+                            $('#movementTable').DataTable()
+                        },
+                        error: function (xhr, status, error) {
+                            alert(xhr.responseText);
+                        }
+                    })
+                    break;
 
-        //        default:
-        //            // Default action
-        //            break;
-        //    }
-        //});
-        $(document).ready(function () {
-            var studentId = "b8f176c7-1d26-4589-b131-4e8b4ad1ccf6";
-            $.ajax({
-                type: 'GET',
-                url: '@Url.Action("StudentMovementList", "Student")',
-                data: { studentId: studentId },
-                success: function (response) {
-                    $('#movementContainer').html(response);
-                    $('#movementTable').DataTable()
-                },
-                error: function (xhr, status, error) {
-                    alert(xhr.responseText);
-                }
-            })
+                default:
+                    // Default action
+                    break;
+            }
         });
     </script>
     <script>

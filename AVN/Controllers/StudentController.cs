@@ -78,41 +78,53 @@ namespace AVN.Web.Controllers
         }
 
 
-        public async Task<ActionResult> StudentList(int facultyId = 0, int departmentId = 0, int directionId = 0, string groupId = "", int groupType = 0)
+        public async Task<ActionResult> StudentList(int facultyId, int departmentId, int directionId, string groupId, int groupType)
         {
             var students = await unitOfWork.StudentRepository.GetAllAsync();
-            if (groupId != null)
+
+            if (!string.IsNullOrEmpty(groupId))
+            {
                 students = students.Where(x => x.GroupId == groupId);
+            }
             else if (directionId > 0)
+            {
                 students = students.Where(x => x.Group.DirectionId == directionId);
+            }
             else if (departmentId > 0)
+            {
                 students = students.Where(x => x.Group.Direction.DepartmentId == departmentId);
+            }
             else if (facultyId > 0)
+            {
                 students = students.Where(x => x.Group.Direction.Department.FacultyId == facultyId);
-
-            var mappedStudents = mapper.Map<Student, StudentVM>(students);
-            if (groupType > 0)
-                mappedStudents = mappedStudents.Where(x => (int)x.Group.GroupType == groupType).ToList();
-            else if (facultyId == 0 && departmentId == 0 && directionId == 0 && groupId == "" && groupType == 0)
+            }
+            else
+            {
                 return PartialView(new List<StudentVM>());
+            }
 
-            return PartialView(mappedStudents);
+            if (groupType > 0)
+            {
+                students = students.Where(x => (int)x.Group.GroupType == groupType);
+            }
+
+            var mappedStudents = students.Select(s => mapper.Map<Student, StudentVM>(s)).ToList();
+            return PartialView(mappedStudents ?? new List<StudentVM>());
         }
 
-        //public async Task<ActionResult> StudentMovementList(string studentId)
-        //{
-        //    if (string.IsNullOrEmpty(studentId))
-        //        return PartialView(new List<StudentMovement>());
-
-        //    var studentMovements = (await unitOfWork.StudentMovementRepository.GetAllAsync()).Where(x => x.StudentId == studentId);
-
-        //    var mappedList = mapper.Map<StudentMovement, StudentMovementVM>(studentMovements);
-
-        //    return PartialView(mappedList);
-        //}
         public async Task<ActionResult> StudentMovementList(string studentId)
         {
-            return PartialView(new List<StudentMovementVM>());
+            if (string.IsNullOrEmpty(studentId))
+                return PartialView(new List<StudentMovementVM>());
+
+            var studentMovements = (await unitOfWork.StudentMovementRepository.GetAllAsync()).Where(x => x.StudentId == studentId);
+
+            var mappedList = mapper.Map<StudentMovement, StudentMovementVM>(studentMovements);
+
+            if (!mappedList.Any())
+                return PartialView(new List<StudentMovementVM>());
+
+            return PartialView(mappedList);
         }
 
         [HttpGet]
@@ -314,6 +326,25 @@ namespace AVN.Web.Controllers
             return View(mappedStudent);
         }
 
+        public async Task<IActionResult> StudentMovementEdit(int id)
+        {
+            var studentMovement = await context.StudentMovements
+                .Include(s => s.AcademicYear)
+                .Include(g => g.MovementType)
+                .Include(d => d.NewGroup)
+                .Include(k => k.OldGroup)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            if (studentMovement == null)
+            {
+                return NotFound();
+            }
+
+            var mappedList = mapper.Map<StudentMovement, StudentMovementVM>(studentMovement);
+
+            return View(mappedList);
+        }
+
         // POST: Student/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -334,6 +365,25 @@ namespace AVN.Web.Controllers
             return View(student);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> StudentMovementEdit(int id, StudentMovementVM studentMovement)
+        {
+            if (id != studentMovement.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var mapped = mapper.Map<StudentMovementVM, StudentMovement>(studentMovement);
+                await unitOfWork.StudentMovementRepository.UpdateAsync(mapped);
+                await unitOfWork.SaveChangesAsync();
+                return RedirectToAction("Edit", "Student", new { id = mapped.StudentId });
+            }
+            return View(studentMovement);
+        }
+
         // GET: Student/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
@@ -346,6 +396,17 @@ namespace AVN.Web.Controllers
             return View(student);
         }
 
+        public async Task<IActionResult> StudentMovementDelete(int id)
+        {
+            var student = await unitOfWork.StudentMovementRepository.GetByIdAsync(id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+            var mapped = mapper.Map<StudentMovement, StudentMovementVM>(student);
+            return View(mapped);
+        }
+
         // POST: Student/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -355,6 +416,16 @@ namespace AVN.Web.Controllers
             await unitOfWork.StudentRepository.DeleteAsync(student);
             await unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteStudentMovementConfirmed(string id)
+        {
+            var student = await unitOfWork.StudentMovementRepository.GetByIdAsync(id);
+            await unitOfWork.StudentMovementRepository.DeleteAsync(student);
+            await unitOfWork.SaveChangesAsync();
+            return RedirectToAction("Edit", "Student", new { id = student.StudentId });
         }
 
         public async Task<IActionResult> GeneratePaymentInvoice(string id)

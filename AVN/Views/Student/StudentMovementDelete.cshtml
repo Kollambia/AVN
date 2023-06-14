@@ -1,0 +1,19 @@
+﻿@model StudentMovementVM
+<div class="container">
+    <h1>Подтверждение удаления</h1>
+    <p>Вы уверены, что хотите удалить этот элемент?</p>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">@Model.OrderNumber</p>
+            <p class="card-text">@Model.MovementDate</p>
+            <p class="card-text">@Model.MovementType.Name</p>
+            <p class="card-text">@Model.AcademicYear.Name</p>
+            <p class="card-text">@Model.OldGroup.GroupName</p>
+            <p class="card-text">@Model.NewGroup.GroupName</p>
+            <form method="post" action="/Student/DeleteStudentMovementConfirmed/@Model.Id">
+                <button type="submit" class="btn btn-danger">Удалить</button>
+                <a href="/Student/Edit/@Model.StudentId" class="btn btn-secondary">Отмена</a>
+            </form>
+        </div>
+    </div>
+</div>

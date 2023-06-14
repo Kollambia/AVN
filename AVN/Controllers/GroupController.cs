@@ -140,6 +140,12 @@ namespace AVN.Web.Controllers
             await unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        public async Task<List<SelectListItem>> GetGroups()
+        {
+            var groups = await unitOfWork.GroupRepository.GetAllAsync();
+            var groupList = groups.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GroupName }).ToList();
+            return groupList;
+        }
 
         public async Task<List<SelectListItem>> GetGroupsByDirection(int directionId)
         {

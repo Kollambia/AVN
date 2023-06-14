@@ -1,0 +1,145 @@
+﻿@model StudentMovementVM
+@{
+    ViewBag.Title = "Редактирование";
+}
+
+@using (Html.BeginForm())
+{
+    <div class="container mt-3">
+        <form>
+            <div class="row jumbotron box8">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(x => x.StudentId);
+                <div class="col-sm-12 mx-t3 mb-4">
+                    <h2 class="text-center text-info">Редактирование истории перемещения</h2>
+                </div>
+                @*start-first-row*@
+                
+                <div class="col-sm-3 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.OrderNumber)</label>
+                    @Html.EditorFor(x => x.OrderNumber, new { htmlAttributes = new { @class = "form-control" }})
+                    @Html.ValidationMessageFor(x => x.OrderNumber, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-2 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.MovementDate)</label>
+                    @Html.TextBoxFor(x => x.MovementDate, "{0:yyyy-MM-dd}", new { @class = "form-control",@type = "date"})
+                    @Html.ValidationMessageFor(x => x.MovementDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-7 form-group"></div>
+                @*end-first-row*@
+
+                @*start-second-row*@
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.OldGroupId)</label>
+                    @Html.DropDownListFor(x => x.OldGroupId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "oldGroupDropdown" })
+                    @Html.ValidationMessageFor(x => x.OldGroupId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.NewGroupId)</label>
+                    @Html.DropDownListFor(x => x.NewGroupId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "newGroupDropdown" })
+                    @Html.ValidationMessageFor(x => x.NewGroupId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-4 form-group"></div>
+                @*end-second-row*@
+
+                @*start-third-row*@
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.AcademicYearId)</label>
+                    @Html.DropDownListFor(x => x.AcademicYearId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "academYearDropdown" })
+                    @Html.ValidationMessageFor(x => x.AcademicYearId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.MovementTypeId)</label>
+                    @Html.DropDownListFor(x => x.MovementTypeId, new List<SelectListItem>(), "Не выбрано", new { @class = "form-control", id = "movementTypeDropdown" })
+                    @Html.ValidationMessageFor(x => x.MovementTypeId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-sm-4 form-group"></div>
+                @*end-third-row*@
+
+                @*start-fourth-row*@
+                @*end-fourth-row*@
+
+                @*start-last-row*@
+                @*end-last-row*@
+
+
+                <div class="col-sm-12 row">
+                    <div class="col-sm-9"></div>
+                    <div class="col-sm-3">
+                        <a href="/Student/Edit/@Model.StudentId" class="btn btn-secondary btn-lg btn-block-inline" type="button">Назад</a>
+                        <button class="btn btn-success btn-lg btn-block-inline" type="submit">Обновить</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetAcademicYears", "Option")',
+                type: 'GET',
+                success: function (data) {
+                    $.each(data, function (i, academYear) {
+                        $('#academYearDropdown').append($('<option></option>').val(academYear.value).text(academYear.text));
+                    });
+                    var academYearId = '@Model.AcademicYearId';
+                    $('#academYearDropdown').val(academYearId);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("GetMovementTypes", "Option")',
+                type: 'GET',
+                success: function (data) {
+                    $.each(data, function (i, moveType) {
+                        $('#movementTypeDropdown').append($('<option></option>').val(moveType.value).text(moveType.text));
+                    });
+                    var moveTypeId = '@Model.MovementTypeId';
+                    $('#movementTypeDropdown').val(moveTypeId);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("GetGroups", "Group")',
+                type: 'GET',
+                success: function (data) {
+                    $.each(data, function (i, group) {
+                        $('#oldGroupDropdown').append($('<option></option>').val(group.value).text(group.text));
+                    });
+                    var oldGroupId = '@Model.OldGroupId';
+                    $('#oldGroupDropdown').val(oldGroupId);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("GetGroups", "Group")',
+                type: 'GET',
+                success: function (data) {
+                    $.each(data, function (i, group) {
+                        $('#newGroupDropdown').append($('<option></option>').val(group.value).text(group.text));
+                    });
+                    var newGroupId = '@Model.NewGroupId';
+                    $('#newGroupDropdown').val(newGroupId);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+
+    </script>
+}

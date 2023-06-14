@@ -85,7 +85,7 @@
                 data: { facultyId: facultyId },
                 success: function (data) {
 
-                    $('#departmentDropdown').append($('<option>').text('Все').val('0'));
+                    $('#departmentDropdown').append($('<option>').text('Все').val(''));
 
                     $.each(data, function (i, department) {
                         $('#departmentDropdown').append($('<option></option>').val(department.value).text(department.text));
@@ -108,7 +108,7 @@
                 data: { departmentId: departmentId },
                 success: function (data) {
 
-                    $('#directionDropdown').append($('<option>').text('Все').val('0'));
+                    $('#directionDropdown').append($('<option>').text('Все').val(''));
 
                     $.each(data, function (i, direction) {
                         $('#directionDropdown').append($('<option></option>').val(direction.value).text(direction.text));
@@ -130,7 +130,7 @@
                 type: 'GET',
                 data: { directionId: directionId },
                 success: function (data) {
-                    $('#groupDropdown').append($('<option>').text('Все').val('0'));
+                    $('#groupDropdown').append($('<option>').text('Все').val(''));
 
                     $.each(data, function (i, group) {
                         $('#groupDropdown').append($('<option></option>').val(group.value).text(group.text));
@@ -153,9 +153,9 @@
                     $('#groupDropdown').empty();
 
                     // Add "select item" option
-                    $('#departmentDropdown').append($('<option>').text('Все').val('0'));
-                    $('#directionDropdown').append($('<option>').text('Все').val('0'));
-                    $('#groupDropdown').append($('<option>').text('Все').val('0'));
+                    $('#departmentDropdown').append($('<option>').text('Все').val(''));
+                    $('#directionDropdown').append($('<option>').text('Все').val(''));
+                    $('#groupDropdown').append($('<option>').text('Все').val(''));
                 }
 
                 $.ajax({
@@ -168,9 +168,9 @@
                         $('#directionDropdown').empty();
                         $('#groupDropdown').empty();
 
-                        $('#departmentDropdown').append($('<option>').text('Все').val('0'));
-                        $('#directionDropdown').append($('<option>').text('Все').val('0'));
-                        $('#groupDropdown').append($('<option>').text('Все').val('0'));
+                        $('#departmentDropdown').append($('<option>').text('Все').val(''));
+                        $('#directionDropdown').append($('<option>').text('Все').val(''));
+                        $('#groupDropdown').append($('<option>').text('Все').val(''));
                         // Add new options
                         $.each(response, function (i, department) {
                             $('#departmentDropdown').append($('<option></option>').val(department.value).text(department.text));
@@ -195,8 +195,8 @@
                     $('#groupDropdown').empty();
 
                     // Add "select item" option
-                    $('#directionDropdown').append($('<option>').text('Все').val('0'));
-                    $('#groupDropdown').append($('<option>').text('Все').val('0'));
+                    $('#directionDropdown').append($('<option>').text('Все').val(''));
+                    $('#groupDropdown').append($('<option>').text('Все').val(''));
                 }
 
                 $.ajax({
@@ -208,8 +208,8 @@
                         $('#directionDropdown').empty();
                         $('#groupDropdown').empty();
 
-                        $('#directionDropdown').append($('<option>').text('Все').val('0'));
-                        $('#groupDropdown').append($('<option>').text('Все').val('0'));
+                        $('#directionDropdown').append($('<option>').text('Все').val(''));
+                        $('#groupDropdown').append($('<option>').text('Все').val(''));
 
                         $.each(response, function (i, direction) {
                             $('#directionDropdown').append($('<option></option>').val(direction.value).text(direction.text));
@@ -228,7 +228,7 @@
                 var directionId = $(this).val();
                 if (directionId == 0) {
                     $('#groupDropdown').empty();
-                    $('#groupDropdown').append($('<option>').text('Все').val('0'));
+                    $('#groupDropdown').append($('<option>').text('Все').val(''));
                 }
                 $.ajax({
                     type: 'GET',
@@ -239,7 +239,7 @@
                         $('#groupDropdown').empty();
 
                         // Add "select item" option
-                        $('#groupDropdown').append($('<option>').text('Все').val('0'));
+                        $('#groupDropdown').append($('<option>').text('Все').val(''));
 
                         // Add new options
                         $.each(response, function (i, group) {
@@ -266,7 +266,7 @@
     <script type="text/javascript">
 
         function GetList() {
-            var facultyId = $("#facultyDropdown").val() || 0;
+            var facultyId = $("#facultyDropdown").val();
             var departmentId = $("#departmentDropdown").val();
             var directionId = $("#directionDropdown").val();
             var groupId = $("#groupDropdown").val();
