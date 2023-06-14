@@ -194,22 +194,66 @@
     </div>
 
     <div class="tab-panel fade" id="history" role="tabpanel" aria-labelledby="history-tab">
-        @*create partial view*@
+        <div id="movementContainer"></div>
     </div>
 </div>
 
 
 
 @section Scripts {
-    <script type="text/javascript">
+    <script>
+        //var lastTab = localStorage.getItem('lastTab');
+
+        //if (lastTab) {
+        //    $('a[href="' + lastTab + '"]').tab('show');
+        //} else {
+        //    $('a[href="#main"]').tab('show');
+        //}
+
+        //$('.nav-link').on('shown.bs.tab', function (e) {
+        //    var target = $(e.target).attr("href");
+        //    localStorage.setItem('lastTab', target);
+
+        //    switch (target) {
+        //        case "#history":
+        //            var studentId = @Model.Id;
+        //            alert(studentId);
+        //            $.ajax({
+        //                type: 'GET',
+        //                url: '@Url.Action("StudentMovementList", "Student")',
+        //                data: { studentId: studentId },
+        //                success: function (response) {
+        //                    $('#movementContainer').html(response);
+        //                    $('#movementTable').DataTable()
+        //                },
+        //                error: function (xhr, status, error) {
+        //                    alert(xhr.responseText);
+        //                }
+        //            })
+        //            break;
+
+        //        default:
+        //            // Default action
+        //            break;
+        //    }
+        //});
         $(document).ready(function () {
-            $(".phone").mask("0(999)99-99-99");
+            var studentId = "b8f176c7-1d26-4589-b131-4e8b4ad1ccf6";
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("StudentMovementList", "Student")',
+                data: { studentId: studentId },
+                success: function (response) {
+                    $('#movementContainer').html(response);
+                    $('#movementTable').DataTable()
+                },
+                error: function (xhr, status, error) {
+                    alert(xhr.responseText);
+                }
+            })
         });
     </script>
-
     <script>
-
-
         $(document).ready(function () {
             $.ajax({
                 url: '@Url.Action("GetFaculties", "Faculty")',
@@ -402,6 +446,12 @@
                     }
                 });
             });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".phone").mask("0(999)99-99-99");
         });
     </script>
 }

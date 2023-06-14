@@ -1,0 +1,46 @@
+﻿@model IEnumerable<StudentMovementVM>
+
+<style>
+    /* CSS for hover effect */
+    .table-hover tr:hover {
+        background-color: #f5f5f5; /* Apply the desired background color */
+    }
+</style>
+
+<table class="table table-bordered table-hover" id="movementTable">
+    <thead class="thead-light">
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.MovementDate)</th>
+            <th>@Html.DisplayNameFor(model => model.MovementTypeId)</th>
+            <th>@Html.DisplayNameFor(model => model.OrderNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.OldGroupId)</th>
+            <th>@Html.DisplayNameFor(model => model.NewGroupId)</th>
+            <th>@Html.DisplayNameFor(model => model.AcademicYearId)</th>
+            <th class="fixed-column">Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr data-id="@item.Id">
+                <td>@item.MovementDate</td>
+                <td>@item.MovementType.MoveType.GetDisplayName()</td>
+                <td>@item.OrderNumber</td>
+                <td>@item.OldGroup.GroupName</td>
+                <td>@item.NewGroup.GroupName</td>
+                <td>@item.AcademicYear.Name</td>
+                <td>
+                    <span> @Html.ActionLink("", "Edit", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
+                    <span> @Html.ActionLink("", "Delete", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+
+    </script>
+}
+

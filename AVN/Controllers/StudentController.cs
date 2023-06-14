@@ -78,7 +78,7 @@ namespace AVN.Web.Controllers
         }
 
 
-        public async Task<ActionResult> StudentList(int facultyId = 0, int departmentId = 0, int directionId = 0, string groupId = null, int groupType = 0)
+        public async Task<ActionResult> StudentList(int facultyId = 0, int departmentId = 0, int directionId = 0, string groupId = "", int groupType = 0)
         {
             var students = await unitOfWork.StudentRepository.GetAllAsync();
             if (groupId != null)
@@ -93,10 +93,26 @@ namespace AVN.Web.Controllers
             var mappedStudents = mapper.Map<Student, StudentVM>(students);
             if (groupType > 0)
                 mappedStudents = mappedStudents.Where(x => (int)x.Group.GroupType == groupType).ToList();
-            else if (facultyId == 0 && departmentId == 0 && directionId == 0 && groupId == null && groupType == 0)
+            else if (facultyId == 0 && departmentId == 0 && directionId == 0 && groupId == "" && groupType == 0)
                 return PartialView(new List<StudentVM>());
 
             return PartialView(mappedStudents);
+        }
+
+        //public async Task<ActionResult> StudentMovementList(string studentId)
+        //{
+        //    if (string.IsNullOrEmpty(studentId))
+        //        return PartialView(new List<StudentMovement>());
+
+        //    var studentMovements = (await unitOfWork.StudentMovementRepository.GetAllAsync()).Where(x => x.StudentId == studentId);
+
+        //    var mappedList = mapper.Map<StudentMovement, StudentMovementVM>(studentMovements);
+
+        //    return PartialView(mappedList);
+        //}
+        public async Task<ActionResult> StudentMovementList(string studentId)
+        {
+            return PartialView(new List<StudentMovementVM>());
         }
 
         [HttpGet]
