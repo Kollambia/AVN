@@ -9,7 +9,7 @@ namespace AVN.PdfGenerator
         public string GeneratePdf(PaymentInvoiceModel model)
         {
             string pdfPath = Path.Combine(Environment.CurrentDirectory, "PaymentInvoice.pdf");
-            string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "times.ttf");
+            //string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "times.ttf");
 
             try
             {

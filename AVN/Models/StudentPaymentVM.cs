@@ -11,7 +11,7 @@ namespace AVN.Models
         public AcademicYear? AcademicYear { get; set; }
 
         [DisplayName("Год создания договора")]
-        public int RecruitmentYear { get; set; } // год создания договора
+        public int? RecruitmentYear { get; set; } // год создания договора
 
         [DisplayName("Контракт")]
         public decimal? Contract { get; set; }
@@ -22,15 +22,14 @@ namespace AVN.Models
         [DisplayName("Долг")]
         public decimal? Debt { get; set; }
 
-        [DisplayName("Специальность в которую оплатил")]
         public string? StudentId { get; set; }
         public Student? Student { get; set; }
 
         [DisplayName("Курс")]
-        public Course Course { get; set; }
+        public Course? Course { get; set; }
 
-        [DisplayName("Группа")]
-        public string GroupId { get; set; }
+        [DisplayName("Специальность в которую оплатил")]
+        public string? GroupId { get; set; }
         public Group? Group { get; set; }
 
     }

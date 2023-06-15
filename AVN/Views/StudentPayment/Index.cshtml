@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<StudentPaymentVM>
-
+@{
+    ViewData["Title"] = "Оплата";
+}
 <style>
     /* CSS for hover effect */
     .table-hover tr:hover {
@@ -10,27 +12,35 @@
 <table class="table table-bordered table-hover" id="firstTable">
     <thead class="thead-light">
         <tr>
-            @*<th>@Html.DisplayNameFor(model => model.AcademicYear)</th>*@
+            <th>@Html.DisplayNameFor(model => model.AcademicYearId)</th>
             <th>@Html.DisplayNameFor(model => model.Contract)</th>
             <th>@Html.DisplayNameFor(model => model.Payed)</th>
             <th>@Html.DisplayNameFor(model => model.Debt)</th>
-            <th>@Html.DisplayNameFor(model => model.StudentId)</th>
+            <th>@Html.DisplayNameFor(model => model.Course)</th>
+            <th>@Html.DisplayNameFor(model => model.GroupId)</th>
+            <th class="fixed-column">Действие</th>
         </tr>
     </thead>
     <tbody>
         @foreach(var group in Model.GroupBy(item => item.Group))
         {
             <tr class="table-primary text-left">
-                <th colspan="5">@group.Key.GroupName (@group.Key.Direction.Department.Faculty.FacultyName)</th>
+                <th colspan="8">@group.Key.GroupName (@group.Key.Direction.Department.Faculty.FacultyName)</th>
             </tr>
             @foreach (var item in group)
             {
                 <tr data-id="@item.Id">
-                    @*<td>@item.AcademicYear</td>*@
+                    <td>@item.AcademicYear.Name</td>
                     <td>@item.Contract</td>
                     <td>@item.Payed</td>
                     <td>@item.Debt</td>
-                    <td>@item.Student.Group.Direction.DirectionName (@item.Student.Group.Direction.Department.Faculty.FacultyShortName)</td>
+                    <td>@item.Course.GetDisplayName()</td>
+                    <td>@item.Group.Direction.DirectionName (@item.Group.Direction.Department.Faculty.FacultyShortName)</td>
+                    <td>
+                        @*<span> @Html.ActionLink("", "StudentMovementEdit", "Student", new { id = @item.Id }, new { @class = "fa fa-edit" })</span> &emsp;
+                        <span> @Html.ActionLink("", "StudentMovementDelete", "Student", new { id = @item.Id }, new { @class = "fa fa-trash" })</span> &emsp;*@
+                        <span>@Html.ActionLink(" ОПЛАТА", "GeneratePaymentInvoice", "Student", new { paymentId = @item.Id, studentId = item.StudentId   }, new { @class = "fa fa-print" })</span> &emsp;
+                    </td>
                 </tr>
             }
         }
