@@ -3,6 +3,8 @@ using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
+using AVN.Utility;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -32,32 +34,37 @@ namespace AVN.Controllers
             ViewData["SubjectId"] = new SelectList(context.Subjects, "Id", "Title");
             ViewData["EmployeeId"] = new SelectList(context.Employees, "Id", "Name");
 
-            var model = new ScheduleVM();
-            model.Schedules = new List<Schedule> { new Schedule(), new Schedule() };
+            var model = new List<ScheduleVM>
+            {
+                new ScheduleVM { Schedules = new List<Schedule> { new Schedule(), new Schedule() } },
+                // Add more ScheduleVM objects as needed
+            };
+
             return View(model);
         }
+
 
         // POST: Schedule/Create
         // POST: Schedules/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ScheduleVM scheduleList)
+        public async Task<IActionResult> Create(List<ScheduleVM> schedules)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                foreach (var schedule in scheduleList.Schedules)
+                var mappedSubjects = mapper.Map<ScheduleVM, Schedule>(schedules);
+                foreach (var schedule in mappedSubjects)
                 {
+                    // Add schedule to database
                     context.Add(schedule);
                 }
                 await context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            // Update ViewData for Group, Subject, Teacher dropdown lists if model state is invalid.
-            ViewData["GroupId"] = new SelectList(context.Groups, "Id", "GroupName");
-            ViewData["SubjectId"] = new SelectList(context.Subjects, "Id", "Title");
-            ViewData["EmployeeId"] = new SelectList(context.Employees, "Id", "Name");
-            return View(scheduleList);
+            return View(schedules);
         }
+
 
 
         public async Task<ActionResult> ScheduleList(int facultyId, int departmentId, int directionId, string groupId, int groupType)

@@ -1,0 +1,61 @@
+﻿@model List<ScheduleVM>
+@{
+    ViewData["Title"] = "Create Schedule";
+}
+
+<h2>Create Schedule</h2>
+
+<form asp-action="Create">
+    <table class="table" id="scheduleTable">
+        <thead>
+            <tr>
+                <th>Day</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Group ID</th>
+                <th>Subject ID</th>
+                <th>Employee ID</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td><input asp-for="@Model[i].Days" class="form-control" /></td>
+                    <td><input asp-for="@Model[i].StartTime" type="time" class="form-control" /></td>
+                    <td><input asp-for="@Model[i].EndTime" type="time" class="form-control" /></td>
+                    <td><input asp-for="@Model[i].GroupId" class="form-control" /></td>
+                    <td><input asp-for="@Model[i].SubjectId" class="form-control" /></td>
+                    <td><input asp-for="@Model[i].EmployeeId" class="form-control" /></td>
+                    <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-primary" id="addRow">Add Row</button>
+    <input type="submit" value="Create" class="btn btn-success" />
+</form>
+
+@section Scripts {
+    <script>
+        var index = @Model.Count;
+        $('#addRow').click(function () {
+            var newRow = '<tr>' +
+                '<td><input name="[' + index + '].Days" class="form-control" /></td>' +
+                '<td><input name="[' + index + '].StartTime" type="time" class="form-control" /></td>' +
+                '<td><input name="[' + index + '].EndTime" type="time" class="form-control" /></td>' +
+                '<td><input name="[' + index + '].GroupId" class="form-control" /></td>' +
+                '<td><input name="[' + index + '].SubjectId" class="form-control" /></td>' +
+                '<td><input name="[' + index + '].EmployeeId" class="form-control" /></td>' +
+                '<td><button type="button" class="btn btn-danger removeRow">Remove</button></td>' +
+                '</tr>';
+            $('#scheduleTable tbody').append(newRow);
+            index++;
+        });
+
+        $(document).on('click', '.removeRow', function () {
+            $(this).closest('tr').remove();
+        });
+    </script>
+}

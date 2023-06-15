@@ -10,7 +10,7 @@ namespace AVN.Models
         public DateTime EndTime { get; set; }
         public string GroupId { get; set; }
         public Group Group { get; set; }
-        public string SubjectId { get; set; }
+        public int SubjectId { get; set; }
         public Subject Subject { get; set; }
         public string EmployeeId { get; set; }
         public Employee Employee { get; set; }
