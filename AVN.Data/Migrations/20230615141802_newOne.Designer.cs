@@ -4,6 +4,7 @@ using AVN.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AVN.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230615141802_newOne")]
+    partial class newOne
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -430,7 +432,11 @@ namespace AVN.Data.Migrations
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("SubjectId")
+                    b.Property<string>("SubjectId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SubjectId1")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -439,7 +445,7 @@ namespace AVN.Data.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.HasIndex("SubjectId");
+                    b.HasIndex("SubjectId1");
 
                     b.ToTable("Schedules");
                 });
@@ -958,7 +964,7 @@ namespace AVN.Data.Migrations
 
                     b.HasOne("AVN.Model.Entities.Subject", "Subject")
                         .WithMany("Schedule")
-                        .HasForeignKey("SubjectId")
+                        .HasForeignKey("SubjectId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
