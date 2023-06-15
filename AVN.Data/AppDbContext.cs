@@ -1,5 +1,4 @@
 ﻿using AVN.Model.Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +24,7 @@ namespace AVN.Data
         public DbSet<MovementType> MovementTypes { get; set; }
         public DbSet<OrderType> OrderTypes { get; set; }
         public DbSet<GroupEmployee> GroupEmployees { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> context) : base(context)
         {
@@ -45,14 +45,8 @@ namespace AVN.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Настройка составного ключа для GroupEmployee
             modelBuilder.Entity<GroupEmployee>()
                 .HasKey(ge => new { ge.GroupId, ge.EmployeeId });
-
-            // Другие настройки...
         }
-
-
-
     }
 }

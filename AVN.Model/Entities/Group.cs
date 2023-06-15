@@ -8,7 +8,7 @@ public class Group : BaseEntity<Group, string>
     public Course Course { get; set; }
     public DateTime DateCreate { get; set; }
     public FormOfEducation StudingForm { get; set; }
-    public AcademicDegree AcademicDegree { get; set; } 
+    public AcademicDegree AcademicDegree { get; set; }
     public TrainingPeriod TrainingPeriod { get; set; }
     public GroupType GroupType { get; set; }
 
@@ -21,12 +21,14 @@ public class Group : BaseEntity<Group, string>
     public virtual ICollection<Student>? Students { get; set; }
     public virtual ICollection<Order>? Orders { get; set; }
     public virtual ICollection<GroupEmployee>? GroupEmployees { get; set; }
+    public virtual ICollection<Schedule> Schedule { get; set; }
 
     public Group()
     {
         GroupEmployees = new List<GroupEmployee>();
         Students = new List<Student>();
         Orders = new List<Order>();
+        Schedule = new List<Schedule>();
     }
 
 }
