@@ -1,0 +1,207 @@
+﻿@{
+    ViewData["Title"] = "Студенты";
+}
+
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-md-7">
+            <div class="form-group row mb-1">
+
+                <div class="col-md-2">
+                    <label class="font-weight-bold">Факультет</label>
+                </div>
+                <div class="col-md-10">
+                    <select id="facultyDropdown" name="facultyDropdown" class="form-control"></select>
+
+                </div>
+            </div>
+            <div class="form-group row mb-1">
+
+                <div class="col-md-2">
+                    <label class="font-weight-bold">Кафедра</label>
+                </div>
+                <div class="col-md-10">
+                    <select id="departmentDropdown" name="departmentDropdown" class="form-control"></select>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group row mb-1">
+
+                <div class="col-md-3">
+                    <label class="font-weight-bold">Направление</label>
+                </div>
+                <div class="col-md-9">
+                    <select id="directionDropdown" name="directionDropdown" class="form-control"></select>
+
+                </div>
+            </div>
+            <div class="form-group row mb-1">
+
+                <div class="col-md-3">
+                    <label class="font-weight-bold">Группа</label>
+                </div>
+                <div class="col-md-9">
+                    <select id="groupDropdown" name="groupDropdown" class="form-control"></select>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<hr>
+<div id="dataContainer"></div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var facultyDropdown = $('#facultyDropdown');
+            var departmentDropdown = $('#departmentDropdown');
+            var directionDropdown = $('#directionDropdown');
+            var groupDropdown = $('#groupDropdown');
+
+            // Заполнение выпадающего списка факультетов при загрузке страницы
+            $.ajax({
+                url: '@Url.Action("GetFaculties", "Faculty")',
+                type: 'GET',
+                success: function (data) {
+                    populateDropdown(facultyDropdown, data);
+                    FillDepartmentsDropdown();
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+
+            // Обработчик изменения выбранного факультета
+            facultyDropdown.change(function () {
+                FillDepartmentsDropdown();
+                GetList();
+            });
+
+            // Обработчик изменения выбранного отделения
+            departmentDropdown.change(function () {
+                FillDirectionsDropdown();
+                GetList();
+            });
+
+            // Обработчик изменения выбранного направления
+            directionDropdown.change(function () {
+                FillGroupsDropdown();
+                GetList();
+            });
+
+            // Обработчик изменения выбранной группы
+            groupDropdown.change(function () {
+                GetList();
+            });
+
+            // Заполнение выпадающего списка отделений
+            function FillDepartmentsDropdown() {
+                var facultyId = facultyDropdown.val();
+                if (!facultyId) {
+                    facultyId = facultyDropdown.find('option:first').val();
+                    facultyDropdown.val(facultyId);
+                }
+                $.ajax({
+                    url: '@Url.Action("GetDepartmentsByFaculty", "Department")',
+                    type: 'GET',
+                    data: { facultyId: facultyId },
+                    success: function (data) {
+                        clearDropdown(departmentDropdown);
+                        populateDropdown(departmentDropdown, data);
+                        FillDirectionsDropdown();
+                        GetList();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+
+            // Заполнение выпадающего списка направлений
+            function FillDirectionsDropdown() {
+                var departmentId = departmentDropdown.val();
+                $.ajax({
+                    url: '@Url.Action("GetDirectionsByDepartment", "Direction")',
+                    type: 'GET',
+                    data: { departmentId: departmentId },
+                    success: function (data) {
+                        clearDropdown(directionDropdown);
+                        populateDropdown(directionDropdown, data);
+                        FillGroupsDropdown();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+
+            // Заполнение выпадающего списка групп
+            function FillGroupsDropdown() {
+                var directionId = directionDropdown.val();
+                $.ajax({
+                    url: '@Url.Action("GetGroupsByDirection", "Group")',
+                    type: 'GET',
+                    data: { directionId: directionId },
+                    success: function (data) {
+                        clearDropdown(groupDropdown);
+                        populateDropdown(groupDropdown, data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+
+            // Получение списка студентов
+            function GetList() {
+                var facultyId = facultyDropdown.val();
+                var departmentId = departmentDropdown.val();
+                var directionId = directionDropdown.val();
+                var groupId = groupDropdown.val();
+                var groupType = '@Html.Raw(Json.Serialize(GroupType.Students))';
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("StudentList", "Student")',
+                    contentType: 'application/json',
+                    data: {
+                        'facultyId': facultyId,
+                        'departmentId': departmentId,
+                        'directionId': directionId,
+                        'groupId': groupId,
+                        'groupType': groupType
+                    },
+                    success: function (response) {
+                        $('#dataContainer').html(response);
+                        $('#table').DataTable();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+
+            // Очистка выпадающего списка
+            function clearDropdown(dropdown) {
+                dropdown.empty();
+                dropdown.append($('<option>').text('Все').val(''));
+            }
+
+            // Заполнение выпадающего списка данными
+            function populateDropdown(dropdown, data) {
+                $.each(data, function (i, item) {
+                    dropdown.append($('<option>').val(item.value).text(item.text));
+                });
+            }
+
+            // Вызов заполнения выпадающих списков при загрузке страницы
+            //FillDepartmentsDropdown();
+            //GetList();
+        });
+    </script>
+}

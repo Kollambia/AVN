@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AVN.Common.Enums;
 using AVN.Model.Entities;
 using AVN.Models;
 
@@ -24,6 +23,7 @@ namespace AVN.Automapper
             CreateMap<Student, TransferStudentVM>().ReverseMap();
             CreateMap<Order, OrderVM>().ReverseMap();
             CreateMap<StudentMovement, StudentMovementVM>().ReverseMap();
+            CreateMap<Schedule, ScheduleVM>().ReverseMap();
         }
     }
 }

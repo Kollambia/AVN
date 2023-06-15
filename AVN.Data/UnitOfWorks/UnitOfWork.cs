@@ -23,6 +23,7 @@ public class UnitOfWork : IUnitOfWork
     private IRepository<StudentMovement, int> _studentMovementRepository;
     private IRepository<MovementType, int> _movementTypeRepository;
     private IRepository<OrderType, int> _orderTypeRepository;
+    private IRepository<Schedule, int> _scheduleRepository;
 
     public UnitOfWork(AppDbContext context)
     {
@@ -168,6 +169,15 @@ public class UnitOfWork : IUnitOfWork
             if (_orderTypeRepository == null)
                 _orderTypeRepository = new DbRepository<OrderType, int>(_context);
             return _orderTypeRepository;
+        }
+    }
+    public IRepository<Schedule, int> ScheduleRepository
+    {
+        get
+        {
+            if (_scheduleRepository == null)
+                _scheduleRepository = new DbRepository<Schedule, int>(_context);
+            return _scheduleRepository;
         }
     }
 

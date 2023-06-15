@@ -1,8 +1,9 @@
 ﻿using AVN.Common.Enums;
+using AVN.Model.Entities;
 
-namespace AVN.Model.Entities
+namespace AVN.Models
 {
-    public class Schedule : BaseEntity<Schedule, int>
+    public class ScheduleVM : BasicVM<int>
     {
         public DaysOfTheWeek Days { get; set; }
         public DateTime StartTime { get; set; }
