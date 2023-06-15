@@ -1,4 +1,8 @@
-﻿@{
+﻿@model IEnumerable<ScheduleVM>
+
+<h2>Расписание</h2>
+
+@{
     ViewData["Title"] = "Студенты";
 }
 
@@ -53,8 +57,6 @@
 }
 <hr>
 <div id="dataContainer"></div>
-
-
 @section Scripts {
     <script>
         $(document).ready(function () {
@@ -163,18 +165,16 @@
                 var departmentId = departmentDropdown.val();
                 var directionId = directionDropdown.val();
                 var groupId = groupDropdown.val();
-                var groupType = '@Html.Raw(Json.Serialize(GroupType.Students))';
 
                 $.ajax({
                     type: 'GET',
-                    url: '@Url.Action("StudentList", "Student")',
+                    url: '@Url.Action("ScheduleList", "Schedule")',
                     contentType: 'application/json',
                     data: {
                         'facultyId': facultyId,
                         'departmentId': departmentId,
                         'directionId': directionId,
                         'groupId': groupId,
-                        'groupType': groupType
                     },
                     success: function (response) {
                         $('#dataContainer').html(response);

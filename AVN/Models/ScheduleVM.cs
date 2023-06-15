@@ -9,10 +9,13 @@ namespace AVN.Models
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public string GroupId { get; set; }
-        public virtual Group Group { get; set; }
+        public Group Group { get; set; }
         public string SubjectId { get; set; }
-        public virtual Subject Subject { get; set; }
+        public Subject Subject { get; set; }
         public string EmployeeId { get; set; }
-        public virtual Employee Employee { get; set; }
+        public Employee Employee { get; set; }
+
+        public List<Schedule> Schedules { get; set; }
     }
 }
+

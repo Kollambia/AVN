@@ -1,0 +1,74 @@
+﻿@model IEnumerable<AVN.Models.ScheduleVM>
+@{
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    var daysOfWeek = Enum.GetValues(typeof(DaysOfTheWeek)).Cast<DaysOfTheWeek>();
+}
+
+
+<div class="table-responsive">
+    <table class="table-striped w-auto"
+           id="table"
+           data-toggle="table"
+           data-pagination="true"
+           data-show-columns="true"
+           data-key-events="true"
+           data-show-toggle="true"
+           data-cookie="true"
+           data-cookie-id-table="saveId"
+           data-show-export="true"
+           data-click-to-select="true"
+           data-toolbar="#toolbar"
+           data-show-columns-toggle-all="true"
+           data-minimum-count-columns="2"
+           data-show-pagination-switch="true"
+           data-page-list="[10, 25, 50, 100, всё]"
+           data-show-footer="true"
+           data-locale="ru-RU">
+        <thead>
+            <tr>
+                <th>
+                    Дни
+                </th>
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="SubjectId">
+                    @Html.DisplayNameFor(model => model.GroupId)
+                </th>
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="GroupId">
+                    @Html.DisplayNameFor(model => model.SubjectId)
+                </th>
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="GroupId">
+                    @Html.DisplayNameFor(model => model.EmployeeId)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Group.GroupName)
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@section Scripts {
+    @* --- Jquery --- *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    @* --- Bootstrap --- *@
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @* --- Скрипт таблицы --- *@
+    <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/bootstrap-table-locale-all.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+
+}
