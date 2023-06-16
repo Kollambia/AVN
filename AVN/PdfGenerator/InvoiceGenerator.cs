@@ -1,6 +1,10 @@
 ﻿using AVN.Models;
-using iTextSharp.text.pdf;
-using iTextSharp.text;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Borders;
+using iText.Layout.Element;
+using iText.Layout.Properties;
 
 namespace AVN.PdfGenerator
 {
@@ -9,145 +13,85 @@ namespace AVN.PdfGenerator
         public string GeneratePdf(PaymentInvoiceModel model)
         {
             string pdfPath = Path.Combine(Environment.CurrentDirectory, "PaymentInvoice.pdf");
-            //string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "times.ttf");
-
+            string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "Arial.ttf");
             try
             {
-
                 using (FileStream stream = new FileStream(pdfPath, FileMode.Create))
                 {
-                    Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
-                    PdfWriter.GetInstance(pdfDoc, stream);
-                    pdfDoc.Open();
+                    PdfWriter writer = new PdfWriter(stream);
+                    PdfDocument pdfDoc = new PdfDocument(writer);
+                    Document doc = new Document(pdfDoc);
 
-                    Chunk chunk = new Chunk("Счет на оплату\n\n", FontFactory.GetFont("Times New Roman", 20, Font.BOLDITALIC));
-                    pdfDoc.Add(new Paragraph(chunk));
+                    PdfFont font = PdfFontFactory.CreateFont(fontPath, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
 
-                    // Создаем таблицу и задаем размер колонок
-                    PdfPTable table = new PdfPTable(2);
-                    table.TotalWidth = 500f;
-                    table.LockedWidth = true;
-                    float[] widths = new float[] { 200f, 300f };
-                    table.SetWidths(widths);
+                    Paragraph title = new Paragraph("Счет на оплату")
+                        .SetFont(font)
+                        .SetBold()
+                        .SetItalic()
+                        .SetFontSize(20);
+                    doc.Add(title);
 
-                    BaseFont baseFont = BaseFont.CreateFont(@"C:\Windows\Fonts\times.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-                    Font font = new Font(baseFont, 20, Font.NORMAL);
+                    Table table = new Table(UnitValue.CreatePointArray(new float[] { 200f, 300f }));
+                    table.SetWidth(UnitValue.CreatePercentValue(100));
 
-                    // Добавляем строки в таблицу
-                    PdfPCell cell1 = new PdfPCell(new Phrase("Названия", font));
-                    cell1.FixedHeight = 50;
-                    cell1.BorderWidthTop = 0.1f;
-                    cell1.BorderWidthBottom = 0.1f;
-                    cell1.BorderWidthLeft = 0.1f;
-                    cell1.BorderWidthRight = 0.1f;
-                    cell1.PaddingLeft = 10;
+                    Cell cell1 = new Cell().Add(new Paragraph("Названия").SetFont(font)).SetHeight(50);
+                    cell1.SetBorder(Border.NO_BORDER);
                     table.AddCell(cell1);
-                    table.AddCell(new Phrase("Данные", font));
+                    table.AddCell(new Paragraph("Данные").SetFont(font));
 
-                    PdfPCell cell2 = new PdfPCell(new Phrase("Факультет", font));
-                    cell2.FixedHeight = 50;
-                    cell2.BorderWidthTop = 0.1f;
-                    cell2.BorderWidthBottom = 0.1f;
-                    cell2.BorderWidthLeft = 0.1f;
-                    cell2.BorderWidthRight = 0.1f;
-                    cell2.PaddingLeft = 10;
+                    Cell cell2 = new Cell().Add(new Paragraph("Факультет").SetFont(font)).SetHeight(50);
+                    cell2.SetBorder(Border.NO_BORDER);
                     table.AddCell(cell2);
-                    table.AddCell(new Phrase(model.Faculty, font));
+                    table.AddCell(new Paragraph(model.Faculty).SetFont(font));
 
-                    PdfPCell cell3 = new PdfPCell(new Phrase("Кафедра", font));
-                    cell3.FixedHeight = 50;
-                    cell3.BorderWidthTop = 0.1f;
-                    cell3.BorderWidthBottom = 0.1f;
-                    cell3.BorderWidthLeft = 0.1f;
-                    cell3.BorderWidthRight = 0.1f;
-                    cell3.PaddingLeft = 10;
+                    Cell cell3 = new Cell().Add(new Paragraph("Кафедра").SetFont(font)).SetHeight(50);
+                    cell3.SetBorder(Border.NO_BORDER);
                     table.AddCell(cell3);
-                    table.AddCell(new Phrase(model.Department, font));
+                    table.AddCell(new Paragraph(model.Department).SetFont(font));
 
-                    PdfPCell cell4 = new PdfPCell(new Phrase("Направление", font));
-                    cell4.FixedHeight = 50;
-                    cell4.BorderWidthTop = 0.1f;
-                    cell4.BorderWidthBottom = 0.1f;
-                    cell4.BorderWidthLeft = 0.1f;
-                    cell4.BorderWidthRight = 0.1f;
-                    cell4.PaddingLeft = 10;
+                    Cell cell4 = new Cell().Add(new Paragraph("Направление").SetFont(font)).SetHeight(50);
+                    cell4.SetBorder(Border.NO_BORDER);
                     table.AddCell(cell4);
-                    table.AddCell(new Phrase(model.Direction, font));
+                    table.AddCell(new Paragraph(model.Direction).SetFont(font));
 
-                    PdfPCell cell5 = new PdfPCell(new Phrase("Группа", font));
-                    cell5.FixedHeight = 50;
-                    cell5.BorderWidthTop = 0.1f;
-                    cell5.BorderWidthBottom = 0.1f;
-                    cell5.BorderWidthLeft = 0.1f;
-                    cell5.BorderWidthRight = 0.1f;
-                    cell5.PaddingLeft = 10;
+                    Cell cell5 = new Cell().Add(new Paragraph("Группа").SetFont(font)).SetHeight(50);
+                    cell5.SetBorder(Border.NO_BORDER);
                     table.AddCell(cell5);
-                    table.AddCell(new Phrase(model.Group, font));
+                    table.AddCell(new Paragraph(model.Group).SetFont(font));
 
-                    PdfPCell cell6 = new PdfPCell(new Phrase("Форма обучения", font));
-                    cell6.FixedHeight = 50;
-                    cell6.BorderWidthTop = 0.1f;
-                    cell6.BorderWidthBottom = 0.1f;
-                    cell6.BorderWidthLeft = 0.1f;
-                    cell6.BorderWidthRight = 0.1f;
-                    cell6.PaddingLeft = 10;
+                    Cell cell6 = new Cell().Add(new Paragraph("Форма обучения").SetFont(font)).SetHeight(50);
+                    cell6.SetBorder(Border.NO_BORDER);
                     table.AddCell(cell6);
-                    table.AddCell(new Phrase(model.EducationForm, font));
+                    table.AddCell(new Paragraph(model.EducationForm).SetFont(font));
 
-                    PdfPCell cell7 = new PdfPCell(new Phrase("Имя студента", font));
-                    cell7.FixedHeight = 50;
-                    cell7.BorderWidthTop = 0.1f;
-                    cell7.BorderWidthBottom = 0.1f;
-                    cell7.BorderWidthLeft = 0.1f;
-                    cell7.BorderWidthRight = 0.1f;
-                    cell7.PaddingLeft = 10;
+                    Cell cell7 = new Cell().Add(new Paragraph("Имя студента").SetFont(font)).SetHeight(50);
+                    cell7.SetBorder(Border.NO_BORDER);
                     table.AddCell(cell7);
-                    table.AddCell(new Phrase(model.FullName, font));
+                    table.AddCell(new Paragraph(model.FullName).SetFont(font));
 
-                    PdfPCell cell8 = new PdfPCell(new Phrase("Степень", font));
-                    cell8.FixedHeight = 50;
-                    cell8.BorderWidthTop = 0.1f;
-                    cell8.BorderWidthBottom = 0.1f;
-                    cell8.BorderWidthLeft = 0.1f;
-                    cell8.BorderWidthRight = 0.1f;
-                    cell8.PaddingLeft = 10;
+                    Cell cell8 = new Cell().Add(new Paragraph("Степень").SetFont(font)).SetHeight(50);
+                    cell8.SetBorder(Border.NO_BORDER);
                     table.AddCell(cell8);
-                    table.AddCell(new Phrase(model.AcademicDegree, font));
+                    table.AddCell(new Paragraph(model.AcademicDegree).SetFont(font));
 
-                    PdfPCell cell9 = new PdfPCell(new Phrase("Номер счета на оплату", font));
-                    cell9.FixedHeight = 50;
-                    cell9.BorderWidthTop = 0.1f;
-                    cell9.BorderWidthBottom = 0.1f;
-                    cell9.BorderWidthLeft = 0.1f;
-                    cell9.BorderWidthRight = 0.1f;
-                    cell9.PaddingLeft = 10;
+                    Cell cell9 = new Cell().Add(new Paragraph("Номер счета на оплату").SetFont(font)).SetHeight(50);
+                    cell9.SetBorder(Border.NO_BORDER);
                     table.AddCell(cell9);
-                    table.AddCell(new Phrase(model.PaymentAccountNumber, font));
+                    table.AddCell(new Paragraph(model.PaymentAccountNumber).SetFont(font));
 
-                    PdfPCell cell10 = new PdfPCell(new Phrase("Сумма платежа", font));
-                    cell10.FixedHeight = 50;
-                    cell10.BorderWidthTop = 0.1f;
-                    cell10.BorderWidthBottom = 0.1f;
-                    cell10.BorderWidthLeft = 0.1f;
-                    cell10.BorderWidthRight = 0.1f;
-                    cell10.PaddingLeft = 10;
+                    Cell cell10 = new Cell().Add(new Paragraph("Сумма платежа").SetFont(font)).SetHeight(50);
+                    cell10.SetBorder(Border.NO_BORDER);
                     table.AddCell(cell10);
-                    table.AddCell(new Phrase(model.PaymentAmount.ToString(), font));
+                    table.AddCell(new Paragraph(model.PaymentAmount.ToString()).SetFont(font));
 
-                    PdfPCell cell11 = new PdfPCell(new Phrase("Назначение платежа", font));
-                    cell11.FixedHeight = 50;
-                    cell11.BorderWidthTop = 0.1f;
-                    cell11.BorderWidthBottom = 0.1f;
-                    cell11.BorderWidthLeft = 0.1f;
-                    cell11.BorderWidthRight = 0.1f;
-                    cell11.PaddingLeft = 10;
+                    Cell cell11 = new Cell().Add(new Paragraph("Назначение платежа").SetFont(font)).SetHeight(50);
+                    cell11.SetBorder(Border.NO_BORDER);
                     table.AddCell(cell11);
-                    table.AddCell(new Phrase(model.PaymentPurpose, font));
+                    table.AddCell(new Paragraph(model.PaymentPurpose).SetFont(font));
 
+                    doc.Add(table);
 
-                    pdfDoc.Add(table);
-
-                    pdfDoc.Close();
+                    doc.Close();
                     stream.Close();
                 }
             }
