@@ -1,17 +1,13 @@
 ﻿using AVN.Automapper;
 using AVN.Business;
-using AVN.Common;
-using AVN.Common.Enums;
 using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
-using AVN.PdfGenerator;
 using AVN.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Plugins;
 
 namespace AVN.Web.Controllers
 {
@@ -430,88 +426,18 @@ namespace AVN.Web.Controllers
             return RedirectToAction("Edit", "Student", new { id = student.StudentId });
         }
 
-        public async Task<IActionResult> GeneratePaymentInvoice(int paymentId, string studentId)
+        public IActionResult GeneratePaymentInvoice(int paymentId, string studentId)
         {
-            //var student = unitOfWork.StudentRepository.GetById(studentId);
             var studentPayment = unitOfWork.StudentPaymentRepository.GetById(paymentId);
 
-            var model = new PaymentInvoiceModel
+            var studentOrderService = new OrderService(context);
+            var fileBytes = studentOrderService.CreateStudentPaymentDetail(studentPayment);
+            if (fileBytes != null)
             {
-                Faculty = studentPayment.Group.Direction.Department.Faculty.FacultyName,
-                Department = studentPayment.Group.Direction.Department.DepartmentName ?? "Нет данных",
-                Direction = studentPayment.Group.Direction.DirectionName ?? "Нет данных",
-                Group = studentPayment.Group.GroupName ?? "Нет данных",
-                Course = studentPayment.Group?.Course.GetCourseInWriting() ?? "Нет данных",
-                FullName = studentPayment.Student.SName + studentPayment.Student.Name + studentPayment.Student.PName,
-                EducationForm = studentPayment.Group.StudingForm.GetDisplayName(),
-                AcademicDegree = studentPayment.Group.AcademicDegree.GetDisplayName(),
-                PaymentAccountNumber = GeneratePaymentAccountNumber(),
-                PaymentAmount = (int)studentPayment.Contract,
-                PaymentPurpose = "Оплата за обучение"
-            };
-       
-            var invoiceGenerator = new InvoiceGenerator();
-            var pdfInvoice = invoiceGenerator.GeneratePdf(model);
-            byte[] fileBytes = System.IO.File.ReadAllBytes(pdfInvoice);
-            return File(fileBytes, "application/pdf", "Contract.pdf");
-     
-            
-            //var studentTask = unitOfWork.StudentRepository.GetByIdAsync(studentId);
-            //var groupTask = unitOfWork.GroupRepository.GetByIdAsync(studentTask.Result.GroupId);
-            //var directionTask = unitOfWork.DirectionRepository.GetByIdAsync((int)groupTask.Result.DirectionId);
-            //var departmentTask = unitOfWork.DepartmentRepository.GetByIdAsync((int)directionTask.Result.DepartmentId);
-            //var facultyTask = unitOfWork.FacultyRepository.GetByIdAsync((int)departmentTask.Result.FacultyId);
-
-            //await Task.WhenAll(studentTask, groupTask, directionTask, departmentTask, facultyTask);
-
-            //var student = await studentTask;
-            //var group = await groupTask;
-            //var direction = await directionTask;
-            //var department = await departmentTask;
-            //var faculty = await facultyTask;
-
-            //var contract = await unitOfWork.StudentPaymentRepository.FindByConditionAsync(s => s.StudentId == studentId);
-
-            //var latestContract = contract.OrderByDescending(c => c.AcademicYear).FirstOrDefault();
-
-            //var model = new PaymentInvoiceModel
-            //{
-            //    Faculty = faculty.FacultyName,
-            //    Department = department.DepartmentName ?? "Нет данных",
-            //    Direction = direction.DirectionName ?? "Нет данных",
-            //    Group = group.GroupName ?? "Нет данных",
-            //    Course = student.Group?.Course.GetCourseInWriting() ?? "Нет данных",
-            //    FullName = student.SName,
-            //    //EducationForm = student.StudingForm.ToString(),
-            //    //AcademicDegree = student.AcademicDegree.ToString(),
-            //    PaymentAccountNumber = GeneratePaymentAccountNumber(),
-            //    PaymentAmount = 40000,
-            //    PaymentPurpose = "Оплата за обучение"   
-            //};
-
-
-
-
-            //когда будет контракт расскоментить
-
-            //var paymentDetail = new StudentPaymentDetail
-            //{
-            //    StudentPaymentId = 1,
-            //    Payment = model.PaymentAmount,
-            //    Number = model.PaymentAccountNumber,
-            //    SpecialPurpose = model.PaymentPurpose
-            //};
-
-            //var createdPaymentDetail = await unitOfWork.StudentPaymentDetailRepository.CreateAsync(paymentDetail);
-
-            //await unitOfWork.SaveChangesAsync();
-
-
+                return File(fileBytes, "application/pdf", "Contract.pdf");
+            }
+            return RedirectToAction("Index", "StudentPayment", new { id = studentId });
         }
 
-        private static string GeneratePaymentAccountNumber()
-        {
-            return Guid.NewGuid().ToString();
-        }
     }
 }

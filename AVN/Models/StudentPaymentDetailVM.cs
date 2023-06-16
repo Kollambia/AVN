@@ -7,19 +7,19 @@ namespace AVN.Models
     public class StudentPaymentDetailVM: BasicVM<int>
     {
         [DisplayName("Оплата")]
-        public decimal Payment { get; set; }
+        public decimal? Payment { get; set; }
 
         [DisplayName("Дата оплаты")]
-        public DateTime PaymentDate { get; set; }
+        public DateTime? PaymentDate { get; set; }
 
         [DisplayName("Номер")]
-        public string Number { get; set; }
+        public string? Number { get; set; }
 
         [DisplayName("Вид оплаты")]
-        public PaymentType PaymentType { get; set; }
+        public PaymentType? PaymentType { get; set; }
 
         [DisplayName("Целевое назначение")]
-        public string SpecialPurpose { get; set; }
+        public string? SpecialPurpose { get; set; }
 
         [DisplayName("За какой учебный год")]
         public int? StudentPaymentId { get; set; }

@@ -1,9 +1,14 @@
 ﻿using AVN.Common;
 using AVN.Common.Customs;
 using AVN.Common.Enums;
+using AVN.Common.PdfGenerator;
 using AVN.Data;
 using AVN.Model.Entities;
+using iText.Layout.Borders;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.Contracts;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace AVN.Business;
@@ -191,6 +196,7 @@ public class OrderService
         return result;
 
     }
+
     private bool CanTranslateInCurrentAcademicYear(string groupId, int currentAcademicYearId)
     {
         var nextCourseTransferMoveType = _dbContext.MovementTypes.Single(x => x.MoveType.Equals(MoveType.NextCourseTransfer));
@@ -233,8 +239,6 @@ public class OrderService
             return currentCourse;
     }
 
-   
-
     private List<Student> GetStudentByIds(List<string> studentIds)
     {
         var students = new List<Student>();
@@ -258,7 +262,6 @@ public class OrderService
         decimal contractValue = subjects.Sum(s => int.Parse(s.CreditHours)) * direction.CreditCost;
         return contractValue;
     }
-
 
     public Student SetStudentStatusAndGradeBookNumber(Student student)
     {
@@ -287,4 +290,58 @@ public class OrderService
         };
         return studentStatus;
     }
+
+    public byte[]? CreateStudentPaymentDetail(StudentPayment payment)
+    {
+        var model = new PaymentInvoice
+        {
+            Faculty = payment.Group.Direction.Department.Faculty.FacultyName,
+            Department = payment.Group.Direction.Department.DepartmentName ?? "Нет данных",
+            Direction = payment.Group.Direction.DirectionName ?? "Нет данных",
+            Group = payment.Group.GroupName ?? "Нет данных",
+            Course = payment.Group?.Course.GetCourseInWriting() ?? "Нет данных",
+            FullName = $"{payment.Student.SName} {payment.Student.Name} {payment.Student.PName}",
+            EducationForm = payment.Group.StudingForm.GetDisplayName(),
+            AcademicDegree = payment.Group.AcademicDegree.GetDisplayName(),
+            PaymentAccountNumber = GeneratePaymentAccountNumber(),
+            PaymentAmount = (int)payment.Contract,
+            PaymentPurpose = "Оплата за обучение"
+        };
+
+        try
+        {
+            _dbContext.StudentPaymentDetails.Add(new StudentPaymentDetail
+            {
+                StudentPaymentId = payment.Id,
+                SpecialPurpose = model.PaymentPurpose,
+                Number = model.PaymentAccountNumber,
+                Payment = 0,
+                PaymentDate = DateTime.Now,
+                PaymentType = PaymentType.Cash
+            });
+            _dbContext.SaveChanges();
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+
+        var invoiceGenerator = new InvoiceGenerator();
+        var pdfInvoice = invoiceGenerator.GenerateStudentPaymentPdf(model);
+        return File.ReadAllBytes(pdfInvoice);
+    }
+    private static string GeneratePaymentAccountNumber()
+    {
+        Random random = new Random();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < 10; i++)
+        {
+            int randomNumber = random.Next(0, 10);
+            stringBuilder.Append(randomNumber);
+        }
+
+        return stringBuilder.ToString();
+    }
+
 }
