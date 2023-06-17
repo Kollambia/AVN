@@ -14,12 +14,12 @@
     @foreach (var item in Model.OrderBy(item => item.PaymentDate))
     {
         <tr data-id="@item.Id">
-            <td>@item.StudentPayment.AcademicYear.Name</td>
-            <td>@item.PaymentDate</td>
-            <td>@item.Payment</td>
-            <td>@item.Number</td>
-            <td>@item.PaymentType.GetDisplayName()</td>
-            <td>@item.SpecialPurpose</td>
+            <td>@item?.StudentPayment?.AcademicYear?.Name</td>
+            <td>@(string.IsNullOrEmpty(item?.PaymentDate.ToString()) ? "-" : item.PaymentDate)</td>
+            <td>@(string.IsNullOrEmpty(item?.Payment.ToString()) ? "-" : item.Payment)</td>
+            <td>@item?.Number</td>
+            <td>@(string.IsNullOrEmpty(item?.PaymentType.ToString()) ? "-" : item?.PaymentType?.GetDisplayName())</td>
+            <td>@item?.SpecialPurpose</td>
         </tr>
     }
 

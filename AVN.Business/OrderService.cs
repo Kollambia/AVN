@@ -291,8 +291,10 @@ public class OrderService
         return studentStatus;
     }
 
-    public byte[]? CreateStudentPaymentDetail(StudentPayment payment)
+    public OperationResult CreateStudentPaymentDetail(StudentPayment payment)
     {
+        var result = new OperationResult();
+
         var model = new PaymentInvoice
         {
             Faculty = payment.Group.Direction.Department.Faculty.FacultyName,
@@ -310,26 +312,35 @@ public class OrderService
 
         try
         {
+            if (payment.Debt <= 0)
+            {
+                result.Success = false;
+                result.Message = $"Текущий контракт полностью оплачен!";
+                return result;
+            }
             _dbContext.StudentPaymentDetails.Add(new StudentPaymentDetail
             {
                 StudentPaymentId = payment.Id,
                 SpecialPurpose = model.PaymentPurpose,
-                Number = model.PaymentAccountNumber,
-                Payment = 0,
-                PaymentDate = DateTime.Now,
-                PaymentType = PaymentType.Cash
+                Number = model.PaymentAccountNumber
             });
             _dbContext.SaveChanges();
         }
         catch (Exception ex)
         {
-            return null;
+            result.Success = false;
+            result.Message = $"Ошибка при создании счета: {ex.Message} ";
+            return result;
         }
 
         var invoiceGenerator = new InvoiceGenerator();
         var pdfInvoice = invoiceGenerator.GenerateStudentPaymentPdf(model);
-        return File.ReadAllBytes(pdfInvoice);
+        result.Success = true;
+        result.Message = "Счет успешно создан!";
+        result.Data = pdfInvoice;
+        return result;
     }
+
     private static string GeneratePaymentAccountNumber()
     {
         Random random = new Random();

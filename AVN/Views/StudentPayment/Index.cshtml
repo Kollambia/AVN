@@ -9,6 +9,10 @@
     }
 </style>
 
+<div class="mb-3">
+    <a href="@Url.Action("Edit", "Student", new { id = Model.FirstOrDefault()?.StudentId })"class="btn btn-primary fas fa-arrow-alt-circle-left"> назад</a>
+</div>
+
 <table class="table table-bordered table-hover" id="firstTable">
     <thead class="thead-light">
         <tr>
@@ -55,8 +59,10 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+            refreshSecondTable();
+
             $('#firstTable').on('click', 'tr', function () {
-                var id = $(this).data('id'); // Get the id from the selected row
+                var id = $(this).data('id');
                 refreshSecondTable(id);
             });
         });
@@ -66,13 +72,12 @@
                 url: '@Url.Action("RefreshStudentPaymentDetails", "StudentPaymentDetails")',
                 type: 'POST',
                 data: {
-                    id: id // Pass the id as a parameter
+                    id: id
                 },
                 success: function (data) {
                     $('#secondTable').html(data);
                 },
                 error: function () {
-                    // Handle any errors that occur during the AJAX request
                 }
             });
         }

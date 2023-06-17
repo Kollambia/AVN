@@ -431,9 +431,11 @@ namespace AVN.Web.Controllers
             var studentPayment = unitOfWork.StudentPaymentRepository.GetById(paymentId);
 
             var studentOrderService = new OrderService(context);
-            var fileBytes = studentOrderService.CreateStudentPaymentDetail(studentPayment);
-            if (fileBytes != null)
+            var result = studentOrderService.CreateStudentPaymentDetail(studentPayment);
+           
+            if (result.Success)
             {
+                var fileBytes = System.IO.File.ReadAllBytes(result.Data);
                 return File(fileBytes, "application/pdf", "Contract.pdf");
             }
             return RedirectToAction("Index", "StudentPayment", new { id = studentId });
