@@ -41,17 +41,25 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+           @* todo убать groupid и сделать по красоте(пиздить из index StudentPaymentVM)*@
+        @foreach (var group in Model.GroupBy(item => item.Group))
+        {
+            <tr class="table-primary text-left">
+                <th colspan="8">@group.Key.GroupName (@group.Key.Direction.Department.Faculty.FacultyName)</th>
+            </tr>
+            @foreach (var item in group)
             {
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.Group.GroupName)
                     </td>
                     <td>
-                        
+
                     </td>
                 </tr>
             }
+        }
+
         </tbody>
     </table>
 </div>

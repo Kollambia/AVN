@@ -9,12 +9,12 @@
     <table class="table" id="scheduleTable">
         <thead>
             <tr>
-                <th>Day</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <th>Group ID</th>
-                <th>Subject ID</th>
-                <th>Employee ID</th>
+                <th>Дни</th>
+                <th>Начало</th>
+                <th>Конец</th>
+                <th>Группа</th>
+                <th>Предмет</th>
+                <th>Преподаватель</th>
                 <th></th>
             </tr>
         </thead>
@@ -22,12 +22,12 @@
             @for (var i = 0; i < Model.Count; i++)
             {
                 <tr>
-                    <td><input asp-for="@Model[i].Days" class="form-control" /></td>
+                    <td><select asp-for="@Model[i].Days" asp-items="Html.GetEnumSelectList<DaysOfTheWeek>()" class="form-control"></select></td>
                     <td><input asp-for="@Model[i].StartTime" type="time" class="form-control" /></td>
                     <td><input asp-for="@Model[i].EndTime" type="time" class="form-control" /></td>
-                    <td><input asp-for="@Model[i].GroupId" class="form-control" /></td>
-                    <td><input asp-for="@Model[i].SubjectId" class="form-control" /></td>
-                    <td><input asp-for="@Model[i].EmployeeId" class="form-control" /></td>
+                    <td><input asp-for="@Model[i].Group.GroupName" class="form-control" /></td>
+                    <td><input asp-for="@Model[i].Subject.Title" class="form-control" /></td>
+                    <td><input asp-for="@Model[i].Employee.FullName" class="form-control" /></td>
                     <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
                 </tr>
             }
@@ -42,7 +42,16 @@
         var index = @Model.Count;
         $('#addRow').click(function () {
             var newRow = '<tr>' +
-                '<td><input name="[' + index + '].Days" class="form-control" /></td>' +
+                '<td><select name="[' + index + '].Days" class="form-control">' +
+                '<option value="0">Понедельник</option>' +
+                '<option value="1">Вторник</option>' +
+                '<option value="2">Среда</option>' +
+                '<option value="3">Четверг</option>' +
+                '<option value="4">Пятница</option>' +
+                '<option value="5">Суббота</option>' +
+                '<option value="6">Воскресенье</option>' +
+                '</select></td>'
+                +
                 '<td><input name="[' + index + '].StartTime" type="time" class="form-control" /></td>' +
                 '<td><input name="[' + index + '].EndTime" type="time" class="form-control" /></td>' +
                 '<td><input name="[' + index + '].GroupId" class="form-control" /></td>' +
