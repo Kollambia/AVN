@@ -25,9 +25,18 @@
                     <td><select asp-for="@Model[i].Days" asp-items="Html.GetEnumSelectList<DaysOfTheWeek>()" class="form-control"></select></td>
                     <td><input asp-for="@Model[i].StartTime" type="time" class="form-control" /></td>
                     <td><input asp-for="@Model[i].EndTime" type="time" class="form-control" /></td>
-                    <td><input asp-for="@Model[i].Group.GroupName" class="form-control" /></td>
-                    <td><input asp-for="@Model[i].Subject.Title" class="form-control" /></td>
-                    <td><input asp-for="@Model[i].Employee.FullName" class="form-control" /></td>
+                    <td>
+                        @Html.DropDownListFor(x => x[i].GroupId, ViewData[$"[{i}].GroupId"] as List<SelectListItem>, "Не выбрано", new { @class = "form-control", id = "groupDropdown" + i })
+                        @Html.ValidationMessageFor(x => x[i].GroupId, "", new { @class = "text-danger" })
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(x => x[i].SubjectId, ViewData[$"[{i}].SubjectId"] as List<SelectListItem>, "Не выбрано", new { @class = "form-control", id = "subjectDropdown" + i })
+                        @Html.ValidationMessageFor(x => x[i].SubjectId, "", new { @class = "text-danger" })
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(x => x[i].EmployeeId, ViewData[$"[{i}].EmployeeId"] as List<SelectListItem>, "Не выбрано", new { @class = "form-control", id = "employeeDropdown" + i })
+                        @Html.ValidationMessageFor(x => x[i].EmployeeId, "", new { @class = "text-danger" })
+                    </td>
                     <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
                 </tr>
             }
@@ -40,6 +49,7 @@
 @section Scripts {
     <script>
         var index = @Model.Count;
+        
         $('#addRow').click(function () {
             var newRow = '<tr>' +
                 '<td><select name="[' + index + '].Days" class="form-control">' +
@@ -55,16 +65,76 @@
                 '<td><input name="[' + index + '].StartTime" type="time" class="form-control" /></td>' +
                 '<td><input name="[' + index + '].EndTime" type="time" class="form-control" /></td>' +
                 '<td><input name="[' + index + '].GroupId" class="form-control" /></td>' +
-                '<td><input name="[' + index + '].SubjectId" class="form-control" /></td>' +
+                '<td><select name="[' + index + '].SubjectId" class="form-control">' + subjectSelectOptions + '</select></td>' +
+                // Add more cells as needed
                 '<td><input name="[' + index + '].EmployeeId" class="form-control" /></td>' +
                 '<td><button type="button" class="btn btn-danger removeRow">Remove</button></td>' +
                 '</tr>';
             $('#scheduleTable tbody').append(newRow);
+
+            $(document).on('click', '.removeRow', function () {
+                $(this).closest('tr').remove();
+            });
+
             index++;
         });
 
-        $(document).on('click', '.removeRow', function () {
-            $(this).closest('tr').remove();
+        var subjectSelectList = @Html.Raw(Json.Serialize(Model.First().SubjectSelectList));
+
+        var subjectSelectOptions = '<option disabled selected>--Select Category--</option>';
+        for (var i = 0; i < subjectSelectList.length; i++) {
+            subjectSelectOptions += '<option value="' + subjectSelectList[i].value + '">' + subjectSelectList[i].text + '</option>';
+        }
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetSubjects", "Subject")',
+                type: 'GET',
+                success: function (data) {
+                    // Add new options
+                    $.each(data, function (i, item) {
+                        $('#subjectDropdown').append($('<option></option>').val(item.value).text(item.text));
+                    });
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetGroups", "Group")',
+                type: 'GET',
+                success: function (data) {
+                    // Add new options
+                    $.each(data, function (i, group) {
+                        $('#subjectDropdown').append($('<option></option>').val(subject.value).text(group.text));
+                    });
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetEmployees", "Employee")',
+                type: 'GET',
+                success: function (data) {
+                    // Add new options
+                    $.each(data, function (i, employee) {
+                        $('#employeeDropdown').append($('<option></option>').val(employee.value).text(employee.text));
+                    });
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
         });
     </script>
 }

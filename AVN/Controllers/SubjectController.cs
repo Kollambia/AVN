@@ -3,6 +3,7 @@ using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AVN.Web.Controllers
 {
@@ -119,5 +120,13 @@ namespace AVN.Web.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<List<SelectListItem>> GetSubjects()
+        {
+            var subjects = await unitOfWork.SubjectRepository.GetAllAsync();
+            var subjectsList = subjects.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.Title }).ToList();
+            return subjectsList;
+        }
+
     }
 }

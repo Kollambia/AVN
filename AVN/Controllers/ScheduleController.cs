@@ -3,11 +3,8 @@ using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
-using AVN.Utility;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Controllers
 {
@@ -36,15 +33,28 @@ namespace AVN.Controllers
 
             var model = new List<ScheduleVM>
             {
-                new ScheduleVM { Schedules = new List<Schedule> { new Schedule(), new Schedule() } },
-                // Add more ScheduleVM objects as needed
+                new ScheduleVM
+                {
+                    Schedules = new List<Schedule> { new Schedule(), new Schedule() },
+                    SubjectSelectList = unitOfWork.SubjectRepository.GetAll().Select(i => new SelectListItem
+                    {
+                        Text = i.Title,
+                        Value = i.Id.ToString()
+                    })
+                },
+
             };
+
+            for (var i = 0; i < model.Count; i++)
+            {
+                ViewData[$"[{i}].SubjectId"] = ViewData["SubjectId"];
+                ViewData[$"[{i}].GroupId"] = ViewData["GroupId"];
+                ViewData[$"[{i}].EmployeeId"] = ViewData["EmployeeId"];
+            }
 
             return View(model);
         }
 
-
-        // POST: Schedule/Create
         // POST: Schedules/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -53,19 +63,29 @@ namespace AVN.Controllers
             if (!ModelState.IsValid)
             {
                 var mappedSubjects = mapper.Map<ScheduleVM, Schedule>(schedules);
+                
                 foreach (var schedule in mappedSubjects)
                 {
+                    new ScheduleVM
+                    {
+                        SubjectSelectList = unitOfWork.SubjectRepository.GetAll().Select(i => new SelectListItem
+                        {
+                            Text = i.Title,
+                            Value = i.Id.ToString()
+                        })
+                    };
                     // Add schedule to database
                     context.Add(schedule);
                 }
                 await context.SaveChangesAsync();
-
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["GroupId"] = new SelectList(context.Groups, "Id", "GroupName");
+            ViewData["SubjectId"] = new SelectList(context.Subjects, "Id", "Title");
+            ViewData["EmployeeId"] = new SelectList(context.Employees, "Id", "Name");
+
             return View(schedules);
         }
-
-
 
         public async Task<ActionResult> ScheduleList(int facultyId, int departmentId, int directionId, string groupId, int groupType)
         {
@@ -100,6 +120,5 @@ namespace AVN.Controllers
             var mappedSchedule = schedule.Select(s => mapper.Map<Schedule, ScheduleVM>(s)).ToList();
             return PartialView(mappedSchedule ?? new List<ScheduleVM>());
         }
-        
     }
 }
