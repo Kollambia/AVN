@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Оплата";
+}
+
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group row mb-1">
+                <div class="col-md-3">
+                    @Html.TextBox("OrderNumber", null, new { @class = "form-control", id = "orderNumber", type = "number", placeholder = "Введите номер счёта" })
+                </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    @Html.TextBox("Fullname", null, new { @class = "form-control", id = "fullname", placeholder = "Введите фио студента" })
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<hr>
+<div id="dataContainer"></div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#orderNumber').on('keydown', function (event) {
+                if (event.which === 13) { // 13 is the key code for Enter key
+                    GetList();
+                    event.preventDefault(); // Prevent the default form submission behavior
+                }
+            });
+
+            // Event handler for Fullname textbox
+            $('#fullname').on('keydown', function (event) {
+                if (event.which === 13) { // 13 is the key code for Enter key
+                    GetList();
+                    event.preventDefault(); // Prevent the default form submission behavior
+                }
+            });
+
+            function GetList() {
+                var orderNumber = $('#orderNumber').val();
+                var studentName = $('#fullname').val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("StudentPaymentDetailList", "StudentPayment")',
+                    contentType: 'application/json',
+                    data: {
+                        'orderNumber': orderNumber,
+                        'studentName': studentName
+                    },
+                    success: function (response) {
+                        $('#dataContainer').html(response);
+                        $('#paymentDetailTable').DataTable();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+        });
+    </script>
+}

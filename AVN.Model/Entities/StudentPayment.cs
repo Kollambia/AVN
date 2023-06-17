@@ -23,7 +23,7 @@ namespace AVN.Model.Entities
 
         public StudentPayment()
         {
-            PaymentDetails= new List<StudentPaymentDetail>();
+            PaymentDetails = new List<StudentPaymentDetail>();
         }
     }
 }

@@ -3,7 +3,9 @@ using AVN.Common.Customs;
 using AVN.Common.Enums;
 using AVN.Common.PdfGenerator;
 using AVN.Data;
+using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
+using iText.Commons.Actions.Contexts;
 using iText.Layout.Borders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +22,21 @@ public class OrderService
     public OrderService(AppDbContext dbContext)
     {
         _dbContext = dbContext;
+    }
+
+    public List<Student> GetStudentsByFullName(string fullName)
+    {
+        string[] nameParts = fullName.Split(' ');
+        var validNameParts = nameParts.Where(part => !string.IsNullOrEmpty(part) && part.Length >= 3);
+        var students = _dbContext.Students.ToList().Where(s =>
+            validNameParts.Any(part =>
+                s.SName.Contains(part, StringComparison.OrdinalIgnoreCase) ||
+                s.Name.Contains(part, StringComparison.OrdinalIgnoreCase) ||
+                s.PName.Contains(part, StringComparison.OrdinalIgnoreCase)
+            )
+        ).ToList();
+
+        return students;
     }
 
     public OperationResult CreateStudentOrder(Order order, List<string> studentIds)

@@ -1,8 +1,11 @@
 ﻿using AVN.Automapper;
+using AVN.Business;
+using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
+using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace AVN.Web.Controllers
 {
@@ -10,11 +13,12 @@ namespace AVN.Web.Controllers
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
-
-        public StudentPaymentController(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly AppDbContext context;
+        public StudentPaymentController(IUnitOfWork unitOfWork, IMapper mapper, AppDbContext context)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.context = context;
         }
 
         public async Task<IActionResult> Index(string id)
@@ -29,6 +33,57 @@ namespace AVN.Web.Controllers
         public IActionResult Create()
         {
             return View();
+        }
+
+        public IActionResult Payment()
+        {
+            return View();
+        }
+
+        public async Task<ActionResult> StudentPaymentDetailList(string orderNumber, string studentName)
+        {
+            List<StudentPaymentDetail> studentPaymentDetailsAll = new List<StudentPaymentDetail>();
+
+            if (!string.IsNullOrEmpty(orderNumber))
+            {
+                var paymentDetail = (await unitOfWork.StudentPaymentDetailRepository.GetAllAsync()).FirstOrDefault(x => x.Number == orderNumber);
+                if (paymentDetail == null)
+                    return PartialView(new List<StudentPaymentDetailVM>());
+
+                var studentPaymentDetails = (await unitOfWork.StudentPaymentDetailRepository.GetAllAsync()).Where(x => x.StudentPaymentId == paymentDetail.StudentPaymentId);
+                studentPaymentDetailsAll.AddRange(studentPaymentDetails);
+            }
+            else if (!string.IsNullOrEmpty(studentName))
+            {
+                var studentOrderService = new OrderService(context);
+                var students = studentOrderService.GetStudentsByFullName(studentName);
+
+                foreach (var student in students)
+                {
+                    if (!student.StudentPayments.Any())
+                        continue;
+
+                    var studentPaymentDetails = student.StudentPayments
+                        .SelectMany(sp => sp.PaymentDetails)
+                        .ToList();
+
+                    studentPaymentDetailsAll.AddRange(studentPaymentDetails);
+                }
+
+            }
+            else
+            {
+                return PartialView(new List<StudentPaymentDetailVM>());
+            }
+
+            var mappings = mapper.Map<StudentPaymentDetail, StudentPaymentDetailVM>(studentPaymentDetailsAll);
+            return PartialView(mappings ?? new List<StudentPaymentDetailVM>());
+        }
+
+        public async Task<ActionResult> StudentPaymentDetails(int id)
+        {
+
+            return PartialView(new List<StudentVM>());
         }
 
         [HttpPost]
