@@ -2,11 +2,13 @@
 @{
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
     var daysOfWeek = Enum.GetValues(typeof(DaysOfTheWeek)).Cast<DaysOfTheWeek>();
+    var sortedModel = Model.OrderBy(item => item.Days);
+
 }
 
 
 <div class="table-responsive">
-    <table class="table-striped w-auto"
+    <table class="table-striped"
            id="table"
            data-toggle="table"
            data-pagination="true"
@@ -26,43 +28,56 @@
            data-locale="ru-RU">
         <thead>
             <tr>
-                <th>
-                    Дни
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="Days">
+                    День недели
+                </th>
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="StartTime">
+                    Время начала
+                </th>
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="EndTime">
+                    Время окончания
                 </th>
                 <th scope="col" data-sortable="true" data-filter-control="input" data-field="SubjectId">
-                    @Html.DisplayNameFor(model => model.GroupId)
+                    Предмет
                 </th>
-                <th scope="col" data-sortable="true" data-filter-control="input" data-field="GroupId">
-                    @Html.DisplayNameFor(model => model.SubjectId)
-                </th>
-                <th scope="col" data-sortable="true" data-filter-control="input" data-field="GroupId">
-                    @Html.DisplayNameFor(model => model.EmployeeId)
+                <th scope="col" data-sortable="true" data-filter-control="input" data-field="EmployeeId">
+                    Преподаватель
                 </th>
             </tr>
         </thead>
         <tbody>
-           @* todo убать groupid и сделать по красоте(пиздить из index StudentPaymentVM)*@
-        @foreach (var group in Model.GroupBy(item => item.Group))
-        {
-            <tr class="table-primary text-left">
-                <th colspan="8">@group.Key.GroupName (@group.Key.Direction.Department.Faculty.FacultyName)</th>
-            </tr>
-            @foreach (var item in group)
+            @foreach (var group in Model.GroupBy(item => item.Group))
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Group.GroupName)
-                    </td>
-                    <td>
-
-                    </td>
+                <tr class="table-primary text-left">
+                    <td colspan="5">@group.Key.GroupName (@group.Key.Direction.Department.Faculty.FacultyName)</td>
                 </tr>
+                foreach (var item in group)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Days)
+                        </td>
+                        <td>
+                            @item.StartTime.ToString("HH:mm")
+                        </td>
+                        <td>
+                            @item.EndTime.ToString("HH:mm")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Subject.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Employee.FullName)
+                        </td>
+                    </tr>
+                }
             }
-        }
-
         </tbody>
     </table>
 </div>
+
+
+
 
 
 @section Scripts {
