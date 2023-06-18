@@ -1,5 +1,6 @@
 ﻿using AVN.Automapper;
 using AVN.Business;
+using AVN.Common.Enums;
 using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
@@ -35,9 +36,36 @@ namespace AVN.Web.Controllers
             return View();
         }
 
-        public IActionResult Payment()
+
+        [HttpGet]
+        public async Task<ActionResult> Payment(string orderNumber)
         {
-            return View();
+            if (string.IsNullOrEmpty(orderNumber))
+                return View();
+
+            var paymentDetail = (await unitOfWork.StudentPaymentDetailRepository.FindByConditionAsync(x => x.Number == orderNumber)).FirstOrDefault();
+            if (paymentDetail == null)
+                return View();
+
+            var paymentDetailVM = mapper.Map<StudentPaymentDetail, StudentPaymentDetailVM>(paymentDetail);
+            return View(paymentDetailVM);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> Payment(StudentPaymentDetailVM paymentDetailVM)
+        {
+            var studentOrderService = new OrderService(context);
+            if (ModelState.IsValid)
+            {
+                var mappings = mapper.Map<StudentPaymentDetailVM, StudentPaymentDetail>(paymentDetailVM);
+                var result = studentOrderService.StudentPaymentProcess(mappings);
+                if (result.Success)
+                    return View();
+                else
+                    return View(paymentDetailVM);
+            }
+            return View(paymentDetailVM);
         }
 
         public async Task<ActionResult> StudentPaymentDetailList(string orderNumber, string studentName)
@@ -80,10 +108,12 @@ namespace AVN.Web.Controllers
             return PartialView(mappings ?? new List<StudentPaymentDetailVM>());
         }
 
-        public async Task<ActionResult> StudentPaymentDetails(int id)
+        public async Task<ActionResult> StudentPaymentDetails(string orderNumber)
         {
-
-            return PartialView(new List<StudentVM>());
+            if (string.IsNullOrEmpty(orderNumber))
+                return RedirectToAction("Payment");
+            var paymentDetail = (await unitOfWork.StudentPaymentDetailRepository.GetAllAsync()).FirstOrDefault(x => x.Number == orderNumber);
+            return RedirectToAction("Payment", new { paymentDetailId = paymentDetail?.Id });
         }
 
         [HttpPost]

@@ -15,7 +15,7 @@
     {
         <tr data-id="@item.Id">
             <td>@item?.StudentPayment?.AcademicYear?.Name</td>
-            <td>@(string.IsNullOrEmpty(item?.PaymentDate.ToString()) ? "-" : item.PaymentDate)</td>
+            <td>@(string.IsNullOrEmpty(item?.PaymentDate?.ToString()) ? "-" : item?.PaymentDate?.ToShortDateString())</td>
             <td>@(string.IsNullOrEmpty(item?.Payment.ToString()) ? "-" : item.Payment)</td>
             <td>@item?.Number</td>
             <td>@(string.IsNullOrEmpty(item?.PaymentType.ToString()) ? "-" : item?.PaymentType?.GetDisplayName())</td>

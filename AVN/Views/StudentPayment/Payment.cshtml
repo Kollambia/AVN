@@ -1,4 +1,5 @@
-﻿@{
+﻿@model StudentPaymentDetailVM
+@{
     ViewData["Title"] = "Оплата";
 }
 
@@ -17,25 +18,102 @@
             </div>
         </div>
     </div>
-}
-<hr>
-<div id="dataContainer"></div>
 
+    <hr>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="container mt-0" id="paymentDetailContainer">
+                <form>
+                    <div class="row jumbotron box8">
+                        @if (Model == null)
+                        {
+                            <div class="col-sm-12 mx-t6 mb-4">
+                                <h4 class="text-center text-info">Нет данных</h4>
+                                <h5 class="text-center text-info">Введите номер счёта и нажмите на enter</h5>
+                            </div>
+                        }
+                        else
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @Html.HiddenFor(x => x.Id)
+                            @Html.HiddenFor(x => x.StudentPaymentId)
+                            <div class="col-sm-12 mx-t6 mb-4">
+                                <h5 class="text-center text-">@Model.StudentPayment.Student.SName @Model.StudentPayment.Student.Name @Model.StudentPayment.Student.PName</h5>
+                                <h5 class="text-center text-info">Форма оплаты</h5>
+                            </div>
+
+                            <div class="col-sm-12 form-group">
+                                <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Number)</label>
+                                @Html.EditorFor(x => x.Number, new { htmlAttributes = new { @class = "form-control", id = "Number" }})
+                                @Html.ValidationMessageFor(x => x.Number, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <label class="font-weight-bold">@Html.DisplayNameFor(x => x.PaymentDate)</label>
+                                @Html.TextBoxFor(x => x.PaymentDate, "{0:yyyy-MM-dd}", new { @class = "form-control",@type = "date", id = "PaymentDate"})
+                                @Html.ValidationMessageFor(x => x.PaymentDate, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Payment)</label>
+                                @Html.EditorFor(x => x.Payment, new { htmlAttributes = new { @class = "form-control", id = "Payment" }})
+                                @Html.ValidationMessageFor(x => x.Payment, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <label class="font-weight-bold">@Html.DisplayNameFor(x => x.PaymentType)</label>
+                                @Html.DropDownListFor(x => x.PaymentType, Html.GetEnumSelectList(typeof(PaymentType)), "Не выбрано", new {@class = "form-control", id = "PaymentType"})
+                                @Html.ValidationMessageFor(x => x.PaymentType, "", new { @class = "text-danger", id = "Number" })
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <label>@Html.DisplayNameFor(x => x.SpecialPurpose)</label>
+                                @Html.TextAreaFor(x => x.SpecialPurpose, new { @class = "form-control"})
+                                @Html.ValidationMessageFor(x => x.SpecialPurpose, "", new { @class = "text-danger", id = "SpecialPurpose" })
+                            </div>
+                            <div class="col-sm-12 row">
+                                <div class="col-sm-9"></div>
+                                <div class="col-sm-3">
+                                    @if (Model?.Payment == null)
+                                    {
+                                        <button class="btn btn-success btn-lg btn-block-inline" type="submit">Оплатить</button>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="dataContainer"></div>
+        </div>
+    </div>
+}
 @section Scripts {
     <script>
         $(document).ready(function () {
+            var previousOrderNumber = localStorage.getItem('orderNumber') || '';
+            //var previousFullname = localStorage.getItem('fullname') || '';
+
+            $('#orderNumber').val(previousOrderNumber);
+            //$('#fullname').val(previousFullname);
+            GetList();
+
             $('#orderNumber').on('keydown', function (event) {
-                if (event.which === 13) { // 13 is the key code for Enter key
+                if (event.which === 13) {
+                    var orderNumber = $(this).val();
+                    localStorage.setItem('orderNumber', orderNumber);
+                    ReloadPage();
                     GetList();
-                    event.preventDefault(); // Prevent the default form submission behavior
+                    event.preventDefault();
                 }
             });
 
-            // Event handler for Fullname textbox
             $('#fullname').on('keydown', function (event) {
-                if (event.which === 13) { // 13 is the key code for Enter key
+                if (event.which === 13) { 
+                    var fullname = $(this).val();
+                    localStorage.setItem('fullname', fullname);
                     GetList();
-                    event.preventDefault(); // Prevent the default form submission behavior
+                    //ReloadPage();
+                    event.preventDefault();
                 }
             });
 
@@ -60,6 +138,15 @@
                     }
                 });
             }
+
+            function ReloadPage() {
+                var orderNumber = $('#orderNumber').val();
+
+                // Reload the page with the order number as a query parameter
+                window.location.href = '@Url.Action("Payment", "StudentPayment")?orderNumber=' + orderNumber;
+            }
+
+            
         });
     </script>
 }

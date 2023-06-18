@@ -184,6 +184,10 @@ public class OrderService
             {
                 foreach (var student in students)
                 {
+                    //Теперь у студента долг хы)
+                    student.IsHasDebt = true;
+                    _dbContext.Update(student);
+
                     decimal contract = CalculateContract(student.Id);
                     _dbContext.StudentPayments.Add(new StudentPayment
                     {
@@ -370,6 +374,78 @@ public class OrderService
         }
 
         return stringBuilder.ToString();
+    }
+
+    public OperationResult StudentPaymentProcess(StudentPaymentDetail paymentDetail)
+    {
+        var result = new OperationResult();
+        var contract = _dbContext.StudentPayments.FirstOrDefault(x => x.Id == paymentDetail.StudentPaymentId);
+        if (contract == null)
+        {
+            result.Success = false;
+            result.Message = $"Не удалось получить данные о контракте студента";
+            return result;
+        }
+
+        var student = _dbContext.Students.FirstOrDefault(x => x.Id == contract.StudentId);
+        if (student == null)
+        {
+            result.Success = false;
+            result.Message = $"Не удалось получить данные о студенте";
+            return result;
+        }
+
+        if (contract.Debt > paymentDetail.Payment)
+        {
+            contract.Debt -= paymentDetail.Payment ?? 0;
+            contract.Payed += paymentDetail.Payment ?? 0;
+        }
+        else if (contract.Debt < paymentDetail.Payment)
+        {
+            var overpayment = paymentDetail.Payment - contract.Debt;
+            paymentDetail.SpecialPurpose = $"Оплата за обучение (Переплата {overpayment})";
+            contract.Debt = 0;
+            contract.Payed += paymentDetail.Payment ?? 0;
+        }
+
+        if (contract.Debt == 0)
+        {
+            student.IsHasDebt = false;
+
+            var inactiveAccounts = _dbContext.StudentPaymentDetails.Where(x => x.StudentPaymentId == contract.Id && x.Payment == null && x.PaymentDate == null && x.Id != paymentDetail.Id).ToList();
+            if (inactiveAccounts.Count > 0)
+            {
+                try
+                {
+                    _dbContext.RemoveRange(inactiveAccounts);
+                }
+                catch (Exception ex)
+                {
+                    result.Success = false;
+                    result.Message = $"Произошла ошибка при удалении неактивных счетов: {ex.Message} ";
+                    return result;
+                }
+            }
+
+        }
+
+        try
+        {
+            _dbContext.Update(student);
+            _dbContext.Update(contract);
+            _dbContext.Update(paymentDetail);
+            _dbContext.SaveChanges();
+        }
+        catch (Exception ex)
+        {
+            result.Success = false;
+            result.Message = $"Произошла ошибка при оплате: {ex.Message} ";
+            return result;
+        }
+
+        result.Success = true;
+        result.Message = "Оплата успешно проведена!";
+        return result;
     }
 
 }
