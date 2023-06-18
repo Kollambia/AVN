@@ -113,6 +113,29 @@ namespace AVN.Controllers
             return View(schedules);
         }
 
+        // GET: Schedule/Delete/5
+        public async Task<IActionResult> Delete(int id)
+        {
+            var schedule = await unitOfWork.ScheduleRepository.GetByIdAsync(id);
+
+            if (schedule == null)
+            {
+                return NotFound();
+            }
+
+            return View(schedule);
+        }
+
+        // POST: Subject/Delete/5
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var schedule = await unitOfWork.ScheduleRepository.GetByIdAsync(id);
+            await unitOfWork.ScheduleRepository.DeleteAsync(schedule);
+            await unitOfWork.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
         public async Task<ActionResult> ScheduleList(int facultyId, int departmentId, int directionId, string groupId, int groupType)
         {
             var schedule = await unitOfWork.ScheduleRepository.GetAllAsync();
