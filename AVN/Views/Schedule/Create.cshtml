@@ -64,10 +64,9 @@
                 +
                 '<td><input name="[' + index + '].StartTime" type="time" class="form-control" /></td>' +
                 '<td><input name="[' + index + '].EndTime" type="time" class="form-control" /></td>' +
-                '<td><input name="[' + index + '].GroupId" class="form-control" /></td>' +
+                '<td><select name="[' + index + '].GroupId" class="form-control">' + groupSelectOptions + '</select></td>' +
                 '<td><select name="[' + index + '].SubjectId" class="form-control">' + subjectSelectOptions + '</select></td>' +
-                // Add more cells as needed
-                '<td><input name="[' + index + '].EmployeeId" class="form-control" /></td>' +
+                '<td><select name="[' + index + '].EmployeeId" class="form-control">' + employeeSelectOptions + '</select></td>' +
                 '<td><button type="button" class="btn btn-danger removeRow">Remove</button></td>' +
                 '</tr>';
             $('#scheduleTable tbody').append(newRow);
@@ -79,11 +78,25 @@
             index++;
         });
 
+        var groupSelectList = @Html.Raw(Json.Serialize(Model.First().GroupSelectList));
+
+        var groupSelectOptions = '<option disabled selected>Выберите группу</option>';
+        for (var i = 0; i < groupSelectList.length; i++) {
+            groupSelectOptions += '<option value="' + groupSelectList[i].value + '">' + groupSelectList[i].text + '</option>';
+        }
+
         var subjectSelectList = @Html.Raw(Json.Serialize(Model.First().SubjectSelectList));
 
-        var subjectSelectOptions = '<option disabled selected>--Select Category--</option>';
+        var subjectSelectOptions = '<option disabled selected>Выбереите предмет</option>';
         for (var i = 0; i < subjectSelectList.length; i++) {
             subjectSelectOptions += '<option value="' + subjectSelectList[i].value + '">' + subjectSelectList[i].text + '</option>';
+        }
+
+        var employeeSelectList = @Html.Raw(Json.Serialize(Model.First().EmployeeSelectList));
+
+        var employeeSelectOptions = '<option disabled selected>Выберите преподавателья</option>';
+        for (var i = 0; i < employeeSelectList.length; i++) {
+            employeeSelectOptions += '<option value="' + employeeSelectList[i].value + '">' + employeeSelectList[i].text + '</option>';
         }
 
         $(document).ready(function () {

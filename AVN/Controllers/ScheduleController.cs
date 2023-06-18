@@ -36,12 +36,26 @@ namespace AVN.Controllers
                 new ScheduleVM
                 {
                     Schedules = new List<Schedule> { new Schedule(), new Schedule() },
+
                     SubjectSelectList = unitOfWork.SubjectRepository.GetAll().Select(i => new SelectListItem
                     {
                         Text = i.Title,
                         Value = i.Id.ToString()
+                    }),
+
+                    EmployeeSelectList = unitOfWork.EmployeeRepository.GetAll().Select(i => new SelectListItem()
+                    {
+                        Text = i.FullName,
+                        Value = i.Id.ToString()
+                    }),
+
+                    GroupSelectList = unitOfWork.GroupRepository.GetAll().Select(i => new SelectListItem()
+                    {
+                        Text = i.GroupName,
+                        Value = i.Id.ToString()
                     })
                 },
+
 
             };
 
@@ -71,6 +85,18 @@ namespace AVN.Controllers
                         SubjectSelectList = unitOfWork.SubjectRepository.GetAll().Select(i => new SelectListItem
                         {
                             Text = i.Title,
+                            Value = i.Id.ToString()
+                        }),
+
+                        EmployeeSelectList = unitOfWork.EmployeeRepository.GetAll().Select(i => new SelectListItem()
+                        {
+                            Text = i.FullName,
+                            Value = i.Id.ToString()
+                        }),
+
+                        GroupSelectList = unitOfWork.GroupRepository.GetAll().Select(i => new SelectListItem()
+                        {
+                            Text = i.GroupName,
                             Value = i.Id.ToString()
                         })
                     };
