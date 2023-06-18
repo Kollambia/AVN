@@ -91,15 +91,27 @@
     <script>
         $(document).ready(function () {
             var previousOrderNumber = localStorage.getItem('orderNumber') || '';
-            //var previousFullname = localStorage.getItem('fullname') || '';
+            var previousFullname = localStorage.getItem('fullname') || '';
+            var orderNumber = $(this).val();
 
             $('#orderNumber').val(previousOrderNumber);
-            //$('#fullname').val(previousFullname);
+
+            if (previousOrderNumber.trim().length > 0) {
+                $('#fullname').val('');
+            } else {
+                $('#fullname').val(previousFullname);
+            }
+            
             GetList();
 
             $('#orderNumber').on('keydown', function (event) {
                 if (event.which === 13) {
                     var orderNumber = $(this).val();
+                    if (orderNumber.trim().length > 0) {
+                        $('#fullname').val('');
+                    } else {
+                        $('#fullname').val(previousFullname);
+                    }
                     localStorage.setItem('orderNumber', orderNumber);
                     ReloadPage();
                     GetList();
@@ -115,6 +127,17 @@
                     //ReloadPage();
                     event.preventDefault();
                 }
+            });
+
+            $('#fullname').on('input', function () {
+                var fullname = $(this).val();
+
+                if (fullname.trim().length > 0) {
+                    $('#orderNumber').val('');
+                    GetList();
+                }
+
+                localStorage.setItem('fullname', fullname);
             });
 
             function GetList() {
