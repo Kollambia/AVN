@@ -91,7 +91,7 @@ namespace AVN.Models
         [Display(Name = "Пароль")]
         public string? Password { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Введите подтверждение пароля")]
         [DataType(DataType.Password)]
         [Display(Name = "Подтвердите пароль")]
         [Compare("Password", ErrorMessage = "Пароль и подтверждения пароля не совпадают.")]

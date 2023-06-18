@@ -275,7 +275,7 @@
             // Your code logic here
             var directionId = $('#directionsDropdown').val();
             $.ajax({
-                url: '@Url.Action("GetGroupsByDirection", "Group")',
+                url: '@Url.Action("GetEnrolledGroupsByDirection", "Group")',
                 type: 'GET',
                 data: { directionId: directionId },
                 success: function (data) {
@@ -284,6 +284,8 @@
                     $.each(data, function (i, group) {
                         $('#groupsDropdown').append($('<option></option>').val(group.value).text(group.text));
                     });
+                    var groupId = '@Model.GroupId';
+                    $('#groupsDropdown').val(groupId);
                 },
                 error: function (xhr, status, error) {
                     // Handle error if any
