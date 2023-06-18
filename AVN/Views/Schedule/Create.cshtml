@@ -3,7 +3,8 @@
     ViewData["Title"] = "Create Schedule";
 }
 
-<h2>Create Schedule</h2>
+<h2 class="text-center mb-2">Регистрация факультета</h2>
+<br/>
 
 <form asp-action="Create">
     <table class="table" id="scheduleTable">
@@ -25,21 +26,31 @@
                     <td><select asp-for="@Model[i].Days" asp-items="Html.GetEnumSelectList<DaysOfTheWeek>()" class="form-control"></select></td>
                     <td><input asp-for="@Model[i].StartTime" type="time" class="form-control" /></td>
                     <td><input asp-for="@Model[i].EndTime" type="time" class="form-control" /></td>
-                    <td><input asp-for="@Model[i].Group.GroupName" class="form-control" /></td>
-                    <td><input asp-for="@Model[i].Subject.Title" class="form-control" /></td>
-                    <td><input asp-for="@Model[i].Employee.FullName" class="form-control" /></td>
-                    <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
+                    <td>
+                        @Html.DropDownListFor(x => x[i].GroupId, ViewData[$"[{i}].GroupId"] as List<SelectListItem>, "Не выбрано", new { @class = "form-control", id = "groupDropdown" + i })
+                        @Html.ValidationMessageFor(x => x[i].GroupId, "", new { @class = "text-danger" })
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(x => x[i].SubjectId, ViewData[$"[{i}].SubjectId"] as List<SelectListItem>, "Не выбрано", new { @class = "form-control", id = "subjectDropdown" + i })
+                        @Html.ValidationMessageFor(x => x[i].SubjectId, "", new { @class = "text-danger" })
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(x => x[i].EmployeeId, ViewData[$"[{i}].EmployeeId"] as List<SelectListItem>, "Не выбрано", new { @class = "form-control", id = "employeeDropdown" + i })
+                        @Html.ValidationMessageFor(x => x[i].EmployeeId, "", new { @class = "text-danger" })
+                    </td>
+                    <td><button type="button" class="btn btn-danger removeRow">Удалить</button></td>
                 </tr>
             }
         </tbody>
     </table>
-    <button type="button" class="btn btn-primary" id="addRow">Add Row</button>
-    <input type="submit" value="Create" class="btn btn-success" />
+    <button type="button" class="btn btn-primary" id="addRow">Добавить строку</button>
+    <input type="submit" value="Создать" class="btn btn-success" />
 </form>
 
 @section Scripts {
     <script>
         var index = @Model.Count;
+        
         $('#addRow').click(function () {
             var newRow = '<tr>' +
                 '<td><select name="[' + index + '].Days" class="form-control">' +
@@ -54,17 +65,90 @@
                 +
                 '<td><input name="[' + index + '].StartTime" type="time" class="form-control" /></td>' +
                 '<td><input name="[' + index + '].EndTime" type="time" class="form-control" /></td>' +
-                '<td><input name="[' + index + '].GroupId" class="form-control" /></td>' +
-                '<td><input name="[' + index + '].SubjectId" class="form-control" /></td>' +
-                '<td><input name="[' + index + '].EmployeeId" class="form-control" /></td>' +
-                '<td><button type="button" class="btn btn-danger removeRow">Remove</button></td>' +
+                '<td><select name="[' + index + '].GroupId" class="form-control">' + groupSelectOptions + '</select></td>' +
+                '<td><select name="[' + index + '].SubjectId" class="form-control">' + subjectSelectOptions + '</select></td>' +
+                '<td><select name="[' + index + '].EmployeeId" class="form-control">' + employeeSelectOptions + '</select></td>' +
+                '<td><button type="button" class="btn btn-danger removeRow">Удалить</button></td>' +
                 '</tr>';
             $('#scheduleTable tbody').append(newRow);
+
+            $(document).on('click', '.removeRow', function () {
+                $(this).closest('tr').remove();
+            });
+
             index++;
         });
 
-        $(document).on('click', '.removeRow', function () {
-            $(this).closest('tr').remove();
+        var groupSelectList = @Html.Raw(Json.Serialize(Model.First().GroupSelectList));
+
+        var groupSelectOptions = '<option>Не выбрано</option>';
+        for (var i = 0; i < groupSelectList.length; i++) {
+            groupSelectOptions += '<option value="' + groupSelectList[i].value + '">' + groupSelectList[i].text + '</option>';
+        }
+
+        var subjectSelectList = @Html.Raw(Json.Serialize(Model.First().SubjectSelectList));
+
+        var subjectSelectOptions = '<option>Не выбрано</option>';
+        for (var i = 0; i < subjectSelectList.length; i++) {
+            subjectSelectOptions += '<option value="' + subjectSelectList[i].value + '">' + subjectSelectList[i].text + '</option>';
+        }
+
+        var employeeSelectList = @Html.Raw(Json.Serialize(Model.First().EmployeeSelectList));
+
+        var employeeSelectOptions = '<option>Не выбрано</option>';
+        for (var i = 0; i < employeeSelectList.length; i++) {
+            employeeSelectOptions += '<option value="' + employeeSelectList[i].value + '">' + employeeSelectList[i].text + '</option>';
+        }
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetSubjects", "Subject")',
+                type: 'GET',
+                success: function (data) {
+                    // Add new options
+                    $.each(data, function (i, item) {
+                        $('#subjectDropdown').append($('<option></option>').val(item.value).text(item.text));
+                    });
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetGroups", "Group")',
+                type: 'GET',
+                success: function (data) {
+                    // Add new options
+                    $.each(data, function (i, group) {
+                        $('#subjectDropdown').append($('<option></option>').val(subject.value).text(group.text));
+                    });
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetEmployees", "Employee")',
+                type: 'GET',
+                success: function (data) {
+                    // Add new options
+                    $.each(data, function (i, employee) {
+                        $('#employeeDropdown').append($('<option></option>').val(employee.value).text(employee.text));
+                    });
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
         });
     </script>
 }

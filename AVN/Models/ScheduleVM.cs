@@ -1,5 +1,6 @@
 ﻿using AVN.Common.Enums;
 using AVN.Model.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AVN.Models
 {
@@ -14,6 +15,10 @@ namespace AVN.Models
         public Subject Subject { get; set; }
         public string EmployeeId { get; set; }
         public Employee Employee { get; set; }
+
+        public IEnumerable<SelectListItem> SubjectSelectList { get; set; }
+        public IEnumerable<SelectListItem> EmployeeSelectList { get; set; }
+        public IEnumerable<SelectListItem> GroupSelectList { get; set; }
 
         public List<Schedule> Schedules { get; set; }
     }
