@@ -184,6 +184,8 @@ public class OrderService
             {
                 foreach (var student in students)
                 {
+                    if (student.EducationalLine == EducationalLine.Budget)
+                        continue;
                     //Теперь у студента долг хы)
                     student.IsHasDebt = true;
                     _dbContext.Update(student);
@@ -291,7 +293,7 @@ public class OrderService
         string lastThreeNumbers = studentsCount.ToString("D3");
 
         student.GradeBookNumber = $"{DateTime.Now.Year}{lastThreeNumbers}";
-        //student.Status = StudentStatus.Enlisted;
+        student.Status = StudentStatus.Enrollee;
 
         return student;
     }
@@ -395,7 +397,7 @@ public class OrderService
             return result;
         }
 
-        if (contract.Debt > paymentDetail.Payment)
+        if (contract.Debt >= paymentDetail.Payment)
         {
             contract.Debt -= paymentDetail.Payment ?? 0;
             contract.Payed += paymentDetail.Payment ?? 0;

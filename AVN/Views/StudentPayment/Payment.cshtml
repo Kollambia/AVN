@@ -39,7 +39,7 @@
                             @Html.HiddenFor(x => x.Id)
                             @Html.HiddenFor(x => x.StudentPaymentId)
                             <div class="col-sm-12 mx-t6 mb-4">
-                                <h5 class="text-center text-">@Model.StudentPayment.Student.SName @Model.StudentPayment.Student.Name @Model.StudentPayment.Student.PName</h5>
+                                <h5 class="text-center text-">@Model?.StudentPayment?.Student?.SName @Model?.StudentPayment?.Student?.Name @Model?.StudentPayment?.Student?.PName</h5>
                                 <h5 class="text-center text-info">Форма оплаты</h5>
                             </div>
 

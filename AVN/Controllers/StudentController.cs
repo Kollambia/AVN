@@ -1,5 +1,6 @@
 ﻿using AVN.Automapper;
 using AVN.Business;
+using AVN.Common.Enums;
 using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
@@ -213,31 +214,6 @@ namespace AVN.Web.Controllers
             return RedirectToAction("Index", "Order");
         }
 
-        [HttpPost]
-        public async Task<ActionResult> SaveImportedStudents(List<TransferStudentVM> transferStudents)
-        {
-            var studentOrderService = new OrderService(context);
-            foreach (var student in transferStudents)
-            {
-                if (student.Transfered == true)
-                {
-                    var changedStudent = await unitOfWork.StudentRepository.GetByIdAsync(student.Id);
-                    changedStudent.GroupId = _importGroupId;
-                    changedStudent.Status = studentOrderService.GetStudentStatusByGroupId(_importGroupId);
-                    await unitOfWork.StudentRepository.UpdateAsync(changedStudent);
-                    await unitOfWork.SaveChangesAsync();
-                    _transferExportStudents.Clear();
-                    _transferImportStudents.Clear();
-                }
-
-            }
-            return RedirectToAction("Index", "Order");
-        }
-
-        public List<TransferStudentVM> GetImportedStudents()
-        {
-            return _transferImportStudents;
-        }
 
         public IActionResult CancelImportStudents()
         {
@@ -247,6 +223,11 @@ namespace AVN.Web.Controllers
                 _transferExportStudents.Clear();
                 _transferImportStudents.Clear();
             }
+            return RedirectToAction("Index", "Order");
+        }
+
+        public IActionResult RefreshTables()
+        {
             return RedirectToAction("Index", "Order");
         }
 
@@ -321,6 +302,7 @@ namespace AVN.Web.Controllers
             mappedStudent.FacultyId = student?.Group?.Direction.Department.FacultyId;
             mappedStudent.DepartmentId = student?.Group?.Direction.DepartmentId;
             mappedStudent.DirectionId = student?.Group?.DirectionId;
+            mappedStudent.GroupId = student?.GroupId;
 
             return View(mappedStudent);
         }
@@ -347,7 +329,8 @@ namespace AVN.Web.Controllers
                 if (group == null)
                     return RedirectToAction(nameof(Index));
 
-                return RedirectToAction($"{group.GroupType.ToString()}");
+                var returnetView = group.GroupType == GroupType.Students ? "Index" : group.GroupType.ToString();
+                return RedirectToAction($"{returnetView}");
             }
             return View(student);
         }
