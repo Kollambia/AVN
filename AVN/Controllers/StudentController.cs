@@ -317,11 +317,39 @@ namespace AVN.Web.Controllers
                 return NotFound();
             }
 
-            var mappedStudent = mapper.Map<Student, StudentVM>(student);
+            var mappedStudent = mapper.Map<Student, StudentEditVM>(student);
             mappedStudent.FacultyId = student?.Group?.Direction.Department.FacultyId;
             mappedStudent.DepartmentId = student?.Group?.Direction.DepartmentId;
             mappedStudent.DirectionId = student?.Group?.DirectionId;
+
             return View(mappedStudent);
+        }
+
+
+        // POST: Student/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string id, StudentEditVM student)
+        {
+            if (id != student.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var mappedStudent = mapper.Map<StudentEditVM, Student>(student);
+
+                await unitOfWork.StudentRepository.UpdateAsync(mappedStudent);
+                await unitOfWork.SaveChangesAsync();
+
+                var group = await context.Groups.FirstOrDefaultAsync(s => s.Id == mappedStudent.GroupId);
+                if (group == null)
+                    return RedirectToAction(nameof(Index));
+
+                return RedirectToAction($"{group.GroupType.ToString()}");
+            }
+            return View(student);
         }
 
         public async Task<IActionResult> StudentMovementEdit(int id)
@@ -341,26 +369,6 @@ namespace AVN.Web.Controllers
             var mappedList = mapper.Map<StudentMovement, StudentMovementVM>(studentMovement);
 
             return View(mappedList);
-        }
-
-        // POST: Student/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, StudentVM student)
-        {
-            if (id != student.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                var mappedStudent = mapper.Map<StudentVM, Student>(student);
-                await unitOfWork.StudentRepository.UpdateAsync(mappedStudent);
-                await unitOfWork.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(student);
         }
 
         [HttpPost]
