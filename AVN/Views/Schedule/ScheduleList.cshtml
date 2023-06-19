@@ -3,6 +3,12 @@
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
     var daysOfWeek = Enum.GetValues(typeof(DaysOfTheWeek)).Cast<DaysOfTheWeek>();
     var sortedModel = Model.OrderBy(item => item.Days);
+    var timeSlots = Model
+        .Select(s => new { StartTime = s.StartTime.ToString("HH:mm"), EndTime = s.EndTime.ToString("HH:mm") })
+        .Distinct()
+        .OrderBy(t => t.StartTime)
+        .ToList();
+
 
 }
 
@@ -33,53 +39,45 @@
            data-locale="ru-RU">
         <thead>
             <tr>
-                <th scope="col" data-sortable="true" data-filter-control="input" data-field="Days">
+                <th scope="col">
                     День недели
                 </th>
-                <th scope="col" data-sortable="true" data-filter-control="input" data-field="StartTime">
-                    Время начала
-                </th>
-                <th scope="col" data-sortable="true" data-filter-control="input" data-field="EndTime">
-                    Время окончания
-                </th>
-                <th scope="col" data-sortable="true" data-filter-control="input" data-field="SubjectId">
-                    Предмет
-                </th>
-                <th scope="col" data-sortable="true" data-filter-control="input" data-field="EmployeeId">
-                    Преподаватель
-                </th>
+                @foreach (var group in Model.Select(s => s.Group).Distinct())
+                {
+                    <th scope="col" data-sortable="true" data-filter-control="input">
+                        @group.GroupName (@group.Direction.Department.Faculty.FacultyName)
+                    </th>
+                }
             </tr>
         </thead>
         <tbody>
-            @foreach (var group in Model.GroupBy(item => item.Group))
+            @foreach (var dayOfWeek in daysOfWeek)
             {
-                <tr class="table-primary text-left">
-                    <td colspan="5">@group.Key.GroupName (@group.Key.Direction.Department.Faculty.FacultyName)</td>
+                <tr>
+                    <td>@dayOfWeek.GetDisplayName()</td>
+                    @foreach (var group in Model.Select(s => s.Group).Distinct())
+                    {
+                        var schedulesForGroupAndDay = Model.Where(s => s.Group == group && s.Days == dayOfWeek);
+                        <td>
+                            @foreach (var schedule in schedulesForGroupAndDay)
+                            {
+                                <div>@schedule.StartTime.ToString("HH:mm") - @schedule.EndTime.ToString("HH:mm")</div>
+                                <div>@schedule.Subject.Title</div>
+                                <div>@schedule.Employee.FullName</div>
+                                <hr />
+                            }
+                        </td>
+                    }
                 </tr>
-                foreach (var item in group)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Days)
-                        </td>
-                        <td>
-                            @item.StartTime.ToString("HH:mm")
-                        </td>
-                        <td>
-                            @item.EndTime.ToString("HH:mm")
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Subject.Title)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Employee.FullName)
-                        </td>
-                    </tr>
-                }
             }
         </tbody>
     </table>
 </div>
+
+
+
+
+
 
 @section Scripts {
     @* --- Jquery --- *@
