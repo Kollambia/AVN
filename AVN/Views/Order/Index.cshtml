@@ -107,23 +107,20 @@
 
 @section Scripts {
     <script>
-        //function saveImportedStudents() {
-        //    var importForm = document.getElementById("orderForm");
-        //    importForm.action = "/Order/SaveImportedStudents";
-        //    importForm.submit();
-        //}
-        //function cancelImportStudents() {
-        //    var importForm = document.getElementById("orderForm");
-        //    importForm.action = "/Order/CancelImportStudents";
-        //    importForm.submit();
-        //}
-
         $(document).ready(function () {
             loadDropdownData();
 
-            $('#movementTypeDropdown, #facultyFromDropdown, #facultyToDropdown, #academYearFirstDropdown, #academYearSecondDropdown').change(function () {
-                FillGroupFromDropdown2();
-                FillGroupToDropdown2();
+            $('#facultyFromDropdown, #academYearFirstDropdown').change(function () {
+                FillGroupFromDropdownAfterChange();
+            });
+
+            $('#facultyToDropdown, #academYearSecondDropdown').change(function () {
+                FillGroupToDropdownAfterChange();
+            });
+
+            $('#movementTypeDropdown').change(function () {
+                FillGroupFromDropdownAfterChange();
+                FillGroupToDropdownAfterChange();
                 FillOrderTypeDropdown();
             });
 
@@ -139,47 +136,53 @@
         });
 
         function loadDropdownData() {
-            $.ajax({
-                url: '@Url.Action("GetFaculties", "Faculty")',
-                type: 'GET',
-                success: function (data) {
+            var dropdownPromises = [];
+
+            dropdownPromises.push(
+                $.ajax({
+                    url: '@Url.Action("GetFaculties", "Faculty")',
+                    type: 'GET'
+                }).done(function (data) {
                     populateDropdown(data, 'facultyFromDropdown');
                     populateDropdown(data, 'facultyToDropdown');
                     loadSelectedValue('facultyFromDropdown');
                     loadSelectedValue('facultyToDropdown');
-                },
-                error: function (xhr, status, error) {
+                }).fail(function (xhr, status, error) {
                     console.error(xhr.responseText);
-                }
-            });
+                })
+            );
 
-            $.ajax({
-                url: '@Url.Action("GetAcademicYears", "Option")',
-                type: 'GET',
-                success: function (data) {
+            dropdownPromises.push(
+                $.ajax({
+                    url: '@Url.Action("GetAcademicYears", "Option")',
+                    type: 'GET'
+                }).done(function (data) {
                     populateDropdown(data, 'academYearFirstDropdown');
                     populateDropdown(data, 'academYearSecondDropdown');
                     loadSelectedValue('academYearFirstDropdown');
                     loadSelectedValue('academYearSecondDropdown');
-                },
-                error: function (xhr, status, error) {
+                }).fail(function (xhr, status, error) {
                     console.error(xhr.responseText);
-                }
-            });
+                })
+            );
 
-            $.ajax({
-                url: '@Url.Action("GetMovementTypes", "Option")',
-                type: 'GET',
-                success: function (data) {
+            dropdownPromises.push(
+                $.ajax({
+                    url: '@Url.Action("GetMovementTypes", "Option")',
+                    type: 'GET'
+                }).done(function (data) {
                     populateDropdown(data, 'movementTypeDropdown');
                     loadSelectedValue('movementTypeDropdown');
-                    FillOrderTypeDropdown();
-                    FillGroupFromDropdown();
-                    FillGroupToDropdown();
-                },
-                error: function (xhr, status, error) {
+                }).fail(function (xhr, status, error) {
                     console.error(xhr.responseText);
-                }
+                })
+            );
+
+            // After all dropdowns are populated, execute the remaining functions
+            $.when.apply($, dropdownPromises).done(function () {
+                FillGroupFromDropdownAfterLoad();
+                FillGroupToDropdownAfterLoad();
+                FillOrderTypeDropdown();
             });
         }
 
@@ -188,7 +191,7 @@
             dropdown.empty();
 
             if (data.length === 0) {
-                dropdown.append($('<option>').text('Нет данных').val('0'));
+                dropdown.append($('<option>').text('Нет данных').val(''));
             } else {
                 $.each(data, function (i, item) {
                     dropdown.append($('<option></option>').val(item.value).text(item.text));
@@ -196,119 +199,166 @@
             }
         }
 
-        function FillGroupFromDropdown() {
+        function FillGroupFromDropdownAfterChange() {
             var facultyId = $('#facultyFromDropdown').val();
             var movementTypeId = $('#movementTypeDropdown').val();
             var academicYearId = $('#academYearFirstDropdown').val();
 
-            $.ajax({
-                type: 'GET',
-                url: '@Url.Action("GetGroupsToExport", "Group")',
-                contentType: 'application/json',
-                data: {
-                    'facultyId': facultyId,
-                    'movementTypeId': movementTypeId,
-                    'academicYearId': academicYearId
-                },
-                success: function (data) {
-                    populateDropdown(data, 'groupFromDropdown');
-                    loadSelectedValue('groupFromDropdown');
-                    GetLeftStudentList();
-                    saveSelectedValue('facultyFromDropdown');
-                    saveSelectedValue('movementTypeDropdown');
-                    saveSelectedValue('academYearFirstDropdown');
-                    //saveSelectedValue('groupFromDropdown');
-                },
-                error: function (xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
+            // Create a promise for the AJAX request
+            var ajaxPromise = new Promise(function (resolve, reject) {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetGroupsToExport", "Group")',
+                    contentType: 'application/json',
+                    data: {
+                        'facultyId': facultyId,
+                        'movementTypeId': movementTypeId,
+                        'academicYearId': academicYearId
+                    },
+                    success: function (data) {
+                        populateDropdown(data, 'groupFromDropdown');
+                        saveSelectedValue('facultyFromDropdown');
+                        saveSelectedValue('movementTypeDropdown');
+                        saveSelectedValue('academYearFirstDropdown');
+                        saveSelectedValue('groupFromDropdown');
+
+                        resolve(); // Resolve the promise when the AJAX request is successful
+                    },
+                    error: function (xhr, status, error) {
+                        alert(xhr.responseText);
+                        reject(); // Reject the promise if there's an error
+                    }
+                });
+            });
+
+            // Execute the GetLeftStudentList function after FillGroupFromDropdownAfterLoad is completed
+            ajaxPromise.then(function () {
+                GetLeftStudentList();
+            }).catch(function () {
+                alert('Произошла ошибка!')
             });
         }
 
-        function FillGroupToDropdown() {
+        function FillGroupToDropdownAfterChange() {
             var facultyId = $('#facultyToDropdown').val();
             var movementTypeId = $('#movementTypeDropdown').val();
             var academicYearId = $('#academYearSecondDropdown').val();
 
-            $.ajax({
-                type: 'GET',
-                url: '@Url.Action("GetGroupsToImport", "Group")',
-                contentType: 'application/json',
-                data: {
-                    'facultyId': facultyId,
-                    'movementTypeId': movementTypeId,
-                    'academicYearId': academicYearId
-                },
-                success: function (data) {
-                    populateDropdown(data, 'groupToDropdown');
-                    loadSelectedValue('groupToDropdown');
-                    GetRightStudentList();
-                    saveSelectedValue('facultyToDropdown');
-                    saveSelectedValue('movementTypeDropdown');
-                    saveSelectedValue('academYearSecondDropdown');
-                    //saveSelectedValue('groupToDropdown');
-                },
-                error: function (xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
+            var ajaxPromise = new Promise(function (resolve, reject) {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetGroupsToImport", "Group")',
+                    contentType: 'application/json',
+                    data: {
+                        'facultyId': facultyId,
+                        'movementTypeId': movementTypeId,
+                        'academicYearId': academicYearId
+                    },
+                    success: function (data) {
+                        populateDropdown(data, 'groupToDropdown');
+                        saveSelectedValue('facultyToDropdown');
+                        saveSelectedValue('movementTypeDropdown');
+                        saveSelectedValue('academYearSecondDropdown');
+                        saveSelectedValue('groupToDropdown');
+
+                        resolve();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                        reject();
+                    }
+                });
+            });
+
+
+            ajaxPromise.then(function () {
+                GetRightStudentList();
+            }).catch(function () {
+                alert('Произошла ошибка!')
             });
         }
 
-        function FillGroupFromDropdown2() {
+        function FillGroupFromDropdownAfterLoad() {
             var facultyId = $('#facultyFromDropdown').val();
             var movementTypeId = $('#movementTypeDropdown').val();
             var academicYearId = $('#academYearFirstDropdown').val();
 
-            $.ajax({
-                type: 'GET',
-                url: '@Url.Action("GetGroupsToExport", "Group")',
-                contentType: 'application/json',
-                data: {
-                    'facultyId': facultyId,
-                    'movementTypeId': movementTypeId,
-                    'academicYearId': academicYearId
-                },
-                success: function (data) {
-                    populateDropdown(data, 'groupFromDropdown');
-                    GetLeftStudentList();
-                    saveSelectedValue('facultyFromDropdown');
-                    saveSelectedValue('movementTypeDropdown');
-                    saveSelectedValue('academYearFirstDropdown');
-                    saveSelectedValue('groupFromDropdown');
-                },
-                error: function (xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
+            // Create a promise for the AJAX request
+            var ajaxPromise = new Promise(function (resolve, reject) {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetGroupsToExport", "Group")',
+                    contentType: 'application/json',
+                    data: {
+                        'facultyId': facultyId,
+                        'movementTypeId': movementTypeId,
+                        'academicYearId': academicYearId
+                    },
+                    success: function (data) {
+                        populateDropdown(data, 'groupFromDropdown');
+                        loadSelectedValue('groupFromDropdown');
+                        saveSelectedValue('facultyFromDropdown');
+                        saveSelectedValue('movementTypeDropdown');
+                        saveSelectedValue('academYearFirstDropdown');
+                        saveSelectedValue('groupFromDropdown');
+
+                        resolve(); // Resolve the promise when the AJAX request is successful
+                    },
+                    error: function (xhr, status, error) {
+                        alert(xhr.responseText);
+                        reject(); // Reject the promise if there's an error
+                    }
+                });
+            });
+
+            // Execute the GetLeftStudentList function after FillGroupFromDropdownAfterLoad is completed
+            ajaxPromise.then(function () {
+                GetLeftStudentList();
+            }).catch(function () {
+                alert('Произошла ошибка!')
             });
         }
 
-        function FillGroupToDropdown2() {
+        function FillGroupToDropdownAfterLoad() {
             var facultyId = $('#facultyToDropdown').val();
             var movementTypeId = $('#movementTypeDropdown').val();
             var academicYearId = $('#academYearSecondDropdown').val();
 
-            $.ajax({
-                type: 'GET',
-                url: '@Url.Action("GetGroupsToImport", "Group")',
-                contentType: 'application/json',
-                data: {
-                    'facultyId': facultyId,
-                    'movementTypeId': movementTypeId,
-                    'academicYearId': academicYearId
-                },
-                success: function (data) {
-                    populateDropdown(data, 'groupToDropdown');
-                    GetRightStudentList();
-                    saveSelectedValue('facultyToDropdown');
-                    saveSelectedValue('movementTypeDropdown');
-                    saveSelectedValue('academYearSecondDropdown');
-                    saveSelectedValue('groupToDropdown');
-                },
-                error: function (xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
+            var ajaxPromise = new Promise(function (resolve, reject) {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetGroupsToImport", "Group")',
+                    contentType: 'application/json',
+                    data: {
+                        'facultyId': facultyId,
+                        'movementTypeId': movementTypeId,
+                        'academicYearId': academicYearId
+                    },
+                    success: function (data) {
+                        populateDropdown(data, 'groupToDropdown');
+                        loadSelectedValue('groupToDropdown');
+                        saveSelectedValue('facultyToDropdown');
+                        saveSelectedValue('movementTypeDropdown');
+                        saveSelectedValue('academYearSecondDropdown');
+                        saveSelectedValue('groupToDropdown');
+
+                        resolve(); 
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                        reject();
+                    }
+                });
+            });
+
+
+            ajaxPromise.then(function () {
+                GetRightStudentList();
+            }).catch(function () {
+                alert('Произошла ошибка!')
             });
         }
+
 
         function FillOrderTypeDropdown() {
             var movementTypeId = $('#movementTypeDropdown').val();
@@ -331,7 +381,7 @@
         }
 
         function loadSelectedValue(dropdownId) {
-            var selectedValue = sessionStorage.getItem(dropdownId);
+            var selectedValue = localStorage.getItem(dropdownId);
             if (selectedValue) {
                 $('#' + dropdownId).val(selectedValue);
             }
@@ -339,7 +389,7 @@
 
         function saveSelectedValue(dropdownId) {
             var selectedValue = $('#' + dropdownId).val();
-            sessionStorage.setItem(dropdownId, selectedValue);
+            localStorage.setItem(dropdownId, selectedValue);
         }
 
         function GetLeftStudentList() {
