@@ -6,6 +6,8 @@
     <div class="card">
         <div class="card-body">
             <p class="card-text">@Model.Subject.Title</p>
+            <p class="card-text">@Model.Group.GroupName</p>
+            <p class="card-text">@Model.Employee.FullName ></p>
             <form method="post" action="/Schedule/DeleteConfirmed/@Model.Id">
                 <button type="submit" class="btn btn-danger">Удалить</button>
                 <a href="/Schedule/Index" class="btn btn-secondary">Отмена</a>

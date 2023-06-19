@@ -6,6 +6,11 @@
 
 }
 
+<div id="toolbar">
+    <a asp-controller="Schedule" asp-action="Create">
+        <input type="button" class="btn btn-success" value="Добавить" />
+    </a>
+</div>
 
 <div class="table-responsive">
     <table class="table-striped"
@@ -75,10 +80,6 @@
         </tbody>
     </table>
 </div>
-
-
-
-
 
 @section Scripts {
     @* --- Jquery --- *@
