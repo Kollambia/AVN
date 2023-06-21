@@ -4,7 +4,7 @@ namespace AVN.Model.Entities
 {
     public class GradeBook : BaseEntity<GradeBook, int>
     {
-        public string Grade { get; set; }
+        public Grades Grade { get; set; }
         public int Points { get; set; }
         public DateTime Date { get; set; }
         public FinalControlForm ControlForm { get; set; }
