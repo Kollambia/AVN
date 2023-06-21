@@ -22,6 +22,7 @@ public class Group : BaseEntity<Group, string>
     public virtual ICollection<Order>? Orders { get; set; }
     public virtual ICollection<GroupEmployee>? GroupEmployees { get; set; }
     public virtual ICollection<Schedule> Schedule { get; set; }
+    public virtual ICollection<GradeBook> GradeBook { get; set; }
 
     public Group()
     {
@@ -29,6 +30,7 @@ public class Group : BaseEntity<Group, string>
         Students = new List<Student>();
         Orders = new List<Order>();
         Schedule = new List<Schedule>();
+        GradeBook = new List<GradeBook>();
     }
 
 }

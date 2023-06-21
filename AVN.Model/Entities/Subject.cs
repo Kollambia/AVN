@@ -28,10 +28,13 @@ namespace AVN.Model.Entities
         public string? EmployeeId { get; set; }
         public virtual Employee? Employee { get; set; }
         public virtual ICollection<Schedule> Schedule { get; set; }
+        public virtual ICollection<GradeBook> GradeBook { get; set; }
+
 
         public Subject()
         {
             Schedule = new List<Schedule>();
+            GradeBook = new List<GradeBook>();
         }
 
     }

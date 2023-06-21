@@ -27,12 +27,14 @@ public class Student : BaseEntity<Student, string>
     public virtual ICollection<StudentPayment>? StudentPayments { get; set; }
     public virtual ICollection<Order>? Orders { get; set; }
     public virtual ICollection<StudentMovement>? StudentMovements { get; set; }
+    public virtual ICollection<GradeBook>? GradeBook { get; set; }
 
     public Student()
     {
         StudentPayments = new List<StudentPayment>();
         Orders = new List<Order>();
         StudentMovements = new List<StudentMovement>();
+        GradeBook = new List<GradeBook>();
     }
 
 }
