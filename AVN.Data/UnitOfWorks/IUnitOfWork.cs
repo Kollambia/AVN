@@ -21,6 +21,7 @@ public interface IUnitOfWork : IDisposable
     IRepository<MovementType, int> MovementTypeRepository { get; }
     IRepository<OrderType, int> OrderTypeRepository { get; }
     IRepository<Schedule, int> ScheduleRepository { get; }
+    IRepository<GradeBook, int> GradeBookRepository { get; }
 
     Task<int> SaveChangesAsync();
 }

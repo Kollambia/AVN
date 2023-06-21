@@ -25,6 +25,7 @@ namespace AVN.Automapper
             CreateMap<StudentMovement, StudentMovementVM>().ReverseMap();
             CreateMap<Schedule, ScheduleVM>().ReverseMap();
             CreateMap<Student, StudentEditVM>().ReverseMap();
+            CreateMap<GradeBook, GradeBookVM>().ReverseMap();
         }
     }
 }
