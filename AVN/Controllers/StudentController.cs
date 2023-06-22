@@ -234,15 +234,25 @@ namespace AVN.Web.Controllers
         // GET: Student/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
+            var students = await context.Students
+                .Include(s => s.Group)
+                .ThenInclude(g => g.Direction)
+                .ThenInclude(d => d.Department)
+                .Where(s => s.Id == id)
+                .ToListAsync();
 
-            if (student == null)
+
+
+            if (students == null)
             {
                 return NotFound();
             }
 
-            return View(student);
+            var mappedStudents = mapper.Map<Student, StudentVM>(students);
+
+            return View(students);
         }
+
 
         // GET: Student/Create
         public IActionResult Create()
