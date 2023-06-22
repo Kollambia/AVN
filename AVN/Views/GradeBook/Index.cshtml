@@ -1,0 +1,55 @@
+﻿<h2>Ведомость</h2>
+
+@{
+    ViewData["Title"] = "Студенты";
+}
+
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="col-md-7">
+            <div class="form-group row mb-1">
+
+                <div class="col-md-2">
+                    <label class="font-weight-bold">Факультет</label>
+                </div>
+                <div class="col-md-10">
+                    <select id="facultyDropdown" name="facultyDropdown" class="form-control"></select>
+
+                </div>
+            </div>
+            <div class="form-group row mb-1">
+
+                <div class="col-md-2">
+                    <label class="font-weight-bold">Кафедра</label>
+                </div>
+                <div class="col-md-10">
+                    <select id="departmentDropdown" name="departmentDropdown" class="form-control"></select>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group row mb-1">
+
+                <div class="col-md-3">
+                    <label class="font-weight-bold">Направление</label>
+                </div>
+                <div class="col-md-9">
+                    <select id="directionDropdown" name="directionDropdown" class="form-control"></select>
+
+                </div>
+            </div>
+            <div class="form-group row mb-1">
+
+                <div class="col-md-3">
+                    <label class="font-weight-bold">Группа</label>
+                </div>
+                <div class="col-md-9">
+                    <select id="groupDropdown" name="groupDropdown" class="form-control"></select>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
