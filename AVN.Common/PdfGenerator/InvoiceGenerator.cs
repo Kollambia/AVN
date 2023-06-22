@@ -25,11 +25,11 @@ namespace AVN.Common.PdfGenerator
                     PdfFont font = PdfFontFactory.CreateFont(fontPath, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
 
                     Paragraph title = new Paragraph("Счет на оплату")
-                .SetFont(font)
-                .SetBold()
-                .SetItalic()
-                .SetFontSize(20)
-                .SetTextAlignment(TextAlignment.CENTER); // Align title to the center
+                    .SetFont(font)
+                    .SetBold()
+                    .SetItalic()
+                    .SetFontSize(20)
+                    .SetTextAlignment(TextAlignment.CENTER); // Align title to the center
                     doc.Add(title);
 
                     // Add each line of data
@@ -41,14 +41,15 @@ namespace AVN.Common.PdfGenerator
                     AddLine(doc, $"Номер счета на оплату: {model.PaymentAccountNumber}", 12, ColorConstants.BLACK, font);
                     AddLine(doc, $"Сумма платежа: {model.PaymentAmount}", 12, ColorConstants.BLACK, font);
                     AddLine(doc, $"Назначение платежа: {model.PaymentPurpose}", 12, ColorConstants.BLACK, font);
-
+                    Thread.Sleep(10);
                     doc.Close();
                     stream.Close();
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception($"Ошибка: {ex}");
+                //todo переделать по человекчески чтоб пользователю было понятно
+                //throw new Exception($"Ошибка: {ex}");
             }
 
             return pdfPath;

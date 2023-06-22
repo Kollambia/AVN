@@ -53,7 +53,7 @@ namespace AVN.Web.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> Payment(StudentPaymentDetailVM paymentDetailVM)
+        public ActionResult Payment(StudentPaymentDetailVM paymentDetailVM)
         {
             var studentOrderService = new OrderService(context);
             if (ModelState.IsValid)
