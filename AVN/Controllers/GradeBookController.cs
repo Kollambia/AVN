@@ -7,10 +7,10 @@ namespace AVN.Controllers
 {
     public class GradeBookController : Controller
     {
-        private readonly UnitOfWork unitOfWork;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public GradeBookController(UnitOfWork unitOfWork, IMapper mapper)
+        public GradeBookController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
