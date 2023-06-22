@@ -8,41 +8,34 @@ namespace AVN.Models
     {
         [Required(ErrorMessage = "Выберите оценку")]
         [Display(Name = "Оценка")]
-        public Grades Grade { get; set; }
+        public Grades? Grade { get; set; }
 
         [Required(ErrorMessage = "Введите баллы")]
         [Display(Name = "Кол-во баллов")]
-        public int Points { get; set; }
+        public int? Points { get; set; }
 
-        [Required(ErrorMessage = "Введите дату сдачу")]
+        [Required(ErrorMessage = "Введите дату сдачи")]
         [Display(Name = "Дата сдачи")]
-        public DateTime Date { get; set; }
-
-        [Required(ErrorMessage = "Выберите форму контроля")]
-        [Display(Name = "Форма итогового контроля")]
-        public FinalControlForm ControlForm { get; set; }
-
-        [Required(ErrorMessage = "Введите кол-во кредитов")]
-        [Display(Name = "Кол-во кредитов")]
-        public int CreditsAmount { get; set; }
-
-        [Required(ErrorMessage = "Введите кол-во часов по учебному плану")]
-        [Display(Name = "Кол-во часов по учебному плану")]
-        public int SyllabusHours { get; set; }
+        public DateTime? Date { get; set; }
 
         [Required(ErrorMessage = "Выберите группу")]
         [Display(Name = "Группа")]
-        public string GroupId { get; set; }
-        public Group Group { get; set; }
+        public string? GroupId { get; set; }
+        public Group? Group { get; set; }
+
+        [Required(ErrorMessage = "Выберите учебный год")]
+        [Display(Name = "Группа")]
+        public int? AcademicYearId { get; set; }
+        public AcademicYear? AcademicYear { get; set; }
 
         [Required(ErrorMessage = "Выберите предмет")]
         [Display(Name = "Предмет")]
-        public int SubjectId { get; set; }
-        public Subject Subject { get; set; }
+        public int? SubjectId { get; set; }
+        public Subject? Subject { get; set; }
 
         [Required(ErrorMessage = "Выберите студента")]
         [Display(Name = "Студент")]
-        public string StudentId { get; set; }
-        public Student Student { get; set; }
+        public string? StudentId { get; set; }
+        public Student? Student { get; set; }
     }
 }
