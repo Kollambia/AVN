@@ -6,7 +6,7 @@ namespace AVN.Model.Entities
     {
         public Grades Grade { get; set; }
         public int Points { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
         public int AcademicYearId { get; set; }
         public virtual AcademicYear? AcademicYear { get; set; }
         public string GroupId { get; set; }

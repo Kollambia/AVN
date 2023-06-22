@@ -128,5 +128,12 @@ namespace AVN.Web.Controllers
             return subjectsList;
         }
 
+        public async Task<List<SelectListItem>> GetSubjectByEmployee(string employeeId)
+        {
+            var subjects = (await unitOfWork.SubjectRepository.GetAllAsync()).Where(x => x.EmployeeId == employeeId);
+            var subjectsList = subjects.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.Title }).ToList();
+            return subjectsList;
+        }
+
     }
 }

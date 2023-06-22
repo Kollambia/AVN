@@ -212,6 +212,38 @@ public class OrderService
             return result;
         }
 
+        // Создаем ведомость за текущий учебный год для студента который только поступил и для тех которые перевелись на следующий курс
+        try
+        {
+            if (movementType.MoveType == MoveType.Enlisted || movementType.MoveType == MoveType.NextCourseTransfer)
+            {
+                foreach (var student in students)
+                {
+                    var studentSubjects = _dbContext.Subjects.Where(subject => subject.DepartmentId == 
+                                        group.Direction.DepartmentId && subject.Course == group.Course);
+                    foreach (var studentSubject in studentSubjects)
+                    {
+                        _dbContext.GradeBooks.Add(new GradeBook
+                        {
+                            Grade = Grades.DontPass,
+                            Points = 0,
+                            Date = null,
+                            AcademicYearId = academicYear.Id,
+                            GroupId = group.Id,
+                            SubjectId = studentSubject.Id,
+                            StudentId = student.Id
+                        });
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            result.Success = false;
+            result.Message = $"Ошибка при создании ведомости для студентов: {ex.Message} ";
+            return result;
+        }
+
         _dbContext.SaveChanges();
 
         result.Success = true;
