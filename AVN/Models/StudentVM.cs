@@ -67,14 +67,19 @@ namespace AVN.Models
         [Required(ErrorMessage = "Выберите факультет")]
         [DisplayName("Факультет")]
         public int? FacultyId { get; set; }
+        public Faculty Faculty { get; set; }
 
         [Required(ErrorMessage = "Выберите кафедру")]
         [DisplayName("Кафедра")]
         public int? DepartmentId { get; set; }
 
+        public Department Department { get; set; }
+
         [Required(ErrorMessage = "Выберите направление")]
         [DisplayName("Направление")]
         public int? DirectionId { get; set; }
+
+        public Direction Direction { get; set; }
 
         [Required(ErrorMessage = "Выберите группу")]
         [DisplayName("Группа")]
@@ -96,6 +101,8 @@ namespace AVN.Models
         [Display(Name = "Подтвердите пароль")]
         [Compare("Password", ErrorMessage = "Пароль и подтверждения пароля не совпадают.")]
         public string? ConfirmPassword { get; set; }
+
+        public string FullName => $"{SName} {Name} {PName}";
 
     }
 

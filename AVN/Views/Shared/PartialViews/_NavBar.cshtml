@@ -1,4 +1,9 @@
 ﻿@using AVN.Utility;
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 
 
 <ul class="navbar-nav flex-grow-1">
@@ -83,17 +88,15 @@
                 </a>
 
             </div>
+
         </li>
     }
-@*    <li class="nav-item">
-        <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-            <i class="far fa-newspaper"></i> Новости
-        </a>
-    </li>*@
-    @if (User.IsInRole(RoleConst.StudentRole))
+    @if (SignInManager.IsSignedIn(User))
     {
+        AppUser applicationUser = (AppUser)await UserManager.GetUserAsync(User);
+        string Id = applicationUser.Id;
         <li class="nav-item">
-            <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link" asp-area="" asp-controller="Student" asp-action="Details" asp-route-id="@Id">
                 <i class="fas fa-user-edit"></i> Анкета
             </a>
         </li>

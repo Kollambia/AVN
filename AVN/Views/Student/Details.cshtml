@@ -1,0 +1,55 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using AVN.Utility
+@model IEnumerable<Student>
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+<style>
+    .table-responsive {
+        width: 100%;
+        height: 100%;
+    }
+
+    .table-responsive .table-striped {
+        width: 100%;
+        height: 100%;
+    }
+
+</style>
+
+<div class="table-responsive" style="width:100%; height:100%;">
+    <table class="table-striped w-auto" style="width:100%; height:100%;">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.SName)</th>
+                <td>@Html.DisplayFor(modelItem => item.SName)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Name)</th>
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.PName)</th>
+                <td>@Html.DisplayFor(modelItem => item.PName)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.RecruitmentYear)</th>
+                <td>@Html.DisplayFor(modelItem => item.RecruitmentYear)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.GradeBookNumber)</th>
+                <td>@Html.DisplayFor(modelItem => item.GradeBookNumber)</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Gender)</th>
+                <td>@Html.DisplayFor(modelItem => item.Gender)</td>
+            </tr>
+            
+        }
+    </table>
+</div>
+
+
+
+
