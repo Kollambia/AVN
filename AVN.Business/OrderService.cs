@@ -314,7 +314,7 @@ public class OrderService
         var course = student.Group.Course;
         var direction = student.Group.Direction;
         var subjects = _dbContext.Subjects.Where(s => s.DepartmentId == direction.DepartmentId && s.Course == course).ToList();
-        decimal contractValue = subjects.Sum(s => int.Parse(s.CreditHours)) * direction.CreditCost;
+        decimal contractValue = subjects.Sum(s => s.CreditCounts) * direction.CreditCost;
         return contractValue;
     }
 

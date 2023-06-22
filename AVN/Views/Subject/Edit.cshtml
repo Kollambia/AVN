@@ -33,14 +33,29 @@
                                         @Html.ValidationMessageFor(x => x.Description, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group">
-                                        <label>@Html.DisplayNameFor(x => x.CreditHours)</label>
-                                        @Html.EditorFor(x => x.CreditHours, new { htmlAttributes = new { @class = "form-control" }})
-                                        @Html.ValidationMessageFor(x => x.CreditHours, "", new { @class = "text-danger" })
+                                        <label>@Html.DisplayNameFor(x => x.CreditCounts)</label>
+                                        @Html.EditorFor(x => x.CreditCounts, new { htmlAttributes = new { @class = "form-control" }})
+                                        @Html.ValidationMessageFor(x => x.CreditCounts, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.DisplayNameFor(x => x.HoursAmount)</label>
+                                        @Html.EditorFor(x => x.HoursAmount, new { htmlAttributes = new { @class = "form-control" }})
+                                        @Html.ValidationMessageFor(x => x.HoursAmount, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group">
                                         <label>@Html.DisplayNameFor(x => x.Course)</label>
                                         @Html.DropDownListFor(x => x.Course, Html.GetEnumSelectList(typeof(Course)), "Не выбрано", new {@class = "form-control"})
                                         @Html.ValidationMessageFor(x => x.Course, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.DisplayNameFor(x => x.Semester)</label>
+                                        @Html.DropDownListFor(x => x.Semester, Html.GetEnumSelectList(typeof(Semestr)), "Не выбрано", new {@class = "form-control"})
+                                        @Html.ValidationMessageFor(x => x.Semester, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@Html.DisplayNameFor(x => x.ControlForm)</label>
+                                        @Html.DropDownListFor(x => x.ControlForm, Html.GetEnumSelectList(typeof(FinalControlForm)), "Не выбрано", new {@class = "form-control"})
+                                        @Html.ValidationMessageFor(x => x.ControlForm, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group">
                                         <label>@Html.DisplayNameFor(x => x.DepartmentId)</label>
@@ -55,7 +70,7 @@
                                     <hr>
                                     <div class="form-group row">
                                         <div class="col-md-6">
-                                            <a href="/Department/Index" class="btn btn-secondary btn-lg btn-block" type="button">Отмена</a>
+                                            <a href="/Subject/Index" class="btn btn-secondary btn-lg btn-block" type="button">Отмена</a>
                                         </div>
                                         <div class="col-md-6">
                                             <button class="btn btn-success btn-lg btn-block" type="submit">Сохранить</button>

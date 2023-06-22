@@ -7,7 +7,7 @@
 
 
 <ul class="navbar-nav flex-grow-1">
-    @if (User.IsInRole(RoleConst.AdminRole))
+    @if (User.IsInRole(RoleConst.AdminRole) || User.IsInRole(RoleConst.Employee))
     {
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

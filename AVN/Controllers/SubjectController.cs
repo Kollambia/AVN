@@ -51,7 +51,7 @@ namespace AVN.Web.Controllers
         public async Task<IActionResult> Create(SubjectVM subject)
         {
             // валидация работает эту хуйню не трогать
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var mappedSubjects = mapper.Map<SubjectVM, Subject>(subject);
                 await unitOfWork.SubjectRepository.CreateAsync(mappedSubjects);

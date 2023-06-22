@@ -50,14 +50,17 @@
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="Title">
                                             @Html.DisplayNameFor(x => x.Title)
                                         </th>
-                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="Description">
-                                            @Html.DisplayNameFor(x => x.Description)
-                                        </th>
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="CreditHours">
-                                            @Html.DisplayNameFor(x => x.CreditHours)
+                                            @Html.DisplayNameFor(x => x.CreditCounts)
+                                        </th>
+                                        <th scope="col" data-sortable="true" data-filter-control="input" data-field="HoursAmount">
+                                            @Html.DisplayNameFor(x => x.HoursAmount)
                                         </th>
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="Course">
                                             @Html.DisplayNameFor(x => x.Course)
+                                        </th>
+                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="Semester">
+                                            @Html.DisplayNameFor(x => x.Semester)
                                         </th>
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="DepartmentId">
                                             @Html.DisplayNameFor(x => x.DepartmentId)
@@ -78,13 +81,16 @@
                                                 @Html.DisplayFor(modelItem => item.Title)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Description)
+                                                @Html.DisplayFor(modelItem => item.CreditCounts)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.CreditHours)
+                                                @Html.DisplayFor(modelItem => item.HoursAmount)
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.Course)
+                                            </td>
+                                             <td>
+                                                @Html.DisplayFor(modelItem => item.Semester)
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.Department.DepartmentName)

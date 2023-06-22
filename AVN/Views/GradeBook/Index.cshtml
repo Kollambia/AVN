@@ -71,10 +71,12 @@
                 type: 'GET',
                 data: { employeeId: '@ViewBag.UserId' },
                 success: function (data) {
-                    clearDropdown(departmentDropdown);
+                    alert('успех')
+                    clearDropdown(subjectDropdown);
                     populateDropdown(subjectDropdown, data);
                 },
                 error: function (xhr, status, error) {
+                    alert('фак')
                     console.error(xhr.responseText);
                 }
             });

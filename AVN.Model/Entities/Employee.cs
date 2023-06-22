@@ -51,16 +51,17 @@ namespace AVN.Model.Entities
         public string PhoneNumber { get; set; }
         [DisplayName("Кафедра")]
         public int? DepartmentId { get; set; }
-        public virtual Department Department { get; set; }
+        public virtual Department? Department { get; set; }
 
-        public virtual ICollection<Subject> Subjects { get; set; }
+        public virtual ICollection<Subject>? Subjects { get; set; }
 
         public virtual ICollection<GroupEmployee>? GroupEmployees { get; set; }
-        public virtual ICollection<Schedule> Schedules { get; set; }
+        public virtual ICollection<Schedule>? Schedules { get; set; }
         public Employee()
         {
             GroupEmployees = new List<GroupEmployee>();
             Subjects = new List<Subject>();
+            Schedules = new List<Schedule>();
         }
 
         [NotMapped]
