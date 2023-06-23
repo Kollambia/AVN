@@ -70,6 +70,7 @@
                 success: function (data) {
                     populateDropdown(facultyDropdown, data);
                     FillDepartmentsDropdown();
+                    GetList();
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -114,7 +115,6 @@
                         clearDropdown(departmentDropdown);
                         populateDropdown(departmentDropdown, data);
                         FillDirectionsDropdown();
-                        GetList();
                     },
                     error: function (xhr, status, error) {
                         console.error(xhr.responseText);
@@ -143,10 +143,15 @@
             // Заполнение выпадающего списка групп
             function FillGroupsDropdown() {
                 var directionId = directionDropdown.val();
+                var groupType = '@Html.Raw(Json.Serialize(GroupType.Archived))';
+
                 $.ajax({
                     url: '@Url.Action("GetGroupsByDirection", "Group")',
                     type: 'GET',
-                    data: { directionId: directionId },
+                    data: {
+                        'directionId': directionId,
+                        'groupType': groupType
+                    },
                     success: function (data) {
                         clearDropdown(groupDropdown);
                         populateDropdown(groupDropdown, data);

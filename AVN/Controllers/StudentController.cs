@@ -307,15 +307,28 @@ namespace AVN.Web.Controllers
                 mappedStudent.Id = newId;
                 
                 var user = new AppUser() { UserName = student.GradeBookNumber, Id = newId, FullName = student.FullName};
-                var result = await userManager.CreateAsync(user, student.Password);
 
-                if (result.Succeeded)
+                try
                 {
-                    await userManager.AddToRoleAsync(user, RoleConst.StudentRole);
-
-                    await unitOfWork.StudentRepository.CreateAsync(mappedStudent);
-                    await unitOfWork.SaveChangesAsync();
-                    return RedirectToAction("Enrolled", "Student");
+                    var result = await userManager.CreateAsync(user, student.Password);
+                    if (result.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(user, RoleConst.StudentRole);
+                        await unitOfWork.StudentRepository.CreateAsync(mappedStudent);
+                        await unitOfWork.SaveChangesAsync();
+                        TempData["success"] = "Абитуриент успешно создан";
+                        return RedirectToAction("Enrolled", "Student");
+                    }
+                    else if (!result.Succeeded)
+                    {
+                        TempData["error"] =  $"Ошибка при создании учетной записи абитуриента: {result.Errors.First().Description}";
+                        return View(student);
+                    }
+                }
+                catch 
+                {
+                    TempData["error"] = "Внутренняя ошибка";
+                    return View(student);
                 }
             }
             return View(student);
