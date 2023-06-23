@@ -1,55 +1,147 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using AVN.Utility
-@model IEnumerable<Student>
-@inject SignInManager<AppUser> SignInManager
-@inject UserManager<AppUser> UserManager
+﻿@model StudentAndStudentPaymentVM
 
 <style>
-    .table-responsive {
-        width: 100%;
-        height: 100%;
+    .datatable-dashv1-list table {
+        width: 100%; 
     }
 
-    .table-responsive .table-striped {
-        width: 100%;
-        height: 100%;
+    .datatable-dashv1-list th,
+    .datatable-dashv1-list td {
+        width: 50%; 
+        padding: 10px;
+    }
+    
+    .datatable-dashv1-list .narrow-cell {
+        width: 20%;
     }
 
+    .datatable-dashv1-list th {
+        background-color: #d6eaf8;
+    }
 </style>
 
-<div class="table-responsive" style="width:100%; height:100%;">
-    <table class="table-striped w-auto" style="width:100%; height:100%;">
-        @foreach (var item in Model)
-        {
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.SName)</th>
-                <td>@Html.DisplayFor(modelItem => item.SName)</td>
-            </tr>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.Name)</th>
-                <td>@Html.DisplayFor(modelItem => item.Name)</td>
-            </tr>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.PName)</th>
-                <td>@Html.DisplayFor(modelItem => item.PName)</td>
-            </tr>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.RecruitmentYear)</th>
-                <td>@Html.DisplayFor(modelItem => item.RecruitmentYear)</td>
-            </tr>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.GradeBookNumber)</th>
-                <td>@Html.DisplayFor(modelItem => item.GradeBookNumber)</td>
-            </tr>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.Gender)</th>
-                <td>@Html.DisplayFor(modelItem => item.Gender)</td>
-            </tr>
-            
-        }
-    </table>
+<div class="data-table-area mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex flex-column align-items-left">
+                <h4>@Html.DisplayFor(model => model.Student.FullName)</h4>
+                <div class="d-flex flex-row justify-content-left w-100">
+                    <h6 class="mr-3">Группа: @Html.DisplayFor(model => model.Student.Group.GroupName)</h6>
+                    <h6>Статус: @Html.DisplayFor(model => model.Student.Status)</h6>
+                </div>
+            </div>
+
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="sparkline13-list">
+                    <div class="sparkline13-graph">
+                        <div class="datatable-dashv1-list custom-datatable-overright">
+                            <table class="table-bordered">
+                                <tbody>
+
+                                    <tr> 
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.Student.FacultyId)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.Student.Faculty.FacultyName)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.Student.DepartmentId)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.Student.Department.DepartmentName)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.Student.DirectionId)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.Student.Direction.DirectionName)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.Student.GroupId)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.Student.Group.GroupName)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.Student.Status)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.Student.Status)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.Student.DateOfBirth)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => Model.Student.DateOfBirth)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.Student.EducationalLine)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.Student.EducationalLine)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.Student.GradeBookNumber)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.Student.GradeBookNumber)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.Student.Gender)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.Student.Gender)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.Student.Citizenship)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.Student.Citizenship)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.Student.RecruitmentYear)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.Student.RecruitmentYear)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.StudentPayment.Debt)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.StudentPayment.Debt)
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-
-
-

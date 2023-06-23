@@ -234,24 +234,51 @@ namespace AVN.Web.Controllers
         // GET: Student/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            var students = await context.Students
+            var student = await context.Students
                 .Include(s => s.Group)
                 .ThenInclude(g => g.Direction)
                 .ThenInclude(d => d.Department)
-                .Where(s => s.Id == id)
-                .ToListAsync();
+                .ThenInclude(f => f.Faculty)
+                .FirstOrDefaultAsync(s => s.Id == id);
 
+            var studentPayment = await context.StudentPayments
+                .FirstOrDefaultAsync(p => p.StudentId == id);
 
-
-            if (students == null)
+            if (student == null || studentPayment == null)
             {
                 return NotFound();
             }
 
-            var mappedStudents = mapper.Map<Student, StudentVM>(students);
+            var studentVM = new StudentVM
+            {
+                SName = student.SName,
+                Name = student.Name,
+                PName = student.PName,
+                Status = student.Status,
+                DateOfBirth = student.DateOfBirth,
+                EducationalLine = student.EducationalLine,
+                GradeBookNumber = student.GradeBookNumber,
+                Gender = student.Gender,
+                Citizenship = student.Citizenship,
+                Address = student.Address,
+                PhoneNumber = student.PhoneNumber,
+                RecruitmentYear = student.RecruitmentYear,
+                Faculty = student.Group.Direction.Department.Faculty,
+                Department = student.Group.Direction.Department,
+                Direction = student.Group.Direction,
+                Group = student.Group
+            };
+            var mappedStudentPayment = mapper.Map<StudentPayment, StudentPaymentVM>(studentPayment);
 
-            return View(students);
+            var studentAndPaymentVM = new StudentAndStudentPaymentVM
+            {
+                Student = studentVM,
+                StudentPayment = mappedStudentPayment
+            };
+
+            return View(studentAndPaymentVM);
         }
+
 
 
         // GET: Student/Create
