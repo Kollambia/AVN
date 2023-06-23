@@ -49,6 +49,21 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-12">
+            <div class="row mb-1">
+                <div class="col-md-4"></div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-3 mt-2">
+                            <label class="font-weight-bold">Поиск по ФИО</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" id="searchByFullname" class="form-control mt-2" placeholder="Введите ФИО" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 }
 <hr>
@@ -59,6 +74,26 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+
+            $('#searchByFullname').on('input', function () {
+                var inputValue = $(this).val();
+
+                if (inputValue.trim() !== '') {
+                    // Disable other dropdowns
+                    $('#facultyDropdown').prop('disabled', true);
+                    $('#departmentDropdown').prop('disabled', true);
+                    $('#directionDropdown').prop('disabled', true);
+                    $('#groupDropdown').prop('disabled', true);
+                } else {
+                    // Enable other dropdowns
+                    $('#facultyDropdown').prop('disabled', false);
+                    $('#departmentDropdown').prop('disabled', false);
+                    $('#directionDropdown').prop('disabled', false);
+                    $('#groupDropdown').prop('disabled', false);
+                }
+            });
+
+
             var facultyDropdown = $('#facultyDropdown');
             var departmentDropdown = $('#departmentDropdown');
             var directionDropdown = $('#directionDropdown');
