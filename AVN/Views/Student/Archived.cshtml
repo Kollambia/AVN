@@ -70,6 +70,7 @@
                 success: function (data) {
                     populateDropdown(facultyDropdown, data);
                     FillDepartmentsDropdown();
+                    GetList();
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -114,7 +115,6 @@
                         clearDropdown(departmentDropdown);
                         populateDropdown(departmentDropdown, data);
                         FillDirectionsDropdown();
-                        GetList();
                     },
                     error: function (xhr, status, error) {
                         console.error(xhr.responseText);
