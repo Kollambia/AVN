@@ -22,6 +22,8 @@ namespace AVN.Models
         [MaxLength(50)]
         public string PName { get; set; }
 
+        public string FullName => $"{SName} {Name} {PName}";
+
         [DateMinimumAge(18, ErrorMessage = "{0} должен быть кем-то в возрасте не менее {1} лет.")]
         [DisplayName("Дата рожд.")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
