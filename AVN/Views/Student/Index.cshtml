@@ -2,70 +2,69 @@
     ViewData["Title"] = "Студенты";
 }
 
-@using (Html.BeginForm())
-{
-    <div class="row">
-        <div class="col-md-7">
-            <div class="form-group row mb-1">
 
-                <div class="col-md-2">
-                    <label class="font-weight-bold">Факультет</label>
-                </div>
-                <div class="col-md-10">
-                    <select id="facultyDropdown" name="facultyDropdown" class="form-control"></select>
+<div class="row">
+    <div class="col-md-7">
+        <div class="form-group row mb-1">
 
-                </div>
+            <div class="col-md-2">
+                <label class="font-weight-bold">Факультет</label>
             </div>
-            <div class="form-group row mb-1">
+            <div class="col-md-10">
+                <select id="facultyDropdown" name="facultyDropdown" class="form-control"></select>
 
-                <div class="col-md-2">
-                    <label class="font-weight-bold">Кафедра</label>
-                </div>
-                <div class="col-md-10">
-                    <select id="departmentDropdown" name="departmentDropdown" class="form-control"></select>
-
-                </div>
             </div>
         </div>
-        <div class="col-md-5">
-            <div class="form-group row mb-1">
+        <div class="form-group row mb-1">
 
-                <div class="col-md-3">
-                    <label class="font-weight-bold">Направление</label>
-                </div>
-                <div class="col-md-9">
-                    <select id="directionDropdown" name="directionDropdown" class="form-control"></select>
-
-                </div>
+            <div class="col-md-2">
+                <label class="font-weight-bold">Кафедра</label>
             </div>
-            <div class="form-group row mb-1">
+            <div class="col-md-10">
+                <select id="departmentDropdown" name="departmentDropdown" class="form-control"></select>
 
-                <div class="col-md-3">
-                    <label class="font-weight-bold">Группа</label>
-                </div>
-                <div class="col-md-9">
-                    <select id="groupDropdown" name="groupDropdown" class="form-control"></select>
-
-                </div>
             </div>
         </div>
-        <div class="col-md-12">
-            <div class="row mb-1">
-                <div class="col-md-4"></div>
-                <div class="col-md-8">
-                    <div class="row">
-                        <div class="col-md-3 mt-2">
-                            <label class="font-weight-bold">Поиск по ФИО</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input type="text" id="searchByFullname" class="form-control mt-2" placeholder="Введите ФИО" />
-                        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="form-group row mb-1">
+
+            <div class="col-md-3">
+                <label class="font-weight-bold">Направление</label>
+            </div>
+            <div class="col-md-9">
+                <select id="directionDropdown" name="directionDropdown" class="form-control"></select>
+
+            </div>
+        </div>
+        <div class="form-group row mb-1">
+
+            <div class="col-md-3">
+                <label class="font-weight-bold">Группа</label>
+            </div>
+            <div class="col-md-9">
+                <select id="groupDropdown" name="groupDropdown" class="form-control"></select>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="row mb-1">
+            <div class="col-md-4"></div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-3 mt-2">
+                        <label class="font-weight-bold">Поиск по ФИО</label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" id="fullname" name="fullname" class="form-control mt-2" placeholder="Введите ФИО" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
-}
+</div>
+
 <hr>
 <div id="dataContainer">
 </div>
@@ -75,7 +74,36 @@
     <script>
         $(document).ready(function () {
 
-            $('#searchByFullname').on('input', function () {
+            //$('#fullname').on('input', function () {
+            //    var inputValue = $(this).val();
+
+            //    if (inputValue.trim() !== '') {
+            //        // Disable other dropdowns
+            //        $('#facultyDropdown').prop('disabled', true);
+            //        $('#departmentDropdown').prop('disabled', true);
+            //        $('#directionDropdown').prop('disabled', true);
+            //        $('#groupDropdown').prop('disabled', true);
+            //    } else {
+            //        // Enable other dropdowns
+            //        $('#facultyDropdown').prop('disabled', false);
+            //        $('#departmentDropdown').prop('disabled', false);
+            //        $('#directionDropdown').prop('disabled', false);
+            //        $('#groupDropdown').prop('disabled', false);
+            //    }
+            //});
+
+            
+        )};
+    </script>
+    <script>
+        $(document).ready(function () {
+            var facultyDropdown = $('#facultyDropdown');
+            var departmentDropdown = $('#departmentDropdown');
+            var directionDropdown = $('#directionDropdown');
+            var groupDropdown = $('#groupDropdown');
+            var fullname = $('#fullname');
+
+            fullname.on('input', function () {
                 var inputValue = $(this).val();
 
                 if (inputValue.trim() !== '') {
@@ -90,14 +118,16 @@
                     $('#departmentDropdown').prop('disabled', false);
                     $('#directionDropdown').prop('disabled', false);
                     $('#groupDropdown').prop('disabled', false);
+                    GetList();
                 }
             });
 
-
-            var facultyDropdown = $('#facultyDropdown');
-            var departmentDropdown = $('#departmentDropdown');
-            var directionDropdown = $('#directionDropdown');
-            var groupDropdown = $('#groupDropdown');
+            fullname.on('keydown', function (event) {
+                if (event.which === 13) {
+                    GetList();
+                    event.preventDefault();
+                }
+            });
 
             // Заполнение выпадающего списка факультетов при загрузке страницы
             $.ajax({
@@ -205,6 +235,7 @@
                 var directionId = directionDropdown.val();
                 var groupId = groupDropdown.val();
                 var groupType = '@Html.Raw(Json.Serialize(GroupType.Students))';
+                var studentFio = fullname.val();
 
                 $.ajax({
                     type: 'GET',
@@ -215,7 +246,8 @@
                         'departmentId': departmentId,
                         'directionId': directionId,
                         'groupId': groupId,
-                        'groupType': groupType
+                        'groupType': groupType,
+                        'fullname': studentFio
                     },
                     success: function (response) {
                         $('#dataContainer').html(response);
@@ -240,9 +272,6 @@
                 });
             }
 
-            // Вызов заполнения выпадающих списков при загрузке страницы
-            //FillDepartmentsDropdown();
-            //GetList();
         });
     </script>
 }

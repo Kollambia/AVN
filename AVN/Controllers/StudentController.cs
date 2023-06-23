@@ -77,11 +77,15 @@ namespace AVN.Web.Controllers
         }
 
 
-        public async Task<ActionResult> StudentList(int facultyId, int departmentId, int directionId, string groupId, int groupType)
+        public async Task<ActionResult> StudentList(int facultyId, int departmentId, int directionId, string groupId, int groupType, string fullname)
         {
             var students = await unitOfWork.StudentRepository.GetAllAsync();
-
-            if (!string.IsNullOrEmpty(groupId))
+            if (!string.IsNullOrEmpty(fullname))
+            {
+                var studentOrderService = new OrderService(context);
+                students = studentOrderService.GetStudentsByFullName(fullname);
+            }
+            else if(!string.IsNullOrEmpty(groupId))
             {
                 students = students.Where(x => x.GroupId == groupId);
             }
@@ -299,7 +303,7 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(StudentVM student)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var mappedStudent = mapper.Map<StudentVM, Student>(student);
 
