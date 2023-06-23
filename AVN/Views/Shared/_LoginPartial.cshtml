@@ -6,8 +6,11 @@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
+        var applicationUser = (AppUser)await UserManager.GetUserAsync(User);
+        //string fullname = applicationUser;
+
         <li class="nav-item">
-            <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@UserManager.GetUserName(User)</a>
+            <a id="manage" class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">!</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-dark" data-toggle="modal" data-target="#logoutModal"><i class="fas fa-sign-out-alt"></i> Выйти</a>
