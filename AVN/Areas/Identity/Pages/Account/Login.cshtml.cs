@@ -108,8 +108,8 @@ namespace AVN.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var isEmail = Input.Login.Contains("@");
-                var user = isEmail ?
-                    await _userManager.FindByEmailAsync(Input.Login) :       ////////////
+                var user = isEmail ? 
+                    await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == Input.Login) :
                     await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == Input.Login);
 
                 if (user == null)
