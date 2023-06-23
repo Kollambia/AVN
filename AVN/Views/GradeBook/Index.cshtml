@@ -81,13 +81,41 @@
                     $.each(data, function (i, academicYear) {
                         $('#academicYearDropdown').append($('<option></option>').val(academicYear.value).text(academicYear.text));
                     });
+                    FillGroupDropdown();
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
                 }
             });
-
-            
         });
+
+        function FillGroupDropdown() {
+            var subjectId = $('#subjectDropdown').val();
+            var academicYearId = $('#academicYearDropdown').val();
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetGroupsByGradeBook", "GradeBook")',
+                contentType: 'application/json',
+                data: {
+                    'subjectId': subjectId,
+                    'academicYearId': academicYearId
+                },
+                success: function (data) {
+                    $('#groupDropdown').empty(); 
+
+                    if (data.length === 0) {
+                        $('#groupDropdown').append($('<option>').text('Нет данных').val(''));
+                    } else {
+                        $.each(data, function (i, group) {
+                            $('#groupDropdown').append($('<option></option>').val(group.value).text(group.text));
+                        });
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
     </script>
 }

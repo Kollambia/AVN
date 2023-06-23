@@ -17,6 +17,7 @@ namespace AVN.Models
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Поле должно содержать от 3 до 50 символов.")]
         public string? Name { get; set; }
 
+        [Required(ErrorMessage = "Поле не заполнено")]
         [DisplayName("Отчество")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Поле должно содержать от 3 до 50 символов.")]
         public string? PName { get; set; }
@@ -67,19 +68,19 @@ namespace AVN.Models
         [Required(ErrorMessage = "Выберите факультет")]
         [DisplayName("Факультет")]
         public int? FacultyId { get; set; }
-        public Faculty Faculty { get; set; }
+        public Faculty? Faculty { get; set; }
 
         [Required(ErrorMessage = "Выберите кафедру")]
         [DisplayName("Кафедра")]
         public int? DepartmentId { get; set; }
 
-        public Department Department { get; set; }
+        public Department? Department { get; set; }
 
         [Required(ErrorMessage = "Выберите направление")]
         [DisplayName("Направление")]
         public int? DirectionId { get; set; }
 
-        public Direction Direction { get; set; }
+        public Direction? Direction { get; set; }
 
         [Required(ErrorMessage = "Выберите группу")]
         [DisplayName("Группа")]

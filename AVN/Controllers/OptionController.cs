@@ -253,7 +253,7 @@ namespace AVN.Controllers
 
         public async Task<List<SelectListItem>> GetAcademicYears()
         {
-            var entityList = await unitOfWork.AcademicYearRepository.GetAllAsync();
+            var entityList = (await unitOfWork.AcademicYearRepository.GetAllAsync()).OrderByDescending(x => x.YearTo);
             return entityList.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.Name }).ToList();
         }
 

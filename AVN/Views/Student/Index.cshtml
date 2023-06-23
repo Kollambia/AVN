@@ -52,7 +52,8 @@
     </div>
 }
 <hr>
-<div id="dataContainer"></div>
+<div id="dataContainer">
+</div>
 
 
 @section Scripts {
@@ -69,6 +70,7 @@
                 type: 'GET',
                 success: function (data) {
                     populateDropdown(facultyDropdown, data);
+                    GetList();
                     FillDepartmentsDropdown();
                 },
                 error: function (xhr, status, error) {
@@ -114,7 +116,6 @@
                         clearDropdown(departmentDropdown);
                         populateDropdown(departmentDropdown, data);
                         FillDirectionsDropdown();
-                        GetList();
                     },
                     error: function (xhr, status, error) {
                         console.error(xhr.responseText);
@@ -178,7 +179,7 @@
                     },
                     success: function (response) {
                         $('#dataContainer').html(response);
-                        $('#table').DataTable();
+                        $('#studentTable').DataTable();
                     },
                     error: function (xhr, status, error) {
                         console.error(xhr.responseText);
