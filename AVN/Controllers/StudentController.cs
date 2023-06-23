@@ -244,7 +244,7 @@ namespace AVN.Web.Controllers
             var studentPayment = await context.StudentPayments
                 .FirstOrDefaultAsync(p => p.StudentId == id);
 
-            if (student == null || studentPayment == null)
+            if (student == null)
             {
                 return NotFound();
             }
@@ -299,14 +299,14 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(StudentVM student)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var mappedStudent = mapper.Map<StudentVM, Student>(student);
 
                 var newId = Guid.NewGuid().ToString();
                 mappedStudent.Id = newId;
                 
-                var user = new AppUser() { UserName = student.Login, Id = newId };
+                var user = new AppUser() { UserName = student.GradeBookNumber, Id = newId, FullName = student.FullName};
 
                 try
                 {
