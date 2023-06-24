@@ -6,11 +6,15 @@
     ViewData["Title"] = "Кафедры";
 }
 
-<div id="toolbar">
-    <a asp-controller="Department" asp-action="Create">
-        <input type="button" class="btn btn-success" value="Добавить" />
-    </a>
-</div>
+@if (User.IsInRole(RoleConst.AdminRole))
+{
+    <div id="toolbar">
+        <a asp-controller="Department" asp-action="Create">
+            <input type="button" class="btn btn-success" value="Добавить" />
+        </a>
+    </div>
+}
+
 
 <div class="data-table-area mg-b-15">
     <div class="container-fluid">

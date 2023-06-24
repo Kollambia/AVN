@@ -117,22 +117,30 @@ namespace AVN.Areas.Identity.Pages.Account.Manage
                 var setMailResult = await _userManager.SetEmailAsync(user, Input.NewEmail);
                 if (setMailResult.Succeeded)
                 {
-                    StatusMessage = "Ваш Email изменен";
-                    return RedirectToPage();
+                    var setUserNameResult = await _userManager.SetUserNameAsync(user, Input.NewEmail);
+                    if (setUserNameResult.Succeeded)
+                    {
+                        StatusMessage = "Ваш Email и имя пользователя изменены";
+                        return RedirectToPage();
+                    }
+                    else
+                    {
+                        foreach (var error in setUserNameResult.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
                 }
                 else
                 {
-                    // Обрабатываем ошибки, возникшие в процессе установки нового Email
                     foreach (var error in setMailResult.Errors)
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
-                    return Page();
                 }
             }
 
-            StatusMessage = "Ваш Email не изменен";
-            return RedirectToPage();
+            return Page();
         }
 
 

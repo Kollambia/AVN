@@ -1,4 +1,6 @@
-﻿@model IEnumerable<AVN.Models.ScheduleVM>
+﻿@using AVN.Utility
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<AVN.Models.ScheduleVM>
 @{
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
     var daysOfWeek = Enum.GetValues(typeof(DaysOfTheWeek)).Cast<DaysOfTheWeek>();
@@ -12,11 +14,16 @@
 
 }
 
-<div id="toolbar">
-    <a asp-controller="Schedule" asp-action="Create">
-        <input type="button" class="btn btn-success" value="Добавить" />
-    </a>
-</div>
+
+@if (User.IsInRole(RoleConst.AdminRole))
+{
+    <div id="toolbar">
+        <a asp-controller="Schedule" asp-action="Create">
+            <input type="button" class="btn btn-success" value="Добавить" />
+        </a>
+    </div>
+}
+
 
 <div class="table-responsive">
     <table class="table-striped"

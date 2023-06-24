@@ -5,11 +5,16 @@
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
 
-<div id="toolbar">
-    <a asp-controller="Direction" asp-action="Create">
-        <input type="button" class="btn btn-success" value="Добавить" />
-    </a>
-</div>
+
+@if (User.IsInRole(RoleConst.AdminRole))
+{
+    <div id="toolbar">
+        <a asp-controller="Direction" asp-action="Create">
+            <input type="button" class="btn btn-success" value="Добавить" />
+        </a>
+    </div>
+}
+
 
 <div class="data-table-area mg-b-15">
     <div class="container-fluid">
