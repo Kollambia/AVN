@@ -20,7 +20,7 @@ namespace AVN.Common.Enums
 
     public static class SemestrExtensions
     {
-        public static string GetCourseInWriting(this Semestr semestr)
+        public static string GetSemesterInWriting(this Semestr semestr)
         {
             switch (semestr)
             {

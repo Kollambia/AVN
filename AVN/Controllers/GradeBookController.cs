@@ -32,6 +32,18 @@ namespace AVN.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> StudentIndividualRecord(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return View(new List<GradeBookVM>());
+
+            var gradeBooks = (await unitOfWork.GradeBookRepository.GetAllAsync()).Where(x => x.StudentId == id);
+
+            var mappedEntities = mapper.Map<GradeBook, GradeBookVM>(gradeBooks).ToList();
+            return PartialView(mappedEntities ?? new List<GradeBookVM>());
+        }
+
+        [HttpGet]
         public async Task<ActionResult> GradeBookList(string groupId, int academicYearId, int subjectId, string userId)
         {
             if (string.IsNullOrEmpty(groupId))

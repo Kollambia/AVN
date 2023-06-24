@@ -21,33 +21,34 @@
         }
         else
         {
-            @foreach (var group in Model.GroupBy(item => item.StudentPayment.Student))
+            @foreach (var students in Model.GroupBy(item => item.StudentPayment.Student))
             {
                 <tr class="table-primary text-left">
-                    <th colspan="8">@group.Key.SName @group.Key.Name @group.Key.PName</th>
+                    <th colspan="8">@students.Key.FullName</th>
                 </tr>
+                @foreach (var item in students)
+                {
+                    <tr data-id="@item.Id">
+                        <td>@(string.IsNullOrEmpty(item?.PaymentDate.ToString()) ? "-" : item.PaymentDate?.ToShortDateString())</td>
+                        <td>@(string.IsNullOrEmpty(item?.Payment.ToString()) ? "-" : item.Payment)</td>
+                        <td>@item?.Number</td>
+                        <td>@(string.IsNullOrEmpty(item?.PaymentType.ToString()) ? "-" : item?.PaymentType?.GetDisplayName())</td>
+                        <td>@item?.StudentPayment?.AcademicYear?.Name</td>
+                        <td>
+                            @if (item.Payment == null)
+                            {
+                                <span> @Html.ActionLink("", "Payment", "StudentPayment", new { orderNumber = @item.Number }, new { @class = "fas fa-cash-register" })</span>
+                            }
+                            else
+                            {
+                                <span> @Html.ActionLink("", "Payment", "StudentPayment", new { orderNumber = @item.Number }, new { @class = "fas fa-eye" })</span>
+                            }
+
+                        </td>
+                    </tr>
+                }
             }
-            @foreach (var item in Model.OrderBy(item => item.PaymentDate))
-            {
-                <tr data-id="@item.Id">
-                    <td>@(string.IsNullOrEmpty(item?.PaymentDate.ToString()) ? "-" : item.PaymentDate?.ToShortDateString())</td>
-                    <td>@(string.IsNullOrEmpty(item?.Payment.ToString()) ? "-" : item.Payment)</td>
-                    <td>@item?.Number</td>
-                    <td>@(string.IsNullOrEmpty(item?.PaymentType.ToString()) ? "-" : item?.PaymentType?.GetDisplayName())</td>
-                    <td>@item?.StudentPayment?.AcademicYear?.Name</td>
-                    <td>
-                        @if (item.Payment == null)
-                        {
-                            <span> @Html.ActionLink("", "Payment", "StudentPayment", new { orderNumber = @item.Number }, new { @class = "fas fa-cash-register" })</span>
-                        }
-                        else
-                        {
-                            <span> @Html.ActionLink("", "Payment", "StudentPayment", new { orderNumber = @item.Number }, new { @class = "fas fa-eye" })</span>
-                        }
-                        
-                    </td>
-                </tr>
-            }
+            
         }
     </tbody>
 </table>

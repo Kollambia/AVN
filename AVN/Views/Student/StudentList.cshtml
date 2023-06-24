@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
 
+
 <div class="table-responsive">
     <table class="table-striped w-auto"
            id="studentTable"
@@ -30,7 +31,7 @@
            data-locale="ru-RU">
         <thead>
             <tr>
-                <th class="fixed-column">
+                <th>
                     Действие
                 </th>
                 <th scope="col" data-sortable="true" data-filter-control="input" data-field="GroupId">
@@ -72,9 +73,12 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>
-                        <span> @Html.ActionLink("", "Edit", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
-                        <span> @Html.ActionLink("", "Delete", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
+                    <td style="width: 250px;">
+                        <div style="white-space: nowrap;">
+                            <span> @Html.ActionLink("", "Edit", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
+                            <span> @Html.ActionLink("", "Delete", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
+                            <span> @Html.ActionLink("", "StudentIndividualRecord", "GradeBook", new { id = @item.Id.ToString() }, new { @class = "fas fa-clipboard-list" })</span> &emsp;
+                        </div>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Group.GroupName)

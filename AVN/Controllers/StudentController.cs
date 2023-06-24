@@ -356,7 +356,6 @@ namespace AVN.Web.Controllers
             mappedStudent.FacultyId = student?.Group?.Direction.Department.FacultyId;
             mappedStudent.DepartmentId = student?.Group?.Direction.DepartmentId;
             mappedStudent.DirectionId = student?.Group?.DirectionId;
-            mappedStudent.GroupId = student?.GroupId;
 
             return View(mappedStudent);
         }

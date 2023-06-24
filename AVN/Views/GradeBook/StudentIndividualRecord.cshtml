@@ -1,0 +1,111 @@
+﻿@model IEnumerable<GradeBookVM>
+
+@{
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+
+<br>
+<div class="mb-3">
+    <a href="@Url.Action("Index", "Student")" class="btn btn-primary fas fa-arrow-alt-circle-left"> назад</a>
+</div>
+
+<form method="post" id="indivRecordForm">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover"
+               id="indivRecordTable">
+            <thead>
+                <tr>
+                    <th scope="col" data-sortable="true" data-filter-control="input" data-field="SubjectId">
+                        @Html.DisplayNameFor(model => model.SubjectId)
+                    </th>
+                    <th scope="col" data-sortable="true" data-filter-control="input">
+                        Кол. кред.
+                    </th>
+                    <th scope="col" data-sortable="true" data-filter-control="input">
+                        Кол. часов
+                    </th>
+                    <th scope="col" data-sortable="true" data-filter-control="input">
+                        Форма контроля
+                    </th>
+                    <th scope="col" data-sortable="true" data-filter-control="input" data-field="Grade">
+                        @Html.DisplayNameFor(model => model.Grade)
+                    </th>
+                    <th scope="col" data-sortable="true" data-filter-control="input" data-field="Points">
+                        @Html.DisplayNameFor(model => model.Points)
+                    </th>
+                    <th scope="col" data-sortable="true" data-filter-control="input" data-field="Date">
+                        @Html.DisplayNameFor(model => model.Date)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count() > 0)
+                {
+
+                    foreach(var academYear in Model.GroupBy(x => x.Subject.Semester))
+                    {
+
+                        <tr class="table-primary text-left">
+                            <th colspan="1">@academYear.FirstOrDefault().AcademicYear.Name учебный год</th>
+                            <th colspan="3">@academYear.FirstOrDefault().Subject.Course.GetCourseInWriting()</th>
+                            <th colspan="4">@academYear.FirstOrDefault().Subject.Semester.GetSemesterInWriting()</th>
+                        </tr>
+                        foreach (var item in academYear)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Subject.Title)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Subject.CreditCounts)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Subject.HoursAmount)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Subject.ControlForm)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Grade)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Points)
+                                </td>
+                                <td>
+                                    @(string.IsNullOrEmpty(item?.Date.ToString()) ? "-" : item.Date?.ToShortDateString())
+                                </td>
+                            </tr>
+                        }
+
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center">Нет данных</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+</form>
+
+
+@section Scripts {
+    @* --- Jquery --- *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    @* --- Bootstrap --- *@
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @* --- Скрипт таблицы --- *@
+    <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/bootstrap-table-locale-all.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+
+    
+}

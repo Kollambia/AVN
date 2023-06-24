@@ -30,7 +30,7 @@
                 @if (Model != null && Model?.Count > 0)
                 {
                     <tr class="table-primary text-left">
-                        <th colspan="8">@Model[0]?.Subject?.Title - @Model[0]?.Subject?.Semester.GetCourseInWriting() (группа @Model[0]?.Group?.GroupName)</th>
+                        <th colspan="8">@Model[0]?.Subject?.Title - @Model[0]?.Subject?.Semester.GetSemesterInWriting() (группа @Model[0]?.Group?.GroupName)</th>
                     </tr>
                     for (var i = 0; i < Model.Count; i++)
                     {
