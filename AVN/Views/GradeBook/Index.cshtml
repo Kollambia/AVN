@@ -58,64 +58,131 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+            var subjectDropdown = $('#subjectDropdown');
+            var academicYearDropdown = $('#academicYearDropdown');
+            var groupDropdown = $('#groupDropdown');
 
-            // Заполнение выпадающего списка предметов препода при загрузке страницы
-            $.ajax({
-                url: '@Url.Action("GetSubjectByEmployee", "Subject")',
-                type: 'GET',
-                data: { employeeId: '@ViewBag.UserId' },
-                success: function (data) {
-                    $.each(data, function (i, subject) {
-                        $('#subjectDropdown').append($('<option></option>').val(subject.value).text(subject.text));
-                    });
-                },
-                error: function (xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
+            loadDropdownData();
+
+            subjectDropdown.change(function () {
+                FillGroupDropdown();
+                saveSelectedValue('subjectDropdown')
+            });
+            academicYearDropdown.change(function () {
+                FillGroupDropdown();
+                saveSelectedValue('academicYearDropdown')
+            });
+            groupDropdown.change(function () {
+                FillGroupDropdown();
             });
 
-            $.ajax({
-                url: '@Url.Action("GetAcademicYears", "Option")',
-                type: 'GET',
-                success: function (data) {
-                    $.each(data, function (i, academicYear) {
-                        $('#academicYearDropdown').append($('<option></option>').val(academicYear.value).text(academicYear.text));
-                    });
+            function loadDropdownData() {
+                var dropdownPromises = [];
+
+                dropdownPromises.push(
+                    $.ajax({
+                        url: '@Url.Action("GetSubjectByEmployee", "Subject")',
+                        type: 'GET',
+                        data: { employeeId: '@ViewBag.UserId' },
+                        success: function (data) {
+                            $.each(data, function (i, subject) {
+                                subjectDropdown.append($('<option></option>').val(subject.value).text(subject.text));
+                            });
+                            loadSelectedValue('subjectDropdown');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(xhr.responseText);
+                        }
+                    })
+                );
+                dropdownPromises.push(
+                    $.ajax({
+                        url: '@Url.Action("GetAcademicYears", "Option")',
+                        type: 'GET',
+                        success: function (data) {
+                            $.each(data, function (i, academicYear) {
+                                academicYearDropdown.append($('<option></option>').val(academicYear.value).text(academicYear.text));
+                            });
+                            loadSelectedValue('academicYearDropdown');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(xhr.responseText);
+                        }
+                    })
+                );
+
+                $.when.apply($, dropdownPromises).done(function () {
                     FillGroupDropdown();
-                },
-                error: function (xhr, status, error) {
-                    console.error(xhr.responseText);
+                });
+
+            }
+
+            function FillGroupDropdown() {
+                var subjectId = subjectDropdown.val();
+                var academicYearId = academicYearDropdown.val();
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetGroupsBySubjectAndAcademicYear", "GradeBook")',
+                    contentType: 'application/json',
+                    data: {
+                        'subjectId': subjectId,
+                        'academicYearId': academicYearId
+                    },
+                    success: function (data) {
+                        groupDropdown.empty();
+                        if (data.length === 0) {
+                            groupDropdown.append($('<option>').text('Нет данных').val(''));
+                        } else {
+                            $.each(data, function (i, group) {
+                                groupDropdown.append($('<option></option>').val(group.value).text(group.text));
+                            });
+                            saveSelectedValue('groupDropdown');
+                        }
+                        GetList();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+
+            function GetList() {
+                var groupId = groupDropdown.val();
+                var subjectId = subjectDropdown.val();
+                var academicYearId = academicYearDropdown.val();
+                var userId = '@ViewBag.UserId';
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GradeBookList", "GradeBook")',
+                    contentType: 'application/json',
+                    data: {
+                        'groupId': groupId,
+                        'subjectId': subjectId,
+                        'academicYearId': academicYearId,
+                        'userId': userId
+                    },
+                    success: function (response) {
+                        $('#dataContainer').html(response);
+                        $('#gradeBookTable').DataTable();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+
+            function loadSelectedValue(dropdownId) {
+                var selectedValue = localStorage.getItem(dropdownId);
+                if (selectedValue) {
+                    $('#' + dropdownId).val(selectedValue);
                 }
-            });
+            }
+
+            function saveSelectedValue(dropdownId) {
+                var selectedValue = $('#' + dropdownId).val();
+                localStorage.setItem(dropdownId, selectedValue);
+            }
         });
 
-        function FillGroupDropdown() {
-            var subjectId = $('#subjectDropdown').val();
-            var academicYearId = $('#academicYearDropdown').val();
-            $.ajax({
-                type: 'GET',
-                url: '@Url.Action("GetGroupsByGradeBook", "GradeBook")',
-                contentType: 'application/json',
-                data: {
-                    'subjectId': subjectId,
-                    'academicYearId': academicYearId
-                },
-                success: function (data) {
-                    $('#groupDropdown').empty(); 
-
-                    if (data.length === 0) {
-                        $('#groupDropdown').append($('<option>').text('Нет данных').val(''));
-                    } else {
-                        $.each(data, function (i, group) {
-                            $('#groupDropdown').append($('<option></option>').val(group.value).text(group.text));
-                        });
-                    }
-
-                },
-                error: function (xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
-            });
-        }
     </script>
 }

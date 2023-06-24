@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks.Sources;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Threading.Tasks.Sources;
 using AVN.Common.Enums;
 
 namespace AVN.Model.Entities;
@@ -35,6 +36,20 @@ public class Student : BaseEntity<Student, string>
         Orders = new List<Order>();
         StudentMovements = new List<StudentMovement>();
         GradeBook = new List<GradeBook>();
+    }
+
+    [NotMapped]
+    public string FullName
+    {
+        get
+        {
+            return this.GetFullName();
+        }
+    }
+
+    public string GetFullName()
+    {
+        return SName + " " + Name + " " + PName;
     }
 
 }

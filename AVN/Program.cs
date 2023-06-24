@@ -1,4 +1,5 @@
 using AVN.Automapper;
+using AVN.Controllers;
 using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
@@ -30,6 +31,8 @@ builder.Services.AddAutoMapper(cfg => cfg.AddProfile<GeneralProfile>());
 builder.Services.AddScoped<IMapper, EntityMapper>();
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddScoped<StudentController>();
+builder.Services.AddScoped<GroupController>();
+builder.Services.AddScoped<GradeBookController>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

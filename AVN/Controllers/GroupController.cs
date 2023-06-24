@@ -7,6 +7,7 @@ using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace AVN.Web.Controllers
 {
@@ -152,6 +153,12 @@ namespace AVN.Web.Controllers
             var groups = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x => x.DirectionId == directionId && (int)x.GroupType == groupType);
             var groupList = groups.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GroupName }).ToList();
             return groupList;
+        }
+
+        public async Task<List<SelectListItem>> GetGroupsByIds(List<string> groupIds)
+        {
+            var entityList = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x => groupIds.Contains(x.Id));
+            return entityList.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GroupName }).ToList();
         }
 
         public async Task<List<SelectListItem>> GetEnrolledGroupsByDirection(int directionId)

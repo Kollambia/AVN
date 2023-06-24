@@ -1,40 +1,74 @@
-﻿@model IEnumerable<AVN.Models.GradeBookVM>
+﻿@model IList<GradeBookVM>
 
 @{
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
+<br>
+<form method="post" id="gradeBookForm">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover" 
+                id="gradeBookTable">
+            <thead>
+                <tr>
+                    <th scope="col" data-sortable="true" data-filter-control="input" data-field="StudentId">
+                        @Html.DisplayNameFor(model => model[0].StudentId)
+                    </th>
+                    <th scope="col" data-sortable="true" data-filter-control="input" data-field="Points">
+                        @Html.DisplayNameFor(model => model[0].Points)
+                    </th>
+                    <th scope="col" data-sortable="true" data-filter-control="input" data-field="Grade">
+                        @Html.DisplayNameFor(model => model[0].Grade)
+                    </th>
+                    <th scope="col" data-sortable="true" data-filter-control="input" data-field="Date">
+                        @Html.DisplayNameFor(model => model[0].Date)
+                    </th>
 
+                </tr>
+            </thead>
+            <tbody>
 
-<div class="table-responsive">
-    <table class="table-striped"
-           id="table"
-           data-toggle="table"
-           data-pagination="true"
-           data-show-columns="true"
-           data-key-events="true"
-           data-show-toggle="true"
-           data-cookie="true"
-           data-cookie-id-table="saveId"
-           data-click-to-select="true"
-           data-toolbar="#toolbar"
-           data-show-columns-toggle-all="true"
-           data-minimum-count-columns="2"
-           data-show-pagination-switch="true"
-           data-page-list="[10, 25, 50, 100, всё]"
-           data-show-footer="true"
-           data-locale="ru-RU">
-        <thead>
-            
-        </thead>
-        <tbody>
-            
-        </tbody>
-    </table>
-</div>
+                @if (Model != null && Model?.Count > 0)
+                {
+                    <tr class="table-primary text-left">
+                        <th colspan="8">@Model[0]?.Subject?.Title - @Model[0]?.Subject?.Semester.GetCourseInWriting() (группа @Model[0]?.Group?.GroupName)</th>
+                    </tr>
+                    for (var i = 0; i < Model.Count; i++)
+                    {
+                        <tr>
+                            @Html.HiddenFor(modelItem => Model[i].Id)
+                            @Html.HiddenFor(modelItem => Model[i].GroupId)
+                            @Html.HiddenFor(modelItem => Model[i].AcademicYearId)
+                            @Html.HiddenFor(modelItem => Model[i].SubjectId)
+                            @Html.HiddenFor(modelItem => Model[i].StudentId)
+                            <td>
+                                @Html.DisplayFor(modelItem => Model[i].Student.FullName)
+                            </td>
+                            <td>
+                                @Html.EditorFor(modelItem => Model[i].Points, new { htmlAttributes = new { @class = "form-control", min = "0", max = "100", oninput = "updateGrade(this)", @onblur = "setDefaultPoints(this)"}})
+                            </td>
+                            <td>
+                                @Html.DropDownListFor(modelItem => Model[i].Grade, Html.GetEnumSelectList(typeof(Grades)), new {@class = "form-control"})
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(modelItem => Model[i].Date, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date"})
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center">Нет данных</td>
+                    </tr>
+                }
 
-
-
-
+            </tbody>
+        </table>
+    </div>
+    <div class="text-right">
+        <button type="submit" class="btn btn-success" onclick="save()"> <i class="fas fa-save"></i> Сохранить изменения</button>
+    </div>
+</form>
 
 
 @section Scripts {
@@ -51,4 +85,39 @@
     <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/extensions/export/bootstrap-table-export.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.20.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
 
+    <script>
+        function save() {
+            var importForm = document.getElementById("gradeBookForm");
+            importForm.action = "/GradeBook/GradeBookList";
+            importForm.submit();
+        }
+
+        function setDefaultPoints(input) {
+            if (input.value === '') {
+                input.value = '0';
+            }
+        }
+
+        function updateGrade(pointsInput) {
+            var points = parseInt(pointsInput.value);
+            var gradeDropdown = pointsInput.parentNode.nextElementSibling.querySelector("select");
+            if (!pointsInput.validity.valid) {
+                pointsInput.value = 0;
+            }
+
+            if (points >= 0 && points <= 41) {
+                gradeDropdown.value = 0;
+            } else if (points > 41 && points <= 61) {
+                gradeDropdown.value = 4;
+            } else if (points > 61 && points <= 74) {
+                gradeDropdown.value = 3;
+            } else if (points > 74 && points <= 86) {
+                gradeDropdown.value = 2;
+            } else if (points > 86 && points <= 100) {
+                gradeDropdown.value = 1;
+            } else {
+                gradeDropdown.value = 0;
+            }
+        }
+    </script>
 }
