@@ -1,4 +1,5 @@
-﻿@model IEnumerable<FacultyVM>
+﻿@using AVN.Utility
+@model IEnumerable<FacultyVM>
 
 @{
     ViewData["Title"] = "Факультеты";
@@ -53,9 +54,12 @@
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="DeanName">
                                             @Html.DisplayNameFor(model => model.DeanName)
                                         </th>
-                                        <th>
-                                            Действие
-                                        </th>
+                                        @if (User.IsInRole(RoleConst.AdminRole))
+                                        {
+                                            <th>
+                                                Действие
+                                            </th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -71,10 +75,13 @@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.DeanName)
                                             </td>
-                                            <td>
-                                                <span> @Html.ActionLink("", "Edit", "Faculty", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
-                                                <span> @Html.ActionLink("", "Delete", "Faculty", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
-                                            </td>
+                                            @if (User.IsInRole(RoleConst.AdminRole))
+                                            {
+                                                <td>
+                                                    <span> @Html.ActionLink("", "Edit", "Faculty", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
+                                                    <span> @Html.ActionLink("", "Delete", "Faculty", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
+                                                </td>
+                                            }
                                         </tr>
                                     }
                                 </tbody>

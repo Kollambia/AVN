@@ -1,4 +1,6 @@
-﻿@model IEnumerable<DirectionVM>
+﻿@using AVN.Utility
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<DirectionVM>
 @{
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
@@ -64,9 +66,12 @@
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="TrainingPeriod">
                                             @Html.DisplayNameFor(x => x.TrainingPeriod)
                                         </th>
-                                        <th>
-                                            Действие
-                                        </th>
+                                        @if (User.IsInRole(RoleConst.AdminRole))
+                                        {
+                                            <th>
+                                                Действие
+                                            </th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -94,10 +99,13 @@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.TrainingPeriod)
                                             </td>
-                                            <td>
-                                                <span> @Html.ActionLink("", "Edit", "Direction", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
-                                                <span> @Html.ActionLink("", "Delete", "Direction", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
-                                            </td>
+                                            @if (User.IsInRole(RoleConst.AdminRole))
+                                            {
+                                                <td>
+                                                    <span> @Html.ActionLink("", "Edit", "Direction", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
+                                                    <span> @Html.ActionLink("", "Delete", "Direction", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
+                                                </td>
+                                            }
                                         </tr>
                                     }
                                 </tbody>

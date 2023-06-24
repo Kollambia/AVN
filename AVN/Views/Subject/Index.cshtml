@@ -1,4 +1,6 @@
-﻿@model IEnumerable<SubjectVM>
+﻿@using AVN.Utility
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<SubjectVM>
 
 @{
     ViewData["Title"] = "Предметы";
@@ -68,9 +70,12 @@
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="EmployeeId">
                                             @Html.DisplayNameFor(x => x.EmployeeId)
                                         </th>
-                                        <th>
-                                            Действие
-                                        </th>
+                                        @if (User.IsInRole(RoleConst.AdminRole))
+                                        {
+                                            <th>
+                                                Действие
+                                            </th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
