@@ -14,7 +14,7 @@ namespace AVN.Models
 
         [Required(ErrorMessage = "Поле не заполнено")]
         [DisplayName("Имя")]
-        [StringLength(50, MinimumLength = 3, ErrorMessage = "Поле должно содержать от 3 до 50 символов.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Поле должно содержать от 3 до 50 символов.")]
         public string? Name { get; set; }
 
         [Required(ErrorMessage = "Поле не заполнено")]
