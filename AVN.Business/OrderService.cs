@@ -318,14 +318,16 @@ public class OrderService
         return contractValue;
     }
 
-    public Student SetStudentStatusAndGradeBookNumber(Student student)
+    public Student SetStudentStatusAndGradeBookNumber()
     {
+        Student student = new Student();
         int count = _dbContext.Students.Count();
         int studentsCount = count % 1000;
         string lastThreeNumbers = studentsCount.ToString("D3");
 
         student.GradeBookNumber = $"{DateTime.Now.Year}{lastThreeNumbers}";
         student.Status = StudentStatus.Enrollee;
+        student.RecruitmentYear = DateTime.Now.Year;
 
         return student;
     }

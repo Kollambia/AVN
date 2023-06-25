@@ -1,4 +1,6 @@
 ﻿@model StudentAndStudentPaymentVM
+@using AVN.Utility;
+
 
 <style>
     .datatable-dashv1-list table {
@@ -19,6 +21,10 @@
         background-color: #d6eaf8;
     }
 </style>
+
+<div class="mb-3">
+    <a href="@Url.Action(Model?.Student.Group?.GroupType != GroupType.Students ? Model?.Student.Group?.GroupType.ToString() : "Index")" class="btn btn-primary fas fa-arrow-alt-circle-left" type="button"> назад</a>
+</div>
 
 <div class="data-table-area mg-b-15">
     <div class="container-fluid">
@@ -144,4 +150,15 @@
             </div>
         </div>
     </div>
+</div>
+<br />
+<div class="text-right">
+    @if (User.IsInRole(RoleConst.AdminRole))
+    {
+        <form action="/Student/DeleteConfirmed/@Model?.Student.Id" method="post">
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-delete"></i> Удалить запись безвозвратно
+            </button>
+        </form>
+    }
 </div>

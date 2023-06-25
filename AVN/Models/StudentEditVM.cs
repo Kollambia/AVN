@@ -54,29 +54,17 @@ namespace AVN.Models
         [Required(ErrorMessage = "Поле не заполнено")]
         [DisplayName("Номер телефона")]
         [RegularExpression(@"^0\(\d{3}\)\d{2}-\d{2}-\d{2}$", ErrorMessage = "Неправильный номер телефона.")]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Поле не заполнено")]
         [DisplayName("Год набора")]
         [YearRange(2000, ErrorMessage = "Пожалуйста, введите действительный год между 2000 и текущим годом")]
-        public int RecruitmentYear { get; set; }
+        public int? RecruitmentYear { get; set; }
 
         [DisplayName("Долг")]
         public bool IsHasDebt { get; set; }
 
-        [Required(ErrorMessage = "Выберите факультет")]
-        [DisplayName("Факультет")]
-        public int? FacultyId { get; set; }
-
-        [Required(ErrorMessage = "Выберите кафедру")]
-        [DisplayName("Кафедра")]
-        public int? DepartmentId { get; set; }
-
-        [Required(ErrorMessage = "Выберите направление")]
-        [DisplayName("Направление")]
-        public int? DirectionId { get; set; }
-
-        [Required(ErrorMessage = "Выберите группу")]
+        [Required]
         [DisplayName("Группа")]
         public string? GroupId { get; set; }
         public Group? Group { get; set; }

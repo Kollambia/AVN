@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using AVN.Model.Entities;
+using iText.StyledXmlParser.Jsoup.Nodes;
 using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Data.Repository
@@ -81,7 +82,12 @@ namespace AVN.Data.Repository
             await _context.SaveChangesAsync();
             return deleteEntity.Entity;
         }
-
+        public async Task<IEnumerable<T>> DeleteRangeAsync(IEnumerable<T> entities)
+        {
+            _context.Set<T>().RemoveRange(entities);
+            await _context.SaveChangesAsync();
+            return entities;
+        }
         public async Task<T> DeleteByIdAsync(int id)
         {
             var entity = await GetByIdAsync(id);

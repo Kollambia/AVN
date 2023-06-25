@@ -14,6 +14,7 @@ namespace AVN.Data.Repository
         T GetById(string id);
         Task<T> GetByIdAsync(string id);
         Task<T> DeleteAsync(T entity);
+        Task<IEnumerable<T>> DeleteRangeAsync(IEnumerable<T> entity);
         Task<T> DeleteByIdAsync(int id); 
         Task<bool> IsExistsAsync(int id);
         void Update(T entity);

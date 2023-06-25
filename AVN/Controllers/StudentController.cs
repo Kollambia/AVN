@@ -76,7 +76,6 @@ namespace AVN.Web.Controllers
             return View();
         }
 
-
         public async Task<ActionResult> StudentList(int facultyId, int departmentId, int directionId, string groupId, int groupType, string fullname)
         {
             var students = await unitOfWork.StudentRepository.GetAllAsync();
@@ -235,7 +234,6 @@ namespace AVN.Web.Controllers
             return RedirectToAction("Index", "Order");
         }
 
-        // GET: Student/Details/5
         public async Task<IActionResult> Details(string id)
         {
             var student = await context.Students
@@ -255,6 +253,7 @@ namespace AVN.Web.Controllers
 
             var studentVM = new StudentVM
             {
+                Id = student.Id,
                 SName = student.SName,
                 Name = student.Name,
                 PName = student.PName,
@@ -283,22 +282,25 @@ namespace AVN.Web.Controllers
             return View(studentAndPaymentVM);
         }
 
-
-
-        // GET: Student/Create
+        [HttpGet]
         public IActionResult Create()
         {
-            // to do переделать этот кошмар
-            var studentOrderService = new OrderService(context);
-            Student student = new Student();
-            var updatedStudent = studentOrderService.SetStudentStatusAndGradeBookNumber(student);
-            var mappedStudent = mapper.Map<Student, StudentVM>(updatedStudent);
-            mappedStudent.Login = mappedStudent.GradeBookNumber;
-            mappedStudent.RecruitmentYear = DateTime.Now.Year;
-            return View(mappedStudent);
+            try
+            {
+                // to do переделать этот кошмар
+                var studentOrderService = new OrderService(context);
+                var updatedStudent = studentOrderService.SetStudentStatusAndGradeBookNumber();
+                var mappedStudent = mapper.Map<Student, StudentVM>(updatedStudent);
+                mappedStudent.Login = mappedStudent.GradeBookNumber;
+                return View(mappedStudent);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Student");
+            }
         }
 
-        // POST: Student/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(StudentVM student)
@@ -329,58 +331,118 @@ namespace AVN.Web.Controllers
                         return View(student);
                     }
                 }
-                catch 
+                catch (Exception ex)
                 {
-                    TempData["error"] = "Внутренняя ошибка";
+                    TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
                     return View(student);
                 }
             }
             return View(student);
         }
 
-        // GET: Student/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            var student = await context.Students
-                .Include(s => s.Group)
-                .ThenInclude(g => g.Direction)
-                .ThenInclude(d => d.Department)
-                .FirstOrDefaultAsync(s => s.Id == id);
-
-            if (student == null)
+            try
             {
-                return NotFound();
+                var student = await context.Students
+                   .Include(s => s.Group)
+                   .ThenInclude(g => g.Direction)
+                   .ThenInclude(d => d.Department)
+                   .FirstOrDefaultAsync(s => s.Id == id);
+
+                if (student == null)
+                {
+                    TempData["error"] = "Не удалось найти студента. Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                    return RedirectToAction("Index", "Student");
+                }
+
+                var mappedStudent = mapper.Map<Student, StudentEditVM>(student);
+                return View(mappedStudent);
             }
-
-            var mappedStudent = mapper.Map<Student, StudentEditVM>(student);
-            mappedStudent.FacultyId = student?.Group?.Direction.Department.FacultyId;
-            mappedStudent.DepartmentId = student?.Group?.Direction.DepartmentId;
-            mappedStudent.DirectionId = student?.Group?.DirectionId;
-
-            return View(mappedStudent);
+            catch(Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Student");
+            }
+            
         }
 
-
-        // POST: Student/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, StudentEditVM student)
+        public async Task<IActionResult> Edit(StudentEditVM student)
         {
-            if (ModelState.IsValid) //to do
+            try
             {
-                var mappedStudent = mapper.Map<StudentEditVM, Student>(student);
+                if (ModelState.IsValid)
+                {
+                    var mappedStudent = mapper.Map<StudentEditVM, Student>(student);
 
-                await unitOfWork.StudentRepository.UpdateAsync(mappedStudent);
+                    await unitOfWork.StudentRepository.UpdateAsync(mappedStudent);
+                    await unitOfWork.SaveChangesAsync();
+
+                    var group = await context.Groups.FirstOrDefaultAsync(s => s.Id == mappedStudent.GroupId);
+                    if (group == null)
+                        return RedirectToAction(nameof(Index));
+
+                    TempData["success"] = "Изменения успешно сохранены";
+                    var returnetView = group.GroupType == GroupType.Students ? "Index" : group.GroupType.ToString();
+                    return RedirectToAction($"{returnetView}");
+                }
+                return View(student);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Student");
+            }
+        }
+
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            try
+            {
+                //var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
+                var student = await context.Students
+                   .Include(g => g.StudentMovements)
+                   .Include(d => d.Orders)
+                   .Include(d => d.Orders)
+                   .Include(s => s.StudentPayments)
+                   .FirstOrDefaultAsync(s => s.Id == id);
+
+                if (student == null)
+                {
+                    TempData["error"] = "Не удалось найти студента. Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                    return RedirectToAction("Index", "Student");
+                }
+                if (false && student.StudentMovements != null && student.StudentPayments != null && student.Orders != null && student.GradeBook != null)
+                {
+                    TempData["error"] = "Невозможно удалить студента, так как у него есть связанная запись.";
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    await unitOfWork.StudentMovementRepository.DeleteRangeAsync(student.StudentMovements);
+                    await unitOfWork.StudentPaymentRepository.DeleteRangeAsync(student.StudentPayments);
+                    await unitOfWork.OrderRepository.DeleteRangeAsync(student.Orders);
+                    await unitOfWork.GradeBookRepository.DeleteRangeAsync(student.GradeBook);
+                }
+                await unitOfWork.StudentRepository.DeleteAsync(student);
                 await unitOfWork.SaveChangesAsync();
+                TempData["success"] = "Запись успешно удалена";
 
-                var group = await context.Groups.FirstOrDefaultAsync(s => s.Id == mappedStudent.GroupId);
-                if (group == null)
+                var studentGroupType = student?.Group?.GroupType;
+                if(studentGroupType == null)
                     return RedirectToAction(nameof(Index));
 
-                var returnetView = group.GroupType == GroupType.Students ? "Index" : group.GroupType.ToString();
+                var returnetView = studentGroupType == GroupType.Students ? "Index" : studentGroupType.ToString();
                 return RedirectToAction($"{returnetView}");
             }
-            return View(student);
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Student");
+            }
         }
 
         public async Task<IActionResult> StudentMovementEdit(int id)
@@ -421,18 +483,6 @@ namespace AVN.Web.Controllers
             return View(studentMovement);
         }
 
-        // GET: Student/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-
-            return View(student);
-        }
-
         public async Task<IActionResult> StudentMovementDelete(int id)
         {
             var student = await unitOfWork.StudentMovementRepository.GetByIdAsync(id);
@@ -444,19 +494,6 @@ namespace AVN.Web.Controllers
             return View(mapped);
         }
 
-        // POST: Student/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
-            await unitOfWork.StudentRepository.DeleteAsync(student);
-            await unitOfWork.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteStudentMovementConfirmed(string id)
         {
             var student = await unitOfWork.StudentMovementRepository.GetByIdAsync(id);

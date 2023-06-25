@@ -111,6 +111,7 @@
                 type: 'GET',
                 success: function (data) {
                     populateDropdown(facultyDropdown, data);
+                    loadSelectedValue('facultyDropdown');
                     GetList();
                     FillDepartmentsDropdown();
                 },
@@ -121,6 +122,7 @@
 
             // Обработчик изменения выбранного факультета
             facultyDropdown.change(function () {
+                saveSelectedValue('facultyDropdown')
                 FillDepartmentsDropdown();
                 GetList();
             });
@@ -128,12 +130,14 @@
             // Обработчик изменения выбранного отделения
             departmentDropdown.change(function () {
                 FillDirectionsDropdown();
+                saveSelectedValue('departmentDropdown')
                 GetList();
             });
 
             // Обработчик изменения выбранного направления
             directionDropdown.change(function () {
                 FillGroupsDropdown();
+                saveSelectedValue('directionDropdown')
                 GetList();
             });
 
@@ -156,6 +160,7 @@
                     success: function (data) {
                         clearDropdown(departmentDropdown);
                         populateDropdown(departmentDropdown, data);
+                        loadSelectedValue('departmentDropdown');
                         FillDirectionsDropdown();
                     },
                     error: function (xhr, status, error) {
@@ -174,6 +179,7 @@
                     success: function (data) {
                         clearDropdown(directionDropdown);
                         populateDropdown(directionDropdown, data);
+                        loadSelectedValue('directionDropdown');
                         FillGroupsDropdown();
                     },
                     error: function (xhr, status, error) {
@@ -246,6 +252,18 @@
                 $.each(data, function (i, item) {
                     dropdown.append($('<option>').val(item.value).text(item.text));
                 });
+            }
+
+            function loadSelectedValue(dropdownId) {
+                var selectedValue = localStorage.getItem(dropdownId);
+                if (selectedValue) {
+                    $('#' + dropdownId).val(selectedValue);
+                }
+            }
+
+            function saveSelectedValue(dropdownId) {
+                var selectedValue = $('#' + dropdownId).val();
+                localStorage.setItem(dropdownId, selectedValue);
             }
 
         });

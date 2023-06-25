@@ -28,6 +28,7 @@
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     @Html.HiddenFor(x => x.Id)
+                    @Html.HiddenFor(x => x.GroupId)
                     <div class="col-sm-12 mx-t3 mb-4">
                         <h2 class="text-center text-info">Редакция студента</h2>
                     </div>
@@ -93,7 +94,7 @@
        
                     @*start-third-row*@
                     <div class="col-sm-2 form-group">
-                        <label>@Html.DisplayNameFor(x => x.EducationalLine)</label>
+                        <label class ="font-weight-bold">@Html.DisplayNameFor(x => x.EducationalLine)</label>
                         @Html.DropDownListFor(x => x.EducationalLine, Html.GetEnumSelectList(typeof(EducationalLine)), "Не выбрано", new {@class = "form-control"})
                         @Html.ValidationMessageFor(x => x.EducationalLine, "", new { @class = "text-danger" })
                     </div>
@@ -191,123 +192,6 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $(".phone").mask("0(999)99-99-99");
-
-            // Fetch initial data
-            fetchData();
-        });
-
-        function fetchData() {
-            $.ajax({
-                url: '@Url.Action("GetFaculties", "Faculty")',
-                type: 'GET'
-            })
-                .then(function (data) {
-                    populateDropdown(data, '#facultiesDropdown');
-                    return '@Model.FacultyId'; // Assuming FacultyId is an integer property
-                })
-                .then(function (facultyId) {
-                    $('#facultiesDropdown').val(facultyId);
-                    return fetchDataByFacultyId(facultyId, '#departmentsDropdown', '@Url.Action("GetDepartmentsByFaculty", "Department")');
-                })
-                .then(function (departmentId) {
-                    $('#departmentsDropdown').val(departmentId);
-                    return fetchDataByDepartmentId(departmentId, '#directionsDropdown', '@Url.Action("GetDirectionsByDepartment", "Direction")');
-                })
-                .then(function (directionId) {
-                    $('#directionsDropdown').val(directionId);
-                    return fetchDataByDirectionId(directionId, '#groupsDropdown', '@Url.Action("GetGroupsByDirection", "Group")');
-                })
-                .then(function (groupId) {
-                    $('#groupsDropdown').val(groupId);
-                })
-                .catch(function (error) {
-                    console.error(error);
-                });
-        }
-
-        function fetchDataByFacultyId(facultyId, dropdownSelector, url) {
-            if (!facultyId) {
-                clearDropdowns('#departmentsDropdown');
-                clearDropdowns('#directionsDropdown');
-                clearDropdowns('#groupsDropdown');
-                return Promise.resolve('');
-            }
-
-            return $.ajax({
-                type: 'GET',
-                url: url,
-                data: { facultyId: facultyId }
-            })
-                .then(function (response) {
-                    populateDropdown(response, dropdownSelector);
-                    return '@Model.DepartmentId';
-                });
-        }
-
-        function fetchDataByDepartmentId(departmentId, dropdownSelector, url) {
-            if (!departmentId) {
-                clearDropdowns('#directionsDropdown');
-                clearDropdowns('#groupsDropdown');
-                return Promise.resolve('');
-            }
-
-            return $.ajax({
-                type: 'GET',
-                url: url,
-                data: { departmentId: departmentId }
-            })
-                .then(function (response) {
-                    populateDropdown(response, dropdownSelector);
-                    return '@Model.DirectionId';
-                });
-        }
-
-        function fetchDataByDirectionId(directionId, dropdownSelector, url) {
-            if (!directionId) {
-                clearDropdowns(dropdownSelector);
-                return Promise.resolve('');
-            }
-
-            return $.ajax({
-                type: 'GET',
-                url: url,
-                data: { directionId: directionId }
-            })
-                .then(function (response) {
-                    populateDropdown(response, dropdownSelector);
-                    return '@Model.GroupId';
-                });
-        }
-
-        function populateDropdown(data, dropdownSelector) {
-            var dropdown = $(dropdownSelector);
-            dropdown.empty();
-            dropdown.append($('<option>').text('Не выбрано').val(''));
-
-            $.each(data, function (i, item) {
-                dropdown.append($('<option></option>').val(item.value).text(item.text));
-            });
-        }
-
-        function clearDropdowns(dropdownSelector) {
-            var dropdown = $(dropdownSelector);
-            dropdown.empty();
-            dropdown.append($('<option>').text('Не выбрано').val(''));
-        }
-
-        $(document).on('change', '#facultiesDropdown', function () {
-            var facultyId = $(this).val();
-            fetchDataByFacultyId(facultyId, '#departmentsDropdown', '@Url.Action("GetDepartmentsByFaculty", "Department")');
-        });
-
-        $(document).on('change', '#departmentsDropdown', function () {
-            var departmentId = $(this).val();
-            fetchDataByDepartmentId(departmentId, '#directionsDropdown', '@Url.Action("GetDirectionsByDepartment", "Direction")');
-        });
-
-        $(document).on('change', '#directionsDropdown', function () {
-            var directionId = $(this).val();
-            fetchDataByDirectionId(directionId, '#groupsDropdown', '@Url.Action("GetGroupsByDirection", "Group")');
         });
     </script>
 }
