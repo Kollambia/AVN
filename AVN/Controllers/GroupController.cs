@@ -182,26 +182,36 @@ namespace AVN.Web.Controllers
             {
                 switch (movement.MoveType)
                 {
-                    case MoveType.Enlisted: //Зачисление
-                        groups = groups.Where(x => x.GroupType == GroupType.Enrolled); //c абитуриентов
-                        break;
-
                     case MoveType.Translated: //Перевод
-                        groups = groups.Where(x => x.GroupType == GroupType.Students); // с студентов
+                    case MoveType.Graduated: //Окончание вуза
+                    case MoveType.Expelled: //Отчисление с вуза
+                    case MoveType.AcademicLeaved: //Академический отпуск
+                        groups = groups.Where(x => x.GroupType == GroupType.Students); //активных студентов
                         break;
-
-
-                    case MoveType.Graduated: //Окончание
-                        groups = groups.Where(x => x.GroupType == GroupType.Graduated);
+                    case MoveType.Enlisted: //Зачисление
+                        groups = groups.Where(x => x.GroupType == GroupType.Enrolled); //абитуриентов
                         break;
-
+                    case MoveType.NextCourseTransfer: //Перевод на следующий курс
+                        groups = groups.Where(x => x.GroupType == GroupType.Students); //активных студентов
+                        break;
+                    case MoveType.RestoredAcademic: //Восстановление из академ
+                        groups = groups.Where(x => x.GroupType == GroupType.AcademicLeaved); //академ отпуск
+                        break;
+                    case MoveType.RestoredExpelled: //Восстановление из отчисл
+                        groups = groups.Where(x => x.GroupType == GroupType.Expelled); //отчисленные
+                        break;
+                    case MoveType.RestoredGraduared: //Восстановление из законч
+                        groups = groups.Where(x => x.GroupType == GroupType.Graduated); //окончившиеся
+                        break;
+                    case MoveType.InArchive: //Восстановление из архива
+                        groups = groups.Where(x => x.GroupType == GroupType.Archived); //архивированные
+                        break;
                     default:
-                        // Handle any other move types here, if needed
+                        groups = groups.Where(x => x.GroupType == GroupType.Archived); //архивированные
                         break;
                 }
             }
             
-            // to do доделать
             var groupList = groups.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GroupName }).ToList();
             return groupList;
         }
@@ -223,24 +233,29 @@ namespace AVN.Web.Controllers
 
             switch (movement.MoveType)
             {
-                case MoveType.Enlisted: //Зачисление
-                    groups = groups.Where(x => x.GroupType == GroupType.Students); // к студентам
+                case MoveType.Translated: // Перевод
+                case MoveType.Enlisted: // Зачисление
+                case MoveType.NextCourseTransfer: // Перевод на следующий курс
+                case MoveType.RestoredAcademic: // Восстановление из академ
+                case MoveType.RestoredExpelled: // Восстановление из отчисл
+                case MoveType.RestoredGraduared: // Восстановление из законч
+                case MoveType.InArchive: // Восстановление из архива
+                    groups = groups.Where(x => x.GroupType == GroupType.Students); // к активным студентам
                     break;
-
-                case MoveType.Translated: //Перевод
-                    groups = groups.Where(x => x.GroupType == GroupType.Students); // к студентов
+                case MoveType.Graduated: // Окончание вуза
+                    groups = groups.Where(x => x.GroupType == GroupType.Graduated); // к окончившим
                     break;
-
-
-                case MoveType.Graduated: //Окончание
-                    groups = groups.Where(x => x.GroupType == GroupType.Graduated);
+                case MoveType.Expelled: // Отчисление с вуза
+                    groups = groups.Where(x => x.GroupType == GroupType.Expelled); // к отчисленным
                     break;
-
+                case MoveType.AcademicLeaved: // Академический отпуск
+                    groups = groups.Where(x => x.GroupType == GroupType.AcademicLeaved); // к академ отпуску
+                    break;
                 default:
-                    // Handle any other move types here, if needed
+                    groups = groups.Where(x => x.GroupType == GroupType.Archived); // к архивным студентам
                     break;
             }
-            // to do доделать
+
             var groupList = groups.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GroupName }).ToList();
             return groupList;
         }

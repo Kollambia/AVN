@@ -72,7 +72,7 @@
                     </div>
                     <div class="col-md-2 form-group">
                         <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Number)</label>
-                        @Html.EditorFor(x => x.Number, new { htmlAttributes = new { @class = "form-control" }})
+                        @Html.EditorFor(x => x.Number, new { htmlAttributes = new { @class = "form-control", @disable = "disable" }})
                         @Html.ValidationMessageFor(x => x.Number, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-md-4 form-group">
@@ -85,7 +85,7 @@
                         <br />
                         <div class="row">
                             <button type="submit" class="btn btn-success mb-3 mr-3">
-                                <i class="fas fa-save"></i> <span> Сохранить</span>
+                                <i class="far fa-calendar-plus"></i> <span> Создать приказ</span>
                             </button>
 @*                            <button type="submit" class="btn btn-info mb-3" onclick="cancelImportStudents()">
                                 <i class="fas fa-reply-all"></i> <span> Отменить</span>

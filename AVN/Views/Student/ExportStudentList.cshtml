@@ -36,7 +36,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model != null)
+                        @if (Model != null && Model?.Count > 0)
                         {
                             for (var i = 0; i < Model.Count; i++)
                             {
@@ -67,6 +67,12 @@
                                     <td>@Model[i].Group.GroupName</td>
                                 </tr>
                             }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center">Нет данных</td>
+                            </tr>
                         }
                     </tbody>
                 </table>

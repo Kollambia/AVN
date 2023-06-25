@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using AVN.Controllers;
 using AVN.Common.Customs;
+using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Web.Controllers
 {
@@ -28,29 +29,48 @@ namespace AVN.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var studentOrderService = new OrderService(context);
+            OrderVM orderInfo = new OrderVM
+            {
+                Number = studentOrderService.GenerateRandomNumber(8),
+                Date = DateTime.Now
+            };
+            return View(orderInfo);
         }
 
         [HttpPost]
         public IActionResult Index(OrderVM orderInfo)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var mappedOrder = mapper.Map<OrderVM, Order>(orderInfo);
-                var transferImportStudentIds = StudentController.TransferImportStudents
-                    .Where(x => x.Transfered == true).Select(x => x.Id).ToList();
-
-                var studentOrderService = new OrderService(context);
-                OperationResult result = studentOrderService.CreateStudentOrder(mappedOrder, transferImportStudentIds);
-                //to to alert
-                if (result.Success)
+                if (ModelState.IsValid)
                 {
-                    StudentController.TransferImportStudents.Clear();
-                    StudentController.TransferExportStudents.Clear();
+                    var mappedOrder = mapper.Map<OrderVM, Order>(orderInfo);
+                    var transferImportStudentIds = StudentController.TransferImportStudents
+                        .Where(x => x.Transfered == true).Select(x => x.Id).ToList();
+
+                    var studentOrderService = new OrderService(context);
+                    OperationResult result = studentOrderService.CreateStudentOrder(mappedOrder, transferImportStudentIds);
+                    if (result.Success)
+                    {
+                        TempData["success"] = "Приказ успешно сформирован";
+                        StudentController.TransferImportStudents.Clear();
+                        StudentController.TransferExportStudents.Clear();
+                        return View();
+                    }
+                    else
+                    {
+                        TempData["error"] = result.Message;
+                    }
                 }
-                return View();
+                return View(orderInfo);
             }
-            return View(orderInfo);
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Student");
+            }
+            
         }
 
 

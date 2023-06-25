@@ -217,7 +217,6 @@ namespace AVN.Web.Controllers
             return RedirectToAction("Index", "Order");
         }
 
-
         public IActionResult CancelImportStudents()
         {
             bool isNeedToCancel = _transferImportStudents.Any(x => x.Transfered);
@@ -340,7 +339,6 @@ namespace AVN.Web.Controllers
             return View(student);
         }
 
-        [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
             try

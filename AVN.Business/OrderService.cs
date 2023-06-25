@@ -362,7 +362,7 @@ public class OrderService
             FullName = $"{payment.Student.SName} {payment.Student.Name} {payment.Student.PName}",
             EducationForm = payment.Group.StudingForm.GetDisplayName(),
             AcademicDegree = payment.Group.AcademicDegree.GetDisplayName(),
-            PaymentAccountNumber = GeneratePaymentAccountNumber(),
+            PaymentAccountNumber = GenerateRandomNumber(10),
             PaymentAmount = (int)payment.Contract,
             PaymentPurpose = "Оплата за обучение"
         };
@@ -398,12 +398,12 @@ public class OrderService
         return result;
     }
 
-    private static string GeneratePaymentAccountNumber()
+    public string GenerateRandomNumber(int count)
     {
         Random random = new Random();
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < count; i++)
         {
             int randomNumber = random.Next(0, 10);
             stringBuilder.Append(randomNumber);

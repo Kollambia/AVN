@@ -23,10 +23,10 @@
                     </button>
                     <div>
                         <button type="submit" class="btn btn-success mb-3 mr-3" onclick="refreshTables()">
-                            <i class="fas fa-history"></i>
+                            <i class="fas fa-history"> обновить таблицу</i>
                         </button>
                         <button type="submit" class="btn btn-info mb-3" onclick="cancelImportStudents()">
-                            <i class="fas fa-reply-all"></i>
+                            <i class="fas fa-reply-all"> отменить всё</i>
                         </button>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model != null)
+                        @if (Model != null && Model?.Count > 0)
                         {
                             for (var i = 0; i < Model.Count; i++)
                             {
@@ -84,6 +84,12 @@
                                     <td>@Model[i].Group.GroupName</td>
                                 </tr>
                             }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center">Нет данных</td>
+                            </tr>
                         }
                     </tbody>
                 </table>
