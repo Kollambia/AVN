@@ -366,12 +366,7 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, StudentEditVM student)
         {
-            if (id != student.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) //to do
             {
                 var mappedStudent = mapper.Map<StudentEditVM, Student>(student);
 
