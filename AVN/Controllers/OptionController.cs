@@ -42,11 +42,6 @@ namespace AVN.Controllers
             var mappedList = mapper.Map<OrderType, OrderTypeVM>(list).ToList();
             return PartialView(mappedList);
         }
-        public async Task<ActionResult> SettingList()
-        {
-            var list = await unitOfWork.SettingRepository.GetAllAsync();
-            return PartialView(list);
-        }
 
         public IActionResult CreateAcademicYear()
         {

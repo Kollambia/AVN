@@ -414,12 +414,8 @@ namespace AVN.Web.Controllers
                     TempData["error"] = "Не удалось найти студента. Пожалуйста попробуйте позже, либо обратитесь к администратору.";
                     return RedirectToAction("Index", "Student");
                 }
-                if (false && student.StudentMovements != null && student.StudentPayments != null && student.Orders != null && student.GradeBook != null)
-                {
-                    TempData["error"] = "Невозможно удалить студента, так как у него есть связанная запись.";
-                    return RedirectToAction(nameof(Index));
-                }
-                else
+
+                if (student.StudentMovements != null || student.StudentPayments != null || student.Orders != null || student.GradeBook != null)
                 {
                     await unitOfWork.StudentMovementRepository.DeleteRangeAsync(student.StudentMovements);
                     await unitOfWork.StudentPaymentRepository.DeleteRangeAsync(student.StudentPayments);

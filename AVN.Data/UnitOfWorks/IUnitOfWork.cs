@@ -22,7 +22,6 @@ public interface IUnitOfWork : IDisposable
     IRepository<OrderType, int> OrderTypeRepository { get; }
     IRepository<Schedule, int> ScheduleRepository { get; }
     IRepository<GradeBook, int> GradeBookRepository { get; }
-    IRepository<Setting, int> SettingRepository { get; }
 
     Task<int> SaveChangesAsync();
 }
