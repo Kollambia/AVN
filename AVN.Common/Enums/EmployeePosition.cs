@@ -9,6 +9,7 @@ namespace AVN.Common.Enums
         [Display(Name = "Профессор")] Professor = 1,
         [Display(Name = "Декан")] Dean = 2,
         [Display(Name = "Доцент")] AssociateProfessor = 3,
-        [Display(Name = "Преподователь")] Lecturer = 4
+        [Display(Name = "Преподователь")] Lecturer = 4,
+        [Display(Name = "Бухгалтер")] Accountant = 5
     }
 }
