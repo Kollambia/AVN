@@ -134,6 +134,19 @@ namespace AVN.Controllers
         {
             var employee = await unitOfWork.EmployeeRepository.GetByIdAsync(id);
             await unitOfWork.EmployeeRepository.DeleteAsync(employee);
+            var user = await userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                var result = await userManager.DeleteAsync(user);
+                if (!result.Succeeded)
+                {
+                    // Обрабатываем ошибки, возникшие в процессе удаления пользователя
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+            }
             await unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
