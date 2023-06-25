@@ -68,7 +68,7 @@ namespace AVN.Areas.Identity.Pages.Account.Manage
             /// </summary>
             [Required]
             [EmailAddress]
-            [Display(Name = "New email")]
+            [Display(Name = "Новый Email")]
             public string NewEmail { get; set; }
         }
 
@@ -114,26 +114,35 @@ namespace AVN.Areas.Identity.Pages.Account.Manage
             var email = await _userManager.GetEmailAsync(user);
             if (Input.NewEmail != email)
             {
-                var userId = await _userManager.GetUserIdAsync(user);
-                var code = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = Url.Page(
-                    "/Account/ConfirmEmailChange",
-                    pageHandler: null,
-                    values: new { area = "Identity", userId = userId, email = Input.NewEmail, code = code },
-                    protocol: Request.Scheme);
-                await _emailSender.SendEmailAsync(
-                    Input.NewEmail,
-                    "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                StatusMessage = "Confirmation link to change email sent. Please check your email.";
-                return RedirectToPage();
+                var setMailResult = await _userManager.SetEmailAsync(user, Input.NewEmail);
+                if (setMailResult.Succeeded)
+                {
+                    var setUserNameResult = await _userManager.SetUserNameAsync(user, Input.NewEmail);
+                    if (setUserNameResult.Succeeded)
+                    {
+                        StatusMessage = "Ваш Email и имя пользователя изменены";
+                        return RedirectToPage();
+                    }
+                    else
+                    {
+                        foreach (var error in setUserNameResult.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var error in setMailResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
             }
 
-            StatusMessage = "Your email is unchanged.";
-            return RedirectToPage();
+            return Page();
         }
+
 
         public async Task<IActionResult> OnPostSendVerificationEmailAsync()
         {

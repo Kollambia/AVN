@@ -1,15 +1,20 @@
-﻿@model IEnumerable<AcademicYearVM>
+﻿@using AVN.Utility
+@model IEnumerable<AcademicYearVM>
 
 @{
     ViewData["Title"] = "Учебный год";
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
 
-<div id="toolbar2">
-    <a asp-controller="Option" asp-action="CreateAcademicYear">
-        <input type="button" class="btn btn-success" value="Добавить" />
-    </a>
-</div>
+@if (User.IsInRole(RoleConst.AdminRole))
+{
+    <div id="toolbar2">
+        <a asp-controller="Option" asp-action="CreateAcademicYear">
+            <input type="button" class="btn btn-success" value="Добавить" />
+        </a>
+    </div>
+}
+
 
 <div class="data-table-area mg-b-15">
     <div class="container-fluid">

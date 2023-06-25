@@ -60,7 +60,14 @@ namespace AVN.Controllers
                 var newId = Guid.NewGuid().ToString();
                 employee.Id = newId;
 
-                var user = new AppUser() { UserName = employee.Email, Id = newId, FullName = employee.FullName};
+                var user = new AppUser()
+                {
+                    UserName = employee.Email, 
+                    Id = newId, 
+                    FullName = employee.FullName, 
+                    Email = employee.Email
+                };
+
                 var mappedEmployee = mapper.Map<EmployeeVM, Employee>(employee);
                 var result = await userManager.CreateAsync(user, employee.Password);
                 if (result.Succeeded)

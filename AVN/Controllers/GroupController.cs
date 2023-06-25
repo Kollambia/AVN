@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AVN.Web.Controllers
 {
@@ -177,25 +178,29 @@ namespace AVN.Web.Controllers
                     x.Direction.Department.FacultyId == facultyId && x.AcademicYearId == academicYearId);
 
             var movement = await unitOfWork.MovementTypeRepository.GetByIdAsync(movementTypeId);
-            switch (movement.MoveType)
+            if (movement != null)
             {
-                case MoveType.Enlisted: //Зачисление
-                    groups = groups.Where(x => x.GroupType == GroupType.Enrolled); //c абитуриентов
-                    break;
+                switch (movement.MoveType)
+                {
+                    case MoveType.Enlisted: //Зачисление
+                        groups = groups.Where(x => x.GroupType == GroupType.Enrolled); //c абитуриентов
+                        break;
 
-                case MoveType.Translated: //Перевод
-                    groups = groups.Where(x => x.GroupType == GroupType.Students); // с студентов
-                    break;
+                    case MoveType.Translated: //Перевод
+                        groups = groups.Where(x => x.GroupType == GroupType.Students); // с студентов
+                        break;
 
 
-                case MoveType.Graduated: //Окончание
-                    groups = groups.Where(x => x.GroupType == GroupType.Graduated);
-                    break;
+                    case MoveType.Graduated: //Окончание
+                        groups = groups.Where(x => x.GroupType == GroupType.Graduated);
+                        break;
 
-                default:
-                    // Handle any other move types here, if needed
-                    break;
+                    default:
+                        // Handle any other move types here, if needed
+                        break;
+                }
             }
+            
             // to do доделать
             var groupList = groups.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GroupName }).ToList();
             return groupList;
@@ -203,13 +208,19 @@ namespace AVN.Web.Controllers
 
         public async Task<List<SelectListItem>> GetGroupsToImport(int facultyId, int movementTypeId, int academicYearId)
         {
-            if (facultyId == 0 && academicYearId == 0 && movementTypeId == 0)
+
+            if (facultyId == 0 || academicYearId == 0 || movementTypeId == 0)
                 return new List<SelectListItem>();
 
             var groups = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x =>
                     x.Direction.Department.FacultyId == facultyId && x.AcademicYearId == academicYearId);
 
-            var movement = await unitOfWork.MovementTypeRepository.GetByIdAsync(movementTypeId);
+            var movement = await appDbContext.MovementTypes.FirstOrDefaultAsync(m => m.Id == movementTypeId);
+            if (movement is null)
+            {
+                throw new Exception("Тип перемещения не найден");
+            }
+
             switch (movement.MoveType)
             {
                 case MoveType.Enlisted: //Зачисление

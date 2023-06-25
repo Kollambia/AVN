@@ -1,6 +1,17 @@
 ﻿@{
-    ViewData["Title"] = "Page Not Found";
+    ViewData["Title"] = "Страница не найдена";
+    string pageNotFound = Context.Request.Cookies["PageNotFound"];
 }
-
-<h1>Page Not Found</h1>
-<p>Ты че ввел долбоеб</p>
+<br/> 
+<br/>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="p-5 shadow rounded text-center">
+                <img class="img-fluid mb-5" width="250px" src="~/img/404.png">
+                <h3 class="mb-4"> Страница не найдена!</h3>
+                @Html.ActionLink(" Главная страница", "Index", "Home", null, new { @class = "btn btn-primary" })
+            </div>
+        </div>
+    </div>
+</div>
