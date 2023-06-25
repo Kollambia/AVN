@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using iText.Kernel.Pdf.Colorspace;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AVN.Web.Controllers
@@ -16,12 +17,12 @@ namespace AVN.Web.Controllers
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
-        private readonly AppDbContext appDbContext;
-        public GroupController(IUnitOfWork unitOfWork, IMapper mapper, AppDbContext appDbContext)
+        private readonly AppDbContext context;
+        public GroupController(IUnitOfWork unitOfWork, IMapper mapper, AppDbContext context)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
-            this.appDbContext = appDbContext;
+            this.context = context;
         }
 
         // GET: Group
@@ -83,7 +84,7 @@ namespace AVN.Web.Controllers
         // GET: Group/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            var group = await appDbContext.Groups
+            var group = await context.Groups
                 .Include(g => g.AcademicYear)
                 .Include(g => g.Direction)
                 .ThenInclude(d => d.Department)
@@ -137,10 +138,40 @@ namespace AVN.Web.Controllers
         // POST: Group/Delete/5
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var group = await unitOfWork.GroupRepository.GetByIdAsync(id);
-            await unitOfWork.GroupRepository.DeleteAsync(group);
-            await unitOfWork.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                var group = await context.Groups
+                    .Include(s => s.Students)
+                    .Include(o => o.Orders)
+                    .Include(g => g.GroupEmployees)
+                    .Include(s => s.Schedule)
+                    .Include(g => g.GradeBook)
+                    .FirstOrDefaultAsync(i => i.Id == id);
+                if (group == null)
+                {
+                    TempData["error"] =
+                        "Не удалось найти группу. Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                    return RedirectToAction("Index", "Group");
+                }
+
+                TempData["success"] = "Запись успешно удалена";
+                await unitOfWork.StudentRepository.DeleteRangeAsync(group.Students);
+                await unitOfWork.OrderRepository.DeleteRangeAsync(group.Orders);
+                context.GroupEmployees.RemoveRange(group.GroupEmployees);
+                await unitOfWork.ScheduleRepository.DeleteRangeAsync(group.Schedule);
+                await unitOfWork.GradeBookRepository.DeleteRangeAsync(group.GradeBook);
+
+
+                await unitOfWork.GroupRepository.DeleteAsync(group);
+                await unitOfWork.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Group");
+            }
+            
         }
         public async Task<List<SelectListItem>> GetGroups()
         {
@@ -225,7 +256,7 @@ namespace AVN.Web.Controllers
             var groups = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x =>
                     x.Direction.Department.FacultyId == facultyId && x.AcademicYearId == academicYearId);
 
-            var movement = await appDbContext.MovementTypes.FirstOrDefaultAsync(m => m.Id == movementTypeId);
+            var movement = await context.MovementTypes.FirstOrDefaultAsync(m => m.Id == movementTypeId);
             if (movement is null)
             {
                 throw new Exception("Тип перемещения не найден");

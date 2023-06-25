@@ -1,9 +1,12 @@
-﻿using AVN.Automapper;
+﻿using AutoMapper.Execution;
+using AVN.Automapper;
+using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Web.Controllers
 {
@@ -11,11 +14,13 @@ namespace AVN.Web.Controllers
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
+        private readonly AppDbContext context;
 
-        public DepartmentController(IUnitOfWork unitOfWork, IMapper mapper)
+        public DepartmentController(IUnitOfWork unitOfWork, IMapper mapper, AppDbContext context)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.context = context;
         }
 
         // GET: Department
@@ -107,10 +112,45 @@ namespace AVN.Web.Controllers
         // POST: Department/Delete/5
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var department = await unitOfWork.DepartmentRepository.GetByIdAsync(id);
-            await unitOfWork.DepartmentRepository.DeleteAsync(department);
-            await unitOfWork.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                var department = await context.Departments
+                    .Include(f => f.Employees)
+                    .Include(d => d.Subjects)
+                    .Include(d => d.Directions)
+                    .ThenInclude(g => g.Groups)
+                    .FirstOrDefaultAsync(i => i.Id == id);
+
+                if (department == null)
+                {
+                    TempData["error"] =
+                        "Не удалось найти кафедру. Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                    return RedirectToAction("Index", "Department");
+                }
+
+                if (false && department.Faculty != null)
+                {
+                    TempData["error"] = "Невозможно удалить студента, так как у него есть связанная запись.";
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    await unitOfWork.EmployeeRepository.DeleteRangeAsync(department.Employees);
+                    await unitOfWork.SubjectRepository.DeleteRangeAsync(department.Subjects);
+                    await unitOfWork.DirectionRepository.DeleteRangeAsync(department.Directions);
+                }
+
+                TempData["success"] = "Запись успешно удалена";
+                await unitOfWork.DepartmentRepository.DeleteAsync(department);
+                await unitOfWork.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch(Exception ex) 
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Department");
+            }
+           
         }
 
         public async Task<List<SelectListItem>> GetDepartmentsByFaculty(int facultyId)
