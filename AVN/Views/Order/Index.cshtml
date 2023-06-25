@@ -380,6 +380,17 @@
             });
         }
 
+        function HandleMovementTypeChange() {
+            var movementTypeId = $('#movementTypeDropdown').val();
+            if (movementTypeId === "3") {
+                // Set the value and disable groupToDropdown
+                $("#groupToDropdown").val($("#groupFromDropdown").val()).text(groupFromDropdown.text()).prop("disabled", true);
+            } else {
+                // Enable groupToDropdown
+                $("#groupToDropdown").prop("disabled", false);
+            }
+        }
+
         function loadSelectedValue(dropdownId) {
             var selectedValue = localStorage.getItem(dropdownId);
             if (selectedValue) {
