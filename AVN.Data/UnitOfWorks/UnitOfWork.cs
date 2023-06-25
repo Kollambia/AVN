@@ -23,6 +23,7 @@ public class UnitOfWork : IUnitOfWork
     private IRepository<OrderType, int> _orderTypeRepository;
     private IRepository<Schedule, int> _scheduleRepository;
     private IRepository<GradeBook, int> _gradeBookRepository;
+    private IRepository<Setting, int> _settingRepository;
 
     public UnitOfWork(AppDbContext context)
     {
@@ -188,7 +189,15 @@ public class UnitOfWork : IUnitOfWork
             return _gradeBookRepository;
         }
     }
-
+    public IRepository<Setting, int> SettingRepository
+    {
+        get
+        {
+            if (_settingRepository == null)
+                _settingRepository = new DbRepository<Setting, int>(_context);
+            return _settingRepository;
+        }
+    }
     public async Task<int> SaveChangesAsync()
     {
         return await _context.SaveChangesAsync();

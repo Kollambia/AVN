@@ -26,6 +26,7 @@ namespace AVN.Data
         public DbSet<GroupEmployee> GroupEmployees { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<GradeBook> GradeBooks { get; set; }
+        public DbSet<Setting> Settings { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> context) : base(context)
         {
