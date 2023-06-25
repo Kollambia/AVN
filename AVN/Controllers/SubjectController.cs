@@ -1,21 +1,25 @@
 ﻿using AVN.Automapper;
+using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Web.Controllers
 {
     public class SubjectController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
-        private readonly IMapper mapper;    
+        private readonly IMapper mapper;
+        private readonly AppDbContext context;
 
-        public SubjectController(IUnitOfWork unitOfWork, IMapper mapper)
+        public SubjectController(IUnitOfWork unitOfWork, IMapper mapper, AppDbContext context)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.context = context;
         }
 
         // GET: Subject
@@ -114,11 +118,34 @@ namespace AVN.Web.Controllers
         // POST: Subject/Delete/5
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var subject = await unitOfWork.SubjectRepository.GetByIdAsync(id);
-            await unitOfWork.SubjectRepository.DeleteAsync(subject);
-            await unitOfWork.SaveChangesAsync();
+            try
+            {
+                var subject = await context.Subjects.Include(s => s.Schedule)
+                    .Include(g => g.GradeBook)
+                    .FirstOrDefaultAsync(i => i.Id == id);
 
-            return RedirectToAction(nameof(Index));
+                if (subject == null)
+                {
+                    TempData["error"] =
+                        "Не удалось найти предмет. Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                    return RedirectToAction("Index", "Subject");
+                }
+
+                TempData["success"] = "Запись успешно удалена";
+                await unitOfWork.ScheduleRepository.DeleteRangeAsync(subject.Schedule);
+                await unitOfWork.GradeBookRepository.DeleteRangeAsync(subject.GradeBook);
+
+                await unitOfWork.SubjectRepository.DeleteAsync(subject);
+                await unitOfWork.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Subject");
+            }
+            
         }
 
         public async Task<List<SelectListItem>> GetSubjects()

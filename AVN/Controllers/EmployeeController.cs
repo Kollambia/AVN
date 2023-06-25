@@ -16,14 +16,14 @@ namespace AVN.Controllers
         private readonly IUnitOfWork unitOfWork;
         private readonly UserManager<AppUser> userManager;
         private readonly IMapper mapper;
-        private readonly AppDbContext appDbContext;
+        private readonly AppDbContext context;
 
-        public EmployeeController(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, IMapper mapper, AppDbContext appDbContext)
+        public EmployeeController(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, IMapper mapper, AppDbContext context)
         {
             this.unitOfWork = unitOfWork;
             this.userManager = userManager;
             this.mapper = mapper;
-            this.appDbContext = appDbContext;
+            this.context = context;
         }
 
         // GET: Employee
@@ -68,17 +68,29 @@ namespace AVN.Controllers
                     Email = employee.Email
                 };
 
-                var mappedEmployee = mapper.Map<EmployeeVM, Employee>(employee);
-                var result = await userManager.CreateAsync(user, employee.Password);
-                if (result.Succeeded)
+                try
                 {
+                    var mappedEmployee = mapper.Map<EmployeeVM, Employee>(employee);
+                    var result = await userManager.CreateAsync(user, employee.Password);
+                    if (!result.Succeeded)
+                    {
+                        TempData["error"] = $"Произошла ошибка создания пользователя: {result.Errors}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                        return RedirectToAction("Create", "Employee");
+                    }
                     await userManager.AddToRoleAsync(user, RoleConst.Employee);
 
                     await unitOfWork.EmployeeRepository.CreateAsync(mappedEmployee);
                     await unitOfWork.SaveChangesAsync();
-                    
+
+
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                catch (Exception ex)
+                {
+                    TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                    return RedirectToAction("Index", "Employee");
+                }
+                
             }
             return View(employee);
         }
@@ -86,7 +98,7 @@ namespace AVN.Controllers
         // GET: Employee/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            var employee = await appDbContext.Employees
+            var employee = await context.Employees
                 .Include(d => d.Department)
                 .FirstOrDefaultAsync(e => e.Id == id);
             var mappedEmployee = mapper.Map<Employee, EmployeeVM>(employee);
@@ -132,23 +144,43 @@ namespace AVN.Controllers
         // POST: Employee/Delete/5
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var employee = await unitOfWork.EmployeeRepository.GetByIdAsync(id);
-            await unitOfWork.EmployeeRepository.DeleteAsync(employee);
-            var user = await userManager.FindByIdAsync(id);
-            if (user != null)
+            try
             {
-                var result = await userManager.DeleteAsync(user);
-                if (!result.Succeeded)
+                var employee = await context.Employees
+                    .Include(s => s.Subjects)
+                    .Include(g => g.GroupEmployees)
+                    .Include(s => s.Schedules)
+                    .FirstOrDefaultAsync(i => i.Id == id);
+
+                TempData["success"] = "Запись успешно удалена";
+                await unitOfWork.SubjectRepository.DeleteRangeAsync(employee.Subjects);
+                context.GroupEmployees.RemoveRange(employee.GroupEmployees);
+                await unitOfWork.ScheduleRepository.DeleteRangeAsync(employee.Schedules);
+
+                await unitOfWork.EmployeeRepository.DeleteAsync(employee);
+                var user = await userManager.FindByIdAsync(id);
+                if (user != null)
                 {
-                    // Обрабатываем ошибки, возникшие в процессе удаления пользователя
-                    foreach (var error in result.Errors)
+                    var result = await userManager.DeleteAsync(user);
+                    if (!result.Succeeded)
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
+                        // Обрабатываем ошибки, возникшие в процессе удаления пользователя
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
                     }
                 }
+
+                await unitOfWork.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            await unitOfWork.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            catch(Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Employee");
+            }
+            
         }
 
         public async Task<List<SelectListItem>> GetEmployees()

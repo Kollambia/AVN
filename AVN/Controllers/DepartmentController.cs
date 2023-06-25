@@ -136,7 +136,6 @@ namespace AVN.Web.Controllers
                 else
                 {
                     await unitOfWork.EmployeeRepository.DeleteRangeAsync(department.Employees);
-                   
                     await unitOfWork.SubjectRepository.DeleteRangeAsync(department.Subjects);
                     await unitOfWork.DirectionRepository.DeleteRangeAsync(department.Directions);
                 }
