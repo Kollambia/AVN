@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using AVN.Common.Enums;
 
 namespace AVN.Common
 {
@@ -12,6 +13,15 @@ namespace AVN.Common
                 .FirstOrDefault()?
                 .GetCustomAttribute<DisplayAttribute>()?
                 .Name ?? enumValue.ToString();
+        }
+        public static string GetRoleName(EmployeePosition position)
+        {
+            var displayName = position.GetType()
+                .GetMember(position.ToString())
+                .First()
+                .GetCustomAttribute<DisplayAttribute>()
+                .GetName();
+            return displayName;
         }
     }
 }

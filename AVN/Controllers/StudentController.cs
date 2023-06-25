@@ -402,7 +402,6 @@ namespace AVN.Web.Controllers
         {
             try
             {
-                //var student = await unitOfWork.StudentRepository.GetByIdAsync(id);
                 var student = await context.Students
                    .Include(g => g.StudentMovements)
                    .Include(d => d.Orders)
@@ -427,16 +426,36 @@ namespace AVN.Web.Controllers
                     await unitOfWork.OrderRepository.DeleteRangeAsync(student.Orders);
                     await unitOfWork.GradeBookRepository.DeleteRangeAsync(student.GradeBook);
                 }
+
+                // Удаляем студента
                 await unitOfWork.StudentRepository.DeleteAsync(student);
+
+                // Удаляем пользователя
+                var user = await userManager.FindByIdAsync(id);
+                if (user != null)
+                {
+                    var result = await userManager.DeleteAsync(user);
+                    if (!result.Succeeded)
+                    {
+                        // Обрабатываем ошибки, возникшие в процессе удаления пользователя
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
+                }
+
+                // Сохраняем все изменения
                 await unitOfWork.SaveChangesAsync();
+
                 TempData["success"] = "Запись успешно удалена";
 
                 var studentGroupType = student?.Group?.GroupType;
-                if(studentGroupType == null)
+                if (studentGroupType == null)
                     return RedirectToAction(nameof(Index));
 
-                var returnetView = studentGroupType == GroupType.Students ? "Index" : studentGroupType.ToString();
-                return RedirectToAction($"{returnetView}");
+                var returnedView = studentGroupType == GroupType.Students ? "Index" : studentGroupType.ToString();
+                return RedirectToAction($"{returnedView}");
             }
             catch (Exception ex)
             {
@@ -444,6 +463,7 @@ namespace AVN.Web.Controllers
                 return RedirectToAction("Index", "Student");
             }
         }
+
 
         public async Task<IActionResult> StudentMovementEdit(int id)
         {
