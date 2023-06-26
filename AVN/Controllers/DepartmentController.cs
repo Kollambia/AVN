@@ -70,7 +70,7 @@ namespace AVN.Web.Controllers
             catch (Exception ex)
             {
                 TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
-                return RedirectToAction("Index", "Student");
+                return RedirectToAction("Index", "Department");
             }
 
         }
@@ -92,7 +92,7 @@ namespace AVN.Web.Controllers
             catch (Exception ex)
             {
                 TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
-                return RedirectToAction("Index", "Student");
+                return RedirectToAction("Index", "Department");
             }
 
         }
@@ -121,7 +121,7 @@ namespace AVN.Web.Controllers
             catch (Exception ex)
             {
                 TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
-                return RedirectToAction("Index", "Student");
+                return RedirectToAction("Index", "Department");
             }
         }
 
@@ -156,12 +156,7 @@ namespace AVN.Web.Controllers
                     return RedirectToAction("Index", "Department");
                 }
 
-                if (false && department.Faculty != null)
-                {
-                    TempData["error"] = "Невозможно удалить студента, так как у него есть связанная запись.";
-                    return RedirectToAction(nameof(Index));
-                }
-                else
+                if (department.Employees != null || department.Subjects != null || department.Directions != null)
                 {
                     await unitOfWork.EmployeeRepository.DeleteRangeAsync(department.Employees);
                     await unitOfWork.SubjectRepository.DeleteRangeAsync(department.Subjects);

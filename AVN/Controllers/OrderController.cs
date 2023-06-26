@@ -145,9 +145,18 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await unitOfWork.OrderRepository.DeleteByIdAsync(id);
-            await unitOfWork.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await unitOfWork.OrderRepository.DeleteByIdAsync(id);
+                await unitOfWork.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Order");
+            }
+    
         }
     }
 }

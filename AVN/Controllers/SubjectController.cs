@@ -54,13 +54,21 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SubjectVM subject)
         {
-            // валидация работает эту хуйню не трогать
             if (ModelState.IsValid)
             {
-                var mappedSubjects = mapper.Map<SubjectVM, Subject>(subject);
-                await unitOfWork.SubjectRepository.CreateAsync(mappedSubjects);
-                await unitOfWork.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    var mappedSubjects = mapper.Map<SubjectVM, Subject>(subject);
+                    await unitOfWork.SubjectRepository.CreateAsync(mappedSubjects);
+                    await unitOfWork.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                    return RedirectToAction("Index", "Subject");
+                }
+
             }
 
             return View(subject);
@@ -93,10 +101,19 @@ namespace AVN.Web.Controllers
             // валидация работает эту хуйню не трогать
             if (!ModelState.IsValid)
             {
-                var mappedSubjects = mapper.Map<SubjectVM, Subject>(subject);
-                await unitOfWork.SubjectRepository.UpdateAsync(mappedSubjects);
-                await unitOfWork.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    var mappedSubjects = mapper.Map<SubjectVM, Subject>(subject);
+                    await unitOfWork.SubjectRepository.UpdateAsync(mappedSubjects);
+                    await unitOfWork.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                    return RedirectToAction("Index", "Subject");
+                }
+                
             }
 
             return View(subject);

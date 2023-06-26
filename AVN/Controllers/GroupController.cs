@@ -7,9 +7,6 @@ using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using iText.Kernel.Pdf.Colorspace;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AVN.Web.Controllers
 {
@@ -69,16 +66,26 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GroupVM group)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var newId = Guid.NewGuid().ToString();
-                var mappedGroup = mapper.Map<GroupVM, Group>(group);
-                mappedGroup.Id = newId;
-                await unitOfWork.GroupRepository.CreateAsync(mappedGroup);
-                await unitOfWork.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    var newId = Guid.NewGuid().ToString();
+                    var mappedGroup = mapper.Map<GroupVM, Group>(group);
+                    mappedGroup.Id = newId;
+                    await unitOfWork.GroupRepository.CreateAsync(mappedGroup);
+                    await unitOfWork.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View(group);
             }
-            return View(group);
+            catch(Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Group");
+            }
+
         }
 
         // GET: Group/Edit/5

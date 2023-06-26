@@ -76,35 +76,45 @@ namespace AVN.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var mappedSubjects = mapper.Map<ScheduleVM, Schedule>(schedules);
-                
-                foreach (var schedule in mappedSubjects)
+                try
                 {
-                    new ScheduleVM
+                    var mappedSubjects = mapper.Map<ScheduleVM, Schedule>(schedules);
+
+                    foreach (var schedule in mappedSubjects)
                     {
-                        SubjectSelectList = unitOfWork.SubjectRepository.GetAll().Select(i => new SelectListItem
+                        new ScheduleVM
                         {
-                            Text = i.Title,
-                            Value = i.Id.ToString()
-                        }),
+                            SubjectSelectList = unitOfWork.SubjectRepository.GetAll().Select(i => new SelectListItem
+                            {
+                                Text = i.Title,
+                                Value = i.Id.ToString()
+                            }),
 
-                        EmployeeSelectList = unitOfWork.EmployeeRepository.GetAll().Select(i => new SelectListItem()
-                        {
-                            Text = i.FullName,
-                            Value = i.Id.ToString()
-                        }),
+                            EmployeeSelectList = unitOfWork.EmployeeRepository.GetAll().Select(i => new SelectListItem()
+                            {
+                                Text = i.FullName,
+                                Value = i.Id.ToString()
+                            }),
 
-                        GroupSelectList = unitOfWork.GroupRepository.GetAll().Select(i => new SelectListItem()
-                        {
-                            Text = i.GroupName,
-                            Value = i.Id.ToString()
-                        })
-                    };
-                    // Add schedule to database
-                    context.Add(schedule);
+                            GroupSelectList = unitOfWork.GroupRepository.GetAll().Select(i => new SelectListItem()
+                            {
+                                Text = i.GroupName,
+                                Value = i.Id.ToString()
+                            })
+                        };
+                        // Add schedule to database
+                        context.Add(schedule);
+                    }
+
+                    await context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                await context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                catch (Exception ex)
+                {
+                    TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                    return RedirectToAction("Index", "Schedule");
+                }
+                
             }
             ViewData["GroupId"] = new SelectList(context.Groups, "Id", "GroupName");
             ViewData["SubjectId"] = new SelectList(context.Subjects, "Id", "Title");
@@ -129,11 +139,20 @@ namespace AVN.Controllers
         // POST: Subject/Delete/5
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var schedule = await unitOfWork.ScheduleRepository.GetByIdAsync(id);
-            await unitOfWork.ScheduleRepository.DeleteAsync(schedule);
-            await unitOfWork.SaveChangesAsync();
+            try
+            {
+                var schedule = await unitOfWork.ScheduleRepository.GetByIdAsync(id);
+                await unitOfWork.ScheduleRepository.DeleteAsync(schedule);
+                await unitOfWork.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Schedule");
+            }
+
         }
 
         public async Task<ActionResult> ScheduleList(int facultyId, int departmentId, int directionId, string groupId, int groupType)

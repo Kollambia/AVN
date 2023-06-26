@@ -1,5 +1,4 @@
 ﻿using AVN.Automapper;
-using AVN.Data.Migrations;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
@@ -49,9 +48,8 @@ namespace AVN.Controllers
             if (string.IsNullOrEmpty(groupId))
                 return PartialView(new List<GradeBookVM>());
 
-            var gradeBooks = (await unitOfWork.GradeBookRepository.GetAllAsync()).Where(x => x.GroupId == groupId && 
-                                                                                            x.AcademicYearId == academicYearId && 
-                                                                                            x.SubjectId == subjectId);
+            var gradeBooks = (await unitOfWork.GradeBookRepository.GetAllAsync())
+                .Where(x => x.GroupId == groupId && x.AcademicYearId == academicYearId && x.SubjectId == subjectId);
             
             var mappedEntities = mapper.Map<GradeBook, GradeBookVM>(gradeBooks).ToList();
             return PartialView(mappedEntities ?? new List<GradeBookVM>());
