@@ -61,14 +61,23 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(DirectionVM direction)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var mappedDirection = mapper.Map<DirectionVM, Direction>(direction);
-                await unitOfWork.DirectionRepository.CreateAsync(mappedDirection);
-                await unitOfWork.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    var mappedDirection = mapper.Map<DirectionVM, Direction>(direction);
+                    await unitOfWork.DirectionRepository.CreateAsync(mappedDirection);
+                    await unitOfWork.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View(direction);
             }
-            return View(direction);
+            catch(Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Direction");
+            }
         }
 
         // GET: Direction/Edit/5
@@ -90,19 +99,28 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, DirectionVM direction)
         {
-            if (id != direction.Id)
+            try
             {
-                return NotFound();
-            }
+                if (id != direction.Id)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                var mappedDirection = mapper.Map<DirectionVM, Direction>(direction);
-                await unitOfWork.DirectionRepository.UpdateAsync(mappedDirection);
-                await unitOfWork.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    var mappedDirection = mapper.Map<DirectionVM, Direction>(direction);
+                    await unitOfWork.DirectionRepository.UpdateAsync(mappedDirection);
+                    await unitOfWork.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View(direction);
             }
-            return View(direction);
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Direction");
+            }
         }
 
         // GET: Direction/Delete/5
