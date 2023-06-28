@@ -12,7 +12,7 @@
                         <select id="facultyFromDropdown" name="facultyFromDropdown" class="form-control"></select>
                     </div>
                     <div class="col-lg-2  text-center">
-                        <label class="font-weight-bold">- ФАКУЛЬТЕТЫ -</label>
+                        <label id="facultiesLbl" class="font-weight-bold">- ФАКУЛЬТЕТЫ -</label>
                     </div>
                     <div class="col-lg-5">
                         <select id="facultyToDropdown" name="facultyToDropdown" class="form-control"></select>
@@ -34,7 +34,7 @@
                         @Html.DropDownListFor(x => x.MovementTypeId, new List<SelectListItem>(), new { @class = "form-control", id = "movementTypeDropdown" })
                     </div>
                     <div class="col-md-2 text-center">
-                        <label class="font-weight-bold">В группу</label>
+                        <label id="groupToDropdownId" class="font-weight-bold">В группу</label>
                         @*<select id="groupToDropdown" name="groupToDropdown" class="form-control"></select>*@
                         @Html.DropDownListFor(x => x.GroupId, new List<SelectListItem>(), new { @class = "form-control", id = "groupToDropdown" })
                     </div>
@@ -122,6 +122,8 @@
                 FillGroupFromDropdownAfterChange();
                 FillGroupToDropdownAfterChange();
                 FillOrderTypeDropdown();
+                HandleMovementTypeChange();
+                
             });
 
             $('#groupFromDropdown').change(function () {
@@ -183,6 +185,7 @@
                 FillGroupFromDropdownAfterLoad();
                 FillGroupToDropdownAfterLoad();
                 FillOrderTypeDropdown();
+                HandleMovementTypeChange();
             });
         }
 
@@ -221,7 +224,6 @@
                         saveSelectedValue('movementTypeDropdown');
                         saveSelectedValue('academYearFirstDropdown');
                         saveSelectedValue('groupFromDropdown');
-
                         resolve(); // Resolve the promise when the AJAX request is successful
                     },
                     error: function (xhr, status, error) {
@@ -260,7 +262,6 @@
                         saveSelectedValue('movementTypeDropdown');
                         saveSelectedValue('academYearSecondDropdown');
                         saveSelectedValue('groupToDropdown');
-
                         resolve();
                     },
                     error: function (xhr, status, error) {
@@ -381,19 +382,70 @@
         }
 
         function HandleMovementTypeChange() {
-            var movementTypeId = $('#movementTypeDropdown').val();
-            if (movementTypeId === "3") {
-                // Set the value and disable groupToDropdown
-                $("#groupToDropdown").val($("#groupFromDropdown").val()).text(groupFromDropdown.text()).prop("disabled", true);
+            // Add an event listener to the MovementTypeId dropdown
+            var movementTypeValue = $('#movementTypeDropdown').val();
+            // Check if the selected value is 3 (assuming it's an integer)
+            if (movementTypeValue === "3") {
+                // Hide the groupToDropdown, academYearSecondDropdown, and RightContainer
+                document.getElementById("groupToDropdown").style.display = "none";
+                document.getElementById("groupToDropdownId").style.display = "none";
+                document.getElementById("facultyToDropdown").style.display = "none";
+                document.getElementById("RightContainer").style.display = "none";
+                document.getElementById("facultiesLbl").style.display = "none";
             } else {
-                // Enable groupToDropdown
-                $("#groupToDropdown").prop("disabled", false);
+                // Show the groupToDropdown, academYearSecondDropdown, and RightContainer
+                document.getElementById("groupToDropdown").style.display = "block";
+                document.getElementById("groupToDropdownId").style.display = "block";
+                document.getElementById("facultyToDropdown").style.display = "block";
+                document.getElementById("RightContainer").style.display = "block";
+                document.getElementById("facultiesLbl").style.display = "block";
             }
+
+            //var movementTypeId = $('#movementTypeDropdown').val();
+            //var academYearFirstDropdown = $('#academYearFirstDropdown');
+            ////var academYearSecondDropdown = $('#academYearSecondDropdown');
+            ////var groupFromDropdown = $('#groupFromDropdown');
+            //var groupToDropdown = $('#groupToDropdown');
+
+            //if (movementTypeId === "3") {
+            //    var nextIndex = academYearFirstDropdown.prop('selectedIndex') - 1;
+            //    var nextValue = academYearFirstDropdown.find('option').eq(nextIndex).val();
+
+            //    if (nextIndex >= 0 && nextValue) {
+
+            //        $("#facultyToDropdown").prop("visible", true);
+            //        $("#groupToDropdown").prop("visible", true);
+
+            //        //$("#academYearSecondDropdown").empty();
+            //        //$("#groupToDropdown").empty();
+
+            //        //groupToDropdown.append($('<option>').text(groupFromDropdown.find('option:selected').text()).val(groupFromDropdown.val())).prop("disabled", true);
+            //        //academYearSecondDropdown.append($('<option>').text(academYearFirstDropdown.find('option').eq(nextIndex).text()).val(nextValue)).prop("disabled", true);
+
+            //        ////groupToDropdown.val(groupFromDropdown.val())).prop("disabled", true);
+            //        ////academYearSecondDropdown.val(nextValue)).prop("disabled", true);
+            //    }
+            //    else{
+            //        alert('Чтобы перевести группу на следующий курс, добавьте следующий учебный год в настройках.');
+            //    }
+
+            //} else {
+            //    $("#facultyToDropdown").prop("visible", false);
+            //    $("#groupToDropdown").prop("visible", false);
+            //}
         }
 
         function loadSelectedValue(dropdownId) {
+            //var selectedValue = localStorage.getItem(dropdownId);
+            //if (selectedValue) {
+            //    $('#' + dropdownId).val(selectedValue);
+            //}
+
+            var dropdown = document.getElementById(dropdownId);
             var selectedValue = localStorage.getItem(dropdownId);
-            if (selectedValue) {
+
+            // Check if the selectedValue exists in the dropdown
+            if (selectedValue && Array.from(dropdown.options).some(option => option.value === selectedValue)) {
                 $('#' + dropdownId).val(selectedValue);
             }
         }

@@ -44,7 +44,7 @@ public class OrderService
         var result = new OperationResult();
 
         var students = GetStudentByIds(studentIds);
-        if (students == null)
+        if (students == null || students.Count <= 0)
         {
             result.Success = false;
             result.Message = "Не удалось получить данные о студентах.";
@@ -59,7 +59,9 @@ public class OrderService
             return result;
         }
 
-        var group = _dbContext.Groups.FirstOrDefault(x => x.Id == order.GroupId);
+        var groupId = movementType.MoveType != MoveType.NextCourseTransfer ? order.GroupId : students.FirstOrDefault().GroupId;
+
+        var group = _dbContext.Groups.FirstOrDefault(x => x.Id == groupId);
         if (group == null)
         {
             result.Success = false;
@@ -67,8 +69,9 @@ public class OrderService
             return result;
         }
 
-        var academicYear = _dbContext.AcademicYears.FirstOrDefault(x => x.Id == order.AcademicYearId);
-        if (academicYear == null)
+        var newAcademicYear = _dbContext.AcademicYears.FirstOrDefault(x => x.Id == order.AcademicYearId);
+        var oldAcademicYear = _dbContext.AcademicYears.FirstOrDefault(x => x.Id == group.AcademicYearId);
+        if (newAcademicYear == null || oldAcademicYear == null)
         {
             result.Success = false;
             result.Message = "Не удалось получить данные об учебном году.";
@@ -80,7 +83,7 @@ public class OrderService
             var currentCourse = group.Course;
             var currentTrainingPeriod = group.TrainingPeriod;
 
-            if (CanTranslateInCurrentAcademicYear(group.Id, academicYear.Id))
+            if (newAcademicYear.YearTo <= oldAcademicYear.YearTo)
             {
                 result.Success = false;
                 result.Message = $"Нельзя переводить на следующий курс в текущем учебном году.";
@@ -92,6 +95,10 @@ public class OrderService
                 result.Success = false;
                 result.Message = $"Срок обучения: {currentTrainingPeriod.GetDisplayName()}. Текущий курс группы {currentCourse}.";
                 return result;
+            }
+            else
+            {
+                group.AcademicYearId = newAcademicYear.Id;
             }
 
             var changedCourse = SetNextCourseForGroup(currentCourse);
@@ -105,7 +112,18 @@ public class OrderService
             {
                 group.Course = changedCourse;
             }
-                
+
+            try
+            {
+                _dbContext.Update(group);
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.Message = $"Не удалось изменить данные группы: {ex.Message} ";
+                return result;
+            }
+
         }
 
         // Создаем приказ для каждого студента
@@ -122,8 +140,8 @@ public class OrderService
                     Course = group.Course,
                     OrderTypeId = order.OrderTypeId,
                     MovementTypeId = movementType.Id,
-                    AcademicYearId = academicYear.Id,
-                    GroupId = group.Id
+                    AcademicYearId = newAcademicYear.Id,
+                    GroupId = group.Id,
                 };
                 _dbContext.Orders.Add(newStudentOrder);
             }
@@ -147,7 +165,7 @@ public class OrderService
                     MovementDate = order.Date,
                     OrderNumber = order.Number,
                     MovementTypeId = movementType.Id,
-                    AcademicYearId = academicYear.Id,
+                    AcademicYearId = newAcademicYear.Id,
                     StudentId = student.Id
                 };
                 _dbContext.StudentMovements.Add(newStudentMovement);
@@ -198,7 +216,7 @@ public class OrderService
                         Payed = 0,
                         Debt = contract,
                         RecruitmentYear = order.Date.Year,
-                        AcademicYearId = academicYear.Id,
+                        AcademicYearId = newAcademicYear.Id,
                         Course = group.Course,
                         GroupId = student.GroupId
                     });
@@ -228,7 +246,7 @@ public class OrderService
                             Grade = Grades.DontPass,
                             Points = 0,
                             Date = null,
-                            AcademicYearId = academicYear.Id,
+                            AcademicYearId = newAcademicYear.Id,
                             GroupId = group.Id,
                             SubjectId = studentSubject.Id,
                             StudentId = student.Id
@@ -250,15 +268,6 @@ public class OrderService
         result.Message = "Приказ успешно создан.";
         return result;
 
-    }
-
-    private bool CanTranslateInCurrentAcademicYear(string groupId, int currentAcademicYearId)
-    {
-        var nextCourseTransferMoveType = _dbContext.MovementTypes.Single(x => x.MoveType.Equals(MoveType.NextCourseTransfer));
-
-        return _dbContext.Orders.Where(x => x.GroupId == groupId &&
-                                        x.MovementTypeId == nextCourseTransferMoveType.Id)
-                                        .Any(x => x.AcademicYearId == currentAcademicYearId);
     }
 
     private bool CanSetNextCourse(TrainingPeriod trainingPeriod, Course currentCourse)

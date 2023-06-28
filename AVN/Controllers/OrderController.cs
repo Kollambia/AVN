@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using AVN.Controllers;
 using AVN.Common.Customs;
 using Microsoft.EntityFrameworkCore;
+using AVN.Common.Enums;
 
 namespace AVN.Web.Controllers
 {
@@ -45,12 +46,26 @@ namespace AVN.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    List<string> studentIds = new List<string>();
                     var mappedOrder = mapper.Map<OrderVM, Order>(orderInfo);
-                    var transferImportStudentIds = StudentController.TransferImportStudents
-                        .Where(x => x.Transfered == true).Select(x => x.Id).ToList();
+                    var moveType = unitOfWork.MovementTypeRepository.GetById(mappedOrder.MovementTypeId);
+                    if (moveType == null)
+                    {
+                        TempData["error"] = $"Тип перемещения не найден.";
+                    }
+                    else if (moveType.MoveType == MoveType.NextCourseTransfer)
+                    {
+                        studentIds = StudentController.TransferExportStudents.Select(x => x.Id).ToList();
 
+                    }
+                    else
+                    {
+                        studentIds = StudentController.TransferImportStudents
+                                               .Where(x => x.Transfered == true).Select(x => x.Id).ToList();
+                    }
+                   
                     var studentOrderService = new OrderService(context);
-                    OperationResult result = studentOrderService.CreateStudentOrder(mappedOrder, transferImportStudentIds);
+                    OperationResult result = studentOrderService.CreateStudentOrder(mappedOrder, studentIds);
                     if (result.Success)
                     {
                         TempData["success"] = "Приказ успешно сформирован";
