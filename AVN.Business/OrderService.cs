@@ -26,17 +26,26 @@ public class OrderService
 
     public List<Student> GetStudentsByFullName(string fullName)
     {
-        string[] nameParts = fullName.Split(' ');
-        var validNameParts = nameParts.Where(part => !string.IsNullOrEmpty(part) && part.Length >= 3);
-        var students = _dbContext.Students.ToList().Where(s =>
-            validNameParts.Any(part =>
-                s.SName.Contains(part, StringComparison.OrdinalIgnoreCase) ||
-                s.Name.Contains(part, StringComparison.OrdinalIgnoreCase) ||
-                s.PName.Contains(part, StringComparison.OrdinalIgnoreCase)
-            )
-        ).ToList();
+        try
+        {
+            string[] nameParts = fullName.Split(' ');
+            var validNameParts = nameParts.Where(part => !string.IsNullOrEmpty(part) && part.Length >= 3);
+            var students = _dbContext.Students.ToList().Where(s =>
+                validNameParts.Any(part =>
+                    s.SName.Contains(part, StringComparison.OrdinalIgnoreCase) ||
+                    s.Name.Contains(part, StringComparison.OrdinalIgnoreCase) ||
+                    s.PName.Contains(part, StringComparison.OrdinalIgnoreCase)
+                )
+            ).ToList();
 
-        return students;
+            return students;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception();
+            return null;
+        }
+
     }
 
     public OperationResult CreateStudentOrder(Order order, List<string> studentIds)

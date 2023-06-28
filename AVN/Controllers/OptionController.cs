@@ -1,9 +1,11 @@
 ﻿using AVN.Automapper;
+using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Controllers
 {
@@ -11,10 +13,12 @@ namespace AVN.Controllers
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
-        public OptionController(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly AppDbContext context;
+        public OptionController(IUnitOfWork unitOfWork, IMapper mapper, AppDbContext context)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.context = context;
         }
         
         public IActionResult Index()
@@ -236,7 +240,24 @@ namespace AVN.Controllers
 
         public async Task<IActionResult> DeleteMovementTypeConfirmed(int id)
         {
-            var entity = await unitOfWork.MovementTypeRepository.GetByIdAsync(id);
+            var entity = await context.MovementTypes
+                .Include(o => o.OrderTypes)
+                .Include(s => s.StudentMovements)
+                .Include(o => o.Orders)
+                .FirstOrDefaultAsync(i => i.Id == id);
+
+            if (entity == null)
+            {
+                TempData["error"] = "Не удалось найти тип перемещения. Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Option");
+            }
+
+            if (entity.OrderTypes != null || entity.StudentMovements != null || entity.Orders != null)
+            {
+                await unitOfWork.OrderTypeRepository.DeleteRangeAsync(entity.OrderTypes);
+                await unitOfWork.StudentMovementRepository.DeleteRangeAsync(entity.StudentMovements);
+                await unitOfWork.OrderRepository.DeleteRangeAsync(entity.Orders);
+            }
             await unitOfWork.MovementTypeRepository.DeleteAsync(entity);
             await unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

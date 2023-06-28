@@ -55,26 +55,46 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DepartmentName,DepartmentShortName,FacultyId")] DepartmentVM department)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var mappedDepartment = mapper.Map<DepartmentVM,Department> (department);
-                await unitOfWork.DepartmentRepository.CreateAsync(mappedDepartment);
-                await unitOfWork.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    var mappedDepartment = mapper.Map<DepartmentVM, Department>(department);
+                    await unitOfWork.DepartmentRepository.CreateAsync(mappedDepartment);
+                    await unitOfWork.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View(department);
             }
-            return View(department);
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Department");
+            }
+
         }
 
         // GET: Department/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var department = await unitOfWork.DepartmentRepository.GetByIdAsync(id);
-            if (department == null)
+            try
             {
-                return NotFound();
+                var department = await unitOfWork.DepartmentRepository.GetByIdAsync(id);
+                if (department == null)
+                {
+                    return NotFound();
+                }
+
+                var mappedDepartment = mapper.Map<Department, DepartmentVM>(department);
+                return View(mappedDepartment);
             }
-            var mappedDepartment = mapper.Map<Department, DepartmentVM> (department);
-            return View(mappedDepartment);
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Department");
+            }
+
         }
 
         // POST: Department/Edit/5
@@ -82,19 +102,27 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,DepartmentName,DepartmentShortName,FacultyId")] DepartmentVM department)
         {
-            if (id != department.Id)
+            try
             {
-                return NotFound();
-            }
+                if (id != department.Id)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                var mappedDepartment = mapper.Map<DepartmentVM, Department> (department);
-                await unitOfWork.DepartmentRepository.UpdateAsync(mappedDepartment);
-                await unitOfWork.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    var mappedDepartment = mapper.Map<DepartmentVM, Department>(department);
+                    await unitOfWork.DepartmentRepository.UpdateAsync(mappedDepartment);
+                    await unitOfWork.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(department);
             }
-            return View(department);
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Department");
+            }
         }
 
         // GET: Department/Delete/5
@@ -128,12 +156,7 @@ namespace AVN.Web.Controllers
                     return RedirectToAction("Index", "Department");
                 }
 
-                if (false && department.Faculty != null)
-                {
-                    TempData["error"] = "Невозможно удалить студента, так как у него есть связанная запись.";
-                    return RedirectToAction(nameof(Index));
-                }
-                else
+                if (department.Employees != null || department.Subjects != null || department.Directions != null)
                 {
                     await unitOfWork.EmployeeRepository.DeleteRangeAsync(department.Employees);
                     await unitOfWork.SubjectRepository.DeleteRangeAsync(department.Subjects);

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<AVN.Models.StudentVM>
+﻿@using AVN.Utility
+@model IEnumerable<AVN.Models.StudentVM>
 @{
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
@@ -75,8 +76,14 @@
                 <tr>
                     <td style="width: 250px;">
                         <div style="white-space: nowrap;">
-                            <span> @Html.ActionLink("", "Edit", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
-                            <span> @Html.ActionLink("", "Details", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
+                            @if (User.IsInRole(RoleConst.AdminRole))
+                            {
+                                <span> @Html.ActionLink("", "Edit", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span>
+                                <span>&emsp;</span>
+                              
+                                <span> @Html.ActionLink("", "Details", "Student", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span>
+                                <span>&emsp;</span>
+                            }
                             <span> @Html.ActionLink("", "StudentIndividualRecord", "GradeBook", new { id = @item.Id.ToString() }, new { @class = "fas fa-clipboard-list" })</span> &emsp;
                         </div>
                     </td>

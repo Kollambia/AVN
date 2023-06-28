@@ -78,40 +78,49 @@ namespace AVN.Web.Controllers
 
         public async Task<ActionResult> StudentList(int facultyId, int departmentId, int directionId, string groupId, int groupType, string fullname)
         {
-            var students = await unitOfWork.StudentRepository.GetAllAsync();
-            if (!string.IsNullOrEmpty(fullname))
+            try
             {
-                var studentOrderService = new OrderService(context);
-                students = studentOrderService.GetStudentsByFullName(fullname);
-            }
-            else if(!string.IsNullOrEmpty(groupId))
-            {
-                students = students.Where(x => x.GroupId == groupId);
-            }
-            else if (directionId > 0)
-            {
-                students = students.Where(x => x.Group.DirectionId == directionId);
-            }
-            else if (departmentId > 0)
-            {
-                students = students.Where(x => x.Group.Direction.DepartmentId == departmentId);
-            }
-            else if (facultyId > 0)
-            {
-                students = students.Where(x => x.Group.Direction.Department.FacultyId == facultyId);
-            }
-            else
-            {
-                return PartialView(new List<StudentVM>());
-            }
+                var students = await unitOfWork.StudentRepository.GetAllAsync();
+                if (!string.IsNullOrEmpty(fullname))
+                {
+                    var studentOrderService = new OrderService(context);
+                    students = studentOrderService.GetStudentsByFullName(fullname);
+                }
+                else if (!string.IsNullOrEmpty(groupId))
+                {
+                    students = students.Where(x => x.GroupId == groupId);
+                }
+                else if (directionId > 0)
+                {
+                    students = students.Where(x => x.Group.DirectionId == directionId);
+                }
+                else if (departmentId > 0)
+                {
+                    students = students.Where(x => x.Group.Direction.DepartmentId == departmentId);
+                }
+                else if (facultyId > 0)
+                {
+                    students = students.Where(x => x.Group.Direction.Department.FacultyId == facultyId);
+                }
+                else
+                {
+                    return PartialView(new List<StudentVM>());
+                }
 
-            if (groupType > 0)
-            {
-                students = students.Where(x => (int)x.Group.GroupType == groupType);
-            }
+                if (groupType > 0)
+                {
+                    students = students.Where(x => (int)x.Group.GroupType == groupType);
+                }
 
-            var mappedStudents = students.Select(s => mapper.Map<Student, StudentVM>(s)).ToList();
-            return PartialView(mappedStudents ?? new List<StudentVM>());
+                var mappedStudents = students.Select(s => mapper.Map<Student, StudentVM>(s)).ToList();
+                return PartialView(mappedStudents ?? new List<StudentVM>());
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Student");
+            }
+            
         }
 
         public async Task<ActionResult> StudentMovementList(string studentId)
@@ -200,21 +209,30 @@ namespace AVN.Web.Controllers
         [HttpPost]
         public IActionResult RevertTransferStudents(List<TransferStudentVM> transferStudents)
         {
-            var idsToRemove = new List<string>();
-            foreach (var student in transferStudents)
+            try
             {
-                var studentGroup = unitOfWork.GroupRepository.GetById(student.GroupId);
-                student.Group = studentGroup;
-                if (student.Selected == true)
+                var idsToRemove = new List<string>();
+                foreach (var student in transferStudents)
                 {
-                    student.Transfered = false;
-                    student.Selected = false;
-                    idsToRemove.Add(student.Id);
-                    _transferExportStudents.Add(student);
+                    var studentGroup = unitOfWork.GroupRepository.GetById(student.GroupId);
+                    student.Group = studentGroup;
+                    if (student.Selected == true)
+                    {
+                        student.Transfered = false;
+                        student.Selected = false;
+                        idsToRemove.Add(student.Id);
+                        _transferExportStudents.Add(student);
+                    }
                 }
+
+                _transferImportStudents.RemoveAll(exStudent => idsToRemove.Contains(exStudent.Id));
+                return RedirectToAction("Index", "Order");
             }
-            _transferImportStudents.RemoveAll(exStudent => idsToRemove.Contains(exStudent.Id));
-            return RedirectToAction("Index", "Order");
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Student");
+            }
         }
 
         public IActionResult CancelImportStudents()
@@ -461,21 +479,30 @@ namespace AVN.Web.Controllers
 
         public async Task<IActionResult> StudentMovementEdit(int id)
         {
-            var studentMovement = await context.StudentMovements
-                .Include(s => s.AcademicYear)
-                .Include(g => g.MovementType)
-                .Include(d => d.NewGroup)
-                .Include(k => k.OldGroup)
-                .FirstOrDefaultAsync(s => s.Id == id);
-
-            if (studentMovement == null)
+            try
             {
-                return NotFound();
+                var studentMovement = await context.StudentMovements
+                    .Include(s => s.AcademicYear)
+                    .Include(g => g.MovementType)
+                    .Include(d => d.NewGroup)
+                    .Include(k => k.OldGroup)
+                    .FirstOrDefaultAsync(s => s.Id == id);
+
+                if (studentMovement == null)
+                {
+                    return NotFound();
+                }
+
+                var mappedList = mapper.Map<StudentMovement, StudentMovementVM>(studentMovement);
+
+                return View(mappedList);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Student");
             }
 
-            var mappedList = mapper.Map<StudentMovement, StudentMovementVM>(studentMovement);
-
-            return View(mappedList);
         }
 
         [HttpPost]
@@ -510,25 +537,43 @@ namespace AVN.Web.Controllers
 
         public async Task<IActionResult> DeleteStudentMovementConfirmed(string id)
         {
-            var student = await unitOfWork.StudentMovementRepository.GetByIdAsync(id);
-            await unitOfWork.StudentMovementRepository.DeleteAsync(student);
-            await unitOfWork.SaveChangesAsync();
-            return RedirectToAction("Edit", "Student", new { id = student.StudentId });
+            try
+            {
+                var student = await unitOfWork.StudentMovementRepository.GetByIdAsync(id);
+                await unitOfWork.StudentMovementRepository.DeleteAsync(student);
+                await unitOfWork.SaveChangesAsync();
+                return RedirectToAction("Edit", "Student", new { id = student.StudentId });
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Student");
+            }
+
         }
 
         public IActionResult GeneratePaymentInvoice(int paymentId, string studentId)
         {
-            var studentPayment = unitOfWork.StudentPaymentRepository.GetById(paymentId);
-
-            var studentOrderService = new OrderService(context);
-            var result = studentOrderService.CreateStudentPaymentDetail(studentPayment);
-           
-            if (result.Success)
+            try
             {
-                var fileBytes = System.IO.File.ReadAllBytes(result.Data);
-                return File(fileBytes, "application/pdf", "Contract.pdf");
+                var studentPayment = unitOfWork.StudentPaymentRepository.GetById(paymentId);
+
+                var studentOrderService = new OrderService(context);
+                var result = studentOrderService.CreateStudentPaymentDetail(studentPayment);
+
+                if (result.Success)
+                {
+                    var fileBytes = System.IO.File.ReadAllBytes(result.Data);
+                    return File(fileBytes, "application/pdf", "Contract.pdf");
+                }
+
+                return RedirectToAction("Index", "StudentPayment", new { id = studentId });
             }
-            return RedirectToAction("Index", "StudentPayment", new { id = studentId });
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Student");
+            }
         }
 
     }

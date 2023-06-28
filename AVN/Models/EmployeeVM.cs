@@ -7,17 +7,17 @@ namespace AVN.Models
 {
     public class EmployeeVM : BasicVM<string>
     {
-        [Required]
+        [Required(ErrorMessage = "Введите фамилию")]
         [DisplayName("Фамилия")]
         [MaxLength(50)]
         public string SName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Введите имя")]
         [DisplayName("Имя")]
         [MaxLength(50)]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Введите отчество")]
         [DisplayName("Отчество")]
         [MaxLength(50)]
         public string PName { get; set; }
@@ -29,34 +29,35 @@ namespace AVN.Models
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DateOfBirth { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Введите почту")]
         [DisplayName("Электронная почта")]
         [MaxLength(100)]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Выберите пол")]
         [DisplayName("Пол")]
         public Gender Gender { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Выберите должность")]
         [DisplayName("Должность")]
         public EmployeePosition Position { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Введите адрес")]
         [DisplayName("Адрес")]
         [MaxLength(300)]
         public string Address { get; set; }
 
-        [Required(ErrorMessage = "Поле не заполнено")]
+        [Required(ErrorMessage = "Введите номер телофона")]
         [DisplayName("Номер телефона")]
         [RegularExpression(@"^0\(\d{3}\)\d{2}-\d{2}-\d{2}$", ErrorMessage = "Неправильный номер телефона.")]
         public string PhoneNumber { get; set; }
 
+        [Required(ErrorMessage = "Выберите кафедру")]
         [DisplayName("Кафедра")]
         public int? DepartmentId { get; set; }
         public virtual Department Department { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Введите пароль")]
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }

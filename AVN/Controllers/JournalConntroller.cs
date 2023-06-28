@@ -1,5 +1,4 @@
 ﻿using AVN.Business;
-using AVN.Data.UnitOfWorks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AVN.Controllers
