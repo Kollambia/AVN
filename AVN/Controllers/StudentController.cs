@@ -514,15 +514,22 @@ namespace AVN.Web.Controllers
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            try
             {
-                var mapped = mapper.Map<StudentMovementVM, StudentMovement>(studentMovement);
-                await unitOfWork.StudentMovementRepository.UpdateAsync(mapped);
-                await unitOfWork.SaveChangesAsync();
-                return RedirectToAction("Edit", "Student", new { id = mapped.StudentId });
+                if (ModelState.IsValid)
+                {
+                    var mapped = mapper.Map<StudentMovementVM, StudentMovement>(studentMovement);
+                    await unitOfWork.StudentMovementRepository.UpdateAsync(mapped);
+                    await unitOfWork.SaveChangesAsync();
+                    return RedirectToAction("Edit", "Student", new { id = mapped.StudentId });
+                }
+                return View(studentMovement);
             }
-            return View(studentMovement);
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return View(studentMovement);
+            }
         }
 
         public async Task<IActionResult> StudentMovementDelete(int id)

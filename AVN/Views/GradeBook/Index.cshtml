@@ -85,9 +85,13 @@
                         type: 'GET',
                         data: { employeeId: '@ViewBag.UserId' },
                         success: function (data) {
-                            $.each(data, function (i, subject) {
-                                subjectDropdown.append($('<option></option>').val(subject.value).text(subject.text));
-                            });
+                            if (data.length === 0) {
+                                subjectDropdown.append($('<option>').text('Нет данных').val(''));
+                            } else {
+                                $.each(data, function (i, subject) {
+                                    subjectDropdown.append($('<option></option>').val(subject.value).text(subject.text));
+                                });
+                            }
                             loadSelectedValue('subjectDropdown');
                         },
                         error: function (xhr, status, error) {
@@ -100,9 +104,13 @@
                         url: '@Url.Action("GetAcademicYears", "Option")',
                         type: 'GET',
                         success: function (data) {
-                            $.each(data, function (i, academicYear) {
-                                academicYearDropdown.append($('<option></option>').val(academicYear.value).text(academicYear.text));
-                            });
+                            if (data.length === 0) {
+                                academicYearDropdown.append($('<option>').text('Нет данных').val(''));
+                            } else {
+                                $.each(data, function (i, academicYear) {
+                                    academicYearDropdown.append($('<option></option>').val(academicYear.value).text(academicYear.text));
+                                });
+                            }
                             loadSelectedValue('academicYearDropdown');
                         },
                         error: function (xhr, status, error) {
@@ -172,8 +180,11 @@
             }
 
             function loadSelectedValue(dropdownId) {
+                var dropdown = document.getElementById(dropdownId);
                 var selectedValue = localStorage.getItem(dropdownId);
-                if (selectedValue) {
+
+                // Check if the selectedValue exists in the dropdown
+                if (selectedValue && Array.from(dropdown.options).some(option => option.value === selectedValue)) {
                     $('#' + dropdownId).val(selectedValue);
                 }
             }
