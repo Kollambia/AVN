@@ -9,6 +9,7 @@ using AVN.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace AVN.Web.Controllers
 {
@@ -556,6 +557,7 @@ namespace AVN.Web.Controllers
         {
             try
             {
+                var student = unitOfWork.StudentRepository.GetById(studentId);
                 var studentPayment = unitOfWork.StudentPaymentRepository.GetById(paymentId);
 
                 var studentOrderService = new OrderService(context);
@@ -564,7 +566,15 @@ namespace AVN.Web.Controllers
                 if (result.Success)
                 {
                     var fileBytes = System.IO.File.ReadAllBytes(result.Data);
-                    return File(fileBytes, "application/pdf", "Contract.pdf");
+
+                    // Return the PDF file as a FileStreamResult for preview
+                    var fileStreamResult = new FileStreamResult(new MemoryStream(fileBytes), "application/pdf");
+                    fileStreamResult.FileDownloadName = $"Платежный счёт {student.FullName}.pdf";
+                    return fileStreamResult;
+                }
+                else
+                {
+                    TempData["error"] = $"{result.Message}  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
                 }
 
                 return RedirectToAction("Index", "StudentPayment", new { id = studentId });
