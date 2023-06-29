@@ -189,5 +189,12 @@ namespace AVN.Controllers
             var employeeList = employees.Select(f => new SelectListItem { Value = f.Id, Text = f.GetFullName() }).ToList();
             return employeeList;
         }
+
+        public async Task<List<SelectListItem>> GetEmployeesByDeparment(int departmentId)
+        {
+            var employees = (await unitOfWork.EmployeeRepository.GetAllAsync()).Where(x => x.DepartmentId == departmentId);
+            var employeeList = employees.Select(f => new SelectListItem { Value = f.Id, Text = f.GetFullName() }).ToList();
+            return employeeList;
+        }
     }
 }

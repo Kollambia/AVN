@@ -30,6 +30,22 @@ namespace AVN.Web.Controllers
             return View(mappedSubjects);
         }
 
+        public async Task<ActionResult> SubjectList(int facultyId, int departmentId, string employeeId, int courseId)
+        {
+            var subjects = await unitOfWork.SubjectRepository.GetAllAsync();
+            if(!string.IsNullOrEmpty(employeeId))
+                subjects = subjects.Where(x => x.EmployeeId == employeeId);
+            else if (departmentId > 0)
+                subjects = subjects.Where(x => x.DepartmentId == departmentId);
+            else if (facultyId > 0)
+                subjects = subjects.Where(x => x.Department?.FacultyId == facultyId);
+            if (courseId > 0)
+                subjects = subjects.Where(x => (int)x.Course == courseId);
+
+            var mappedSubjects = mapper.Map<Subject, SubjectVM>(subjects).ToList();
+            return PartialView(mappedSubjects);
+        }
+
         // GET: Subject/Details/5
         public async Task<IActionResult> Details(int id)
         {

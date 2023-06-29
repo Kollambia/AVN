@@ -32,9 +32,9 @@ namespace AVN.Web.Controllers
         {
             var groups = await unitOfWork.GroupRepository.GetAllAsync();
             if (departmentId > 0)
-                groups = groups.Where(x => x.Direction.DepartmentId == departmentId);
+                groups = groups.Where(x => x.Direction?.DepartmentId == departmentId);
             else if (facultyId > 0)
-                groups = groups.Where(x => x.Direction.Department.FacultyId == facultyId);
+                groups = groups.Where(x => x.Direction?.Department?.FacultyId == facultyId);
             if (academYearId > 0)
                 groups = groups.Where(x => x.AcademicYearId == academYearId);
 
@@ -213,7 +213,7 @@ namespace AVN.Web.Controllers
                 return new List<SelectListItem>();
 
             var groups = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x => 
-                    x.Direction.Department.FacultyId == facultyId && x.AcademicYearId == academicYearId);
+                    x.Direction?.Department?.FacultyId == facultyId && x.AcademicYearId == academicYearId);
 
             var movement = await unitOfWork.MovementTypeRepository.GetByIdAsync(movementTypeId);
             if (movement != null)
@@ -261,7 +261,7 @@ namespace AVN.Web.Controllers
                 return new List<SelectListItem>();
 
             var groups = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x =>
-                    x.Direction.Department.FacultyId == facultyId && x.AcademicYearId == academicYearId);
+                    x.Direction?.Department?.FacultyId == facultyId && x.AcademicYearId == academicYearId);
 
             var movement = await context.MovementTypes.FirstOrDefaultAsync(m => m.Id == movementTypeId);
             if (movement is null)
