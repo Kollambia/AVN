@@ -1,4 +1,4 @@
-﻿@model DirectionVM
+﻿@model SubjectVM
 @using AVN.Utility;
 
 <style>
@@ -22,7 +22,7 @@
 </style>
 
 <div class="mb-3">
-    <a href="@Url.Action("Index", "Direction")" class="btn btn-primary fas fa-arrow-alt-circle-left" type="button"> назад</a>
+    <a href="@Url.Action("Index", "Subject")" class="btn btn-primary fas fa-arrow-alt-circle-left" type="button"> назад</a>
 </div>
 
 <div class="data-table-area mg-b-15">
@@ -36,34 +36,58 @@
                                 <tbody>
                                     <tr>
                                         <th scope="row" class="narrow-cell">
-                                            @Html.DisplayNameFor(model => model.DirectionName)
+                                            @Html.DisplayNameFor(model => model.Title)
                                         </th>
                                         <td>
-                                            @Html.DisplayFor(model => model.DirectionName)
+                                            @Html.DisplayFor(model => model.Title)
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row" class="narrow-cell">
-                                            @Html.DisplayNameFor(model => model.DirectionShortName)
+                                            @Html.DisplayNameFor(model => model.Description)
                                         </th>
                                         <td>
-                                            @Html.DisplayFor(model => model.DirectionShortName)
+                                            @Html.DisplayFor(model => model.Description)
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row" class="narrow-cell">
-                                            @Html.DisplayNameFor(model => model.DirectionNumber)
+                                            @Html.DisplayNameFor(model => model.CreditCounts)
                                         </th>
                                         <td>
-                                            @Html.DisplayFor(model => model.DirectionNumber)
+                                            @Html.DisplayFor(model => model.CreditCounts)
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row" class="narrow-cell">
-                                            @Html.DisplayNameFor(model => model.CreditCost)
+                                            @Html.DisplayNameFor(model => model.HoursAmount)
                                         </th>
                                         <td>
-                                            @Html.DisplayFor(model => model.CreditCost)
+                                            @Html.DisplayFor(model => model.HoursAmount)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.ControlForm)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.ControlForm)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.EmployeeId)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.Employee.FullName)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.DepartmentId)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.Department.DepartmentName)
                                         </td>
                                     </tr>
                                 </tbody>
@@ -82,7 +106,7 @@
         <p class="text-danger">
             Внимание! Если удалить текущую запись, то удалятся также связанные с ним данные!
         </p>
-        <form action="/Direction/DeleteConfirmed/@Model?.Id" method="post">
+        <form action="/Subject/DeleteConfirmed/@Model?.Id" method="post">
             <button type="submit" class="btn btn-danger">
                 <i class="fas fa-delete"></i> Удалить запись безвозвратно
             </button>

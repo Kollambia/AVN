@@ -130,24 +130,20 @@
 
 
         function loadDropdownData() {
-            var dropdownPromises = [];
-
-            dropdownPromises.push(
-                $.ajax({
-                    url: '@Url.Action("GetFaculties", "Faculty")',
-                    type: 'GET'
-                }).done(function (data) {
+            $.ajax({
+                url: '@Url.Action("GetFaculties", "Faculty")',
+                type: 'GET',
+                success: function (data) {
                     $.each(data, function (i, item) {
                         $('#facultyDropdown').append($('<option></option>').val(item.value).text(item.text));
                     });
                     loadSelectedValue('facultyDropdown');
                     FillDepartmentsDropdown();
-                }).fail(function (xhr, status, error) {
+                },
+                error: function (xhr, status, error) {
                     console.error(xhr.responseText);
-                })
-            );
-
-            $.when.apply($, dropdownPromises).done(function () {
+                }
+            }).done(function () {
                 GetList();
             });
         }
@@ -190,6 +186,7 @@
                     });
                     //populateDropdown(data, 'employeeDropdown');
                     loadSelectedValue('employeeDropdown');
+                    GetList();
                 },
                 error: function (xhr, status, error) {
                     // Handle error if any

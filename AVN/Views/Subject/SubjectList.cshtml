@@ -9,7 +9,7 @@
 @if (User.IsInRole(RoleConst.AdminRole))
 {
     <div id="toolbar">
-        <a asp-controller="Group" asp-action="Create">
+        <a asp-controller="Subject" asp-action="Create">
             <input type="button" class="btn btn-success" value="Добавить" />
         </a>
     </div>
@@ -105,7 +105,7 @@
                                             </td>
                                             <td>
                                                 <span> @Html.ActionLink("", "Edit", "Subject", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
-                                                <span> @Html.ActionLink("", "Delete", "Subject", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
+                                                <span> @Html.ActionLink("", "Details", "Subject", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
                                             </td>
                                         </tr>
                                     }

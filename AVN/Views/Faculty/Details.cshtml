@@ -72,6 +72,9 @@
 <div class="text-right">
     @if (User.IsInRole(RoleConst.AdminRole))
     {
+        <p class="text-danger">
+            Внимание! Если удалить текущую запись, то удалятся также связанные с ним данные!
+        </p>
         <form action="/Faculty/DeleteConfirmed/@Model?.Id" method="post">
             <button type="submit" class="btn btn-danger">
                 <i class="fas fa-delete"></i> Удалить запись безвозвратно

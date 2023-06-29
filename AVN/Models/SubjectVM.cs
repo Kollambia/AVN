@@ -18,7 +18,7 @@ namespace AVN.Models
         public string? Description { get; set; }
 
         [Required(ErrorMessage = "Введите количество кредитов")]
-        [DisplayName("Кол-во кредитов")]
+        [DisplayName("Кредиты")]
         public int? CreditCounts { get; set; }
 
         [Required(ErrorMessage = "Введите количество часов")]

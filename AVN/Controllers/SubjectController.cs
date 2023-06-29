@@ -32,18 +32,27 @@ namespace AVN.Web.Controllers
 
         public async Task<ActionResult> SubjectList(int facultyId, int departmentId, string employeeId, int courseId)
         {
-            var subjects = await unitOfWork.SubjectRepository.GetAllAsync();
-            if(!string.IsNullOrEmpty(employeeId))
-                subjects = subjects.Where(x => x.EmployeeId == employeeId);
-            else if (departmentId > 0)
-                subjects = subjects.Where(x => x.DepartmentId == departmentId);
-            else if (facultyId > 0)
-                subjects = subjects.Where(x => x.Department?.FacultyId == facultyId);
-            if (courseId > 0)
-                subjects = subjects.Where(x => (int)x.Course == courseId);
+            try
+            {
+                var subjects = await unitOfWork.SubjectRepository.GetAllAsync();
+                if (!string.IsNullOrEmpty(employeeId))
+                    subjects = subjects.Where(x => x.EmployeeId == employeeId);
+                else if (departmentId > 0)
+                    subjects = subjects.Where(x => x.DepartmentId == departmentId);
+                else if (facultyId > 0)
+                    subjects = subjects.Where(x => x.Department?.FacultyId == facultyId);
+                if (courseId > 0)
+                    subjects = subjects.Where(x => (int)x.Course == courseId);
 
-            var mappedSubjects = mapper.Map<Subject, SubjectVM>(subjects).ToList();
-            return PartialView(mappedSubjects);
+                var mappedSubjects = mapper.Map<Subject, SubjectVM>(subjects).ToList();
+                return PartialView(mappedSubjects);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Subject");
+            }
+            
         }
 
         // GET: Subject/Details/5
@@ -55,8 +64,8 @@ namespace AVN.Web.Controllers
             {
                 return NotFound();
             }
-
-            return View(subject);
+            var mappedSubject = mapper.Map<Subject, SubjectVM>(subject);
+            return View(mappedSubject);
         }
 
         // GET: Subject/Create
@@ -77,6 +86,8 @@ namespace AVN.Web.Controllers
                     var mappedSubjects = mapper.Map<SubjectVM, Subject>(subject);
                     await unitOfWork.SubjectRepository.CreateAsync(mappedSubjects);
                     await unitOfWork.SaveChangesAsync();
+
+                    TempData["success"] = "Запись успешно добавлена";
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
@@ -114,14 +125,15 @@ namespace AVN.Web.Controllers
                 return NotFound();
             }
 
-            // валидация работает эту хуйню не трогать
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
                     var mappedSubjects = mapper.Map<SubjectVM, Subject>(subject);
                     await unitOfWork.SubjectRepository.UpdateAsync(mappedSubjects);
                     await unitOfWork.SaveChangesAsync();
+
+                    TempData["success"] = "Запись успешно изменена";
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
@@ -164,13 +176,13 @@ namespace AVN.Web.Controllers
                     return RedirectToAction("Index", "Subject");
                 }
 
-                TempData["success"] = "Запись успешно удалена";
                 await unitOfWork.ScheduleRepository.DeleteRangeAsync(subject.Schedule);
                 await unitOfWork.GradeBookRepository.DeleteRangeAsync(subject.GradeBook);
 
                 await unitOfWork.SubjectRepository.DeleteAsync(subject);
                 await unitOfWork.SaveChangesAsync();
 
+                TempData["success"] = "Запись успешно удалена";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
