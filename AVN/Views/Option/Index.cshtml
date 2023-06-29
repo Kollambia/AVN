@@ -30,69 +30,73 @@
 
 @section Scripts {
     <script>
+        function loadTabContent(tab) {
+            switch (tab) {
+                case "#academicYear":
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("AcademicYearList", "Option")',
+                        success: function (response) {
+                            $('#academicYearContainer').html(response);
+                            $('#academicYeartable').DataTable();
+                            console.log(result);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(xhr.responseText);
+                        }
+                    });
+                    break;
+                case "#movementType":
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("MovementTypeList", "Option")',
+                        success: function (response) {
+                            $('#movementTypeContainer').html(response);
+                            $('#movementTypetable').DataTable();
+                            console.log(result);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(xhr.responseText);
+                        }
+                    });
+                    break;
+                case "#orderType":
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("OrderTypeList", "Option")',
+                        success: function (response) {
+                            $('#orderTypeContainer').html(response);
+                            $('#orderTypetable').DataTable();
+                            console.log(result);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(xhr.responseText);
+                        }
+                    });
+                    break;
+                default:
+                    // Default action
+                    break;
+            }
+        }
+
         $(document).ready(function () {
             var lastTab = localStorage.getItem('lastTab');
 
             if (lastTab) {
                 $('a[href="' + lastTab + '"]').tab('show');
             } else {
-                $('a[href="#param"]').tab('show');
+                $('a[href="#academicYear"]').tab('show');
+                lastTab = "#academicYear";
             }
 
-            $('.nav-link').on('shown.bs.tab', function (e) {
-                var target = $(e.target).attr("href"); 
-                localStorage.setItem('lastTab', target);
+            loadTabContent(lastTab);
 
-                switch (target) {
-                    case "#academicYear":
-                        $.ajax({
-                            type: 'GET',
-                            url: '@Url.Action("AcademicYearList", "Option")',
-                            success: function (response) {
-                                $('#academicYearContainer').html(response);
-                                $('#academicYeartable').DataTable()
-                                console.log(result)
-                            },
-                            error: function (xhr, status, error) {
-                                console.error(xhr.responseText);
-                            }
-                        })
-                        break;
-                    case "#movementType":
-                        $.ajax({
-                            type: 'GET',
-                            url: '@Url.Action("MovementTypeList", "Option")',
-                            success: function (response) {
-                                $('#movementTypeContainer').html(response);
-                                $('#movementTypetable').DataTable()
-                                console.log(result)
-                            },
-                            error: function (xhr, status, error) {
-                                console.error(xhr.responseText);
-                            }
-                        })
-                        break;
-                    case "#orderType":
-                        $.ajax({
-                            type: 'GET',
-                            url: '@Url.Action("OrderTypeList", "Option")',
-                            success: function (response) {
-                                $('#orderTypeContainer').html(response);
-                                $('#table').DataTable()
-                                console.log(result)
-                            },
-                            error: function (xhr, status, error) {
-                                console.error(xhr.responseText);
-                            }
-                        })
-                        break;
-                    default:
-                        // Default action
-                        break;
-                }
+            $('.nav-link').on('shown.bs.tab', function (e) {
+                var target = $(e.target).attr("href");
+                localStorage.setItem('lastTab', target);
+                loadTabContent(target);
             });
         });
-
     </script>
-
 }
