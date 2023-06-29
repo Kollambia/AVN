@@ -39,8 +39,8 @@ namespace AVN.Web.Controllers
             {
                 return NotFound();
             }
-
-            return View(faculty);
+            var mappedFaculty = mapper.Map<Faculty, FacultyVM>(faculty);
+            return View(mappedFaculty);
         }
 
         // GET: Faculty/Create

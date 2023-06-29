@@ -93,15 +93,15 @@ namespace AVN.Web.Controllers
                 }
                 else if (directionId > 0)
                 {
-                    students = students.Where(x => x.Group.DirectionId == directionId);
+                    students = students.Where(x => x.Group?.DirectionId == directionId);
                 }
                 else if (departmentId > 0)
                 {
-                    students = students.Where(x => x.Group.Direction.DepartmentId == departmentId);
+                    students = students.Where(x => x.Group?.Direction?.DepartmentId == departmentId);
                 }
                 else if (facultyId > 0)
                 {
-                    students = students.Where(x => x.Group.Direction.Department.FacultyId == facultyId);
+                    students = students.Where(x => x.Group?.Direction?.Department?.FacultyId == facultyId);
                 }
                 else
                 {

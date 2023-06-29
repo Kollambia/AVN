@@ -40,8 +40,8 @@ namespace AVN.Web.Controllers
             {
                 return NotFound();
             }
-
-            return View(department);
+            var mappedDepartment = mapper.Map<Department, DepartmentVM>(department);
+            return View(mappedDepartment);
         }
 
         // GET: Department/Create

@@ -46,8 +46,8 @@ namespace AVN.Web.Controllers
             {
                 return NotFound();
             }
-
-            return View(direction);
+            var mappedDirection = mapper.Map<Direction, DirectionVM>(direction);
+            return View(mappedDirection);
         }
 
         // GET: Direction/Create
