@@ -5,6 +5,7 @@ using AVN.Model.Entities;
 using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text.RegularExpressions;
 
 namespace AVN.Controllers
 {
@@ -30,6 +31,8 @@ namespace AVN.Controllers
             ViewData["GroupId"] = new SelectList(context.Groups, "Id", "GroupName");
             ViewData["SubjectId"] = new SelectList(context.Subjects, "Id", "Title");
             ViewData["EmployeeId"] = new SelectList(context.Employees, "Id", "Name");
+            
+
 
             var model = new List<ScheduleVM>
             {
@@ -65,6 +68,8 @@ namespace AVN.Controllers
                 ViewData[$"[{i}].GroupId"] = ViewData["GroupId"];
                 ViewData[$"[{i}].EmployeeId"] = ViewData["EmployeeId"];
             }
+            ViewData["AcademicYears"] = new SelectList(context.AcademicYears, "Id", "Name");
+
 
             return View(model);
         }
@@ -100,8 +105,11 @@ namespace AVN.Controllers
                             {
                                 Text = i.GroupName,
                                 Value = i.Id.ToString()
-                            })
+                            }),
+
+                           
                         };
+                       
                         // Add schedule to database
                         context.Add(schedule);
                     }
@@ -119,6 +127,7 @@ namespace AVN.Controllers
             ViewData["GroupId"] = new SelectList(context.Groups, "Id", "GroupName");
             ViewData["SubjectId"] = new SelectList(context.Subjects, "Id", "Title");
             ViewData["EmployeeId"] = new SelectList(context.Employees, "Id", "Name");
+            ViewData["AcademicYears"] = new SelectList(context.AcademicYears, "Id", "Name");
 
             return View(schedules);
         }
@@ -155,10 +164,10 @@ namespace AVN.Controllers
 
         }
 
-        public async Task<ActionResult> ScheduleList(int facultyId, int departmentId, int directionId, string groupId, int groupType)
+        public async Task<ActionResult> ScheduleList(int facultyId, int departmentId, int directionId, string groupId, int groupType, int academYearId)
         {
             var schedule = await unitOfWork.ScheduleRepository.GetAllAsync();
-
+            
             if (!string.IsNullOrEmpty(groupId))
             {
                 schedule = schedule.Where(x => x.GroupId == groupId);
@@ -185,8 +194,14 @@ namespace AVN.Controllers
                 schedule = schedule.Where(x => (int)x.Group.GroupType == groupType);
             }
 
+            if (academYearId > 0)
+            {
+                schedule = schedule.Where(x => x.AcademicYearId == academYearId);
+            }
+
             var mappedSchedule = schedule.Select(s => mapper.Map<Schedule, ScheduleVM>(s)).ToList();
             return PartialView(mappedSchedule ?? new List<ScheduleVM>());
         }
+
     }
 }

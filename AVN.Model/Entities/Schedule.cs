@@ -13,5 +13,7 @@ namespace AVN.Model.Entities
         public virtual Subject? Subject { get; set; }
         public string? EmployeeId { get; set; }
         public virtual Employee? Employee { get; set; }
+        public int? AcademicYearId { get; set; }
+        public virtual AcademicYear? AcademicYear { get; set; }
     }
 }

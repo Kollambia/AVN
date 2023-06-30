@@ -7,43 +7,57 @@
 <br/>
 
 <form asp-action="Create">
+    <div class="col-md-3">
+        <label for="academicYearDropdown">Учебный год</label>
+        @Html.DropDownList("academicYearDropdown", ViewData["AcademicYears"] as SelectList, "Выберите учебный год", new { @class = "form-control" })
+    </div>
+    <br/>
     <table class="table" id="scheduleTable">
+        
         <thead>
-            <tr>
-                <th>Дни</th>
-                <th>Начало</th>
-                <th>Конец</th>
-                <th>Группа</th>
-                <th>Предмет</th>
-                <th>Преподаватель</th>
-                <th></th>
-            </tr>
+        <tr>
+            <th>Дни</th>
+            <th>Начало</th>
+            <th>Конец</th>
+            <th>Группа</th>
+            <th>Предмет</th>
+            <th>Преподаватель</th>
+            <th></th>
+        </tr>
         </thead>
         <tbody>
-            @for (var i = 0; i < Model.Count; i++)
-            {
-                <tr>
-                    <td><select asp-for="@Model[i].Days" asp-items="Html.GetEnumSelectList<DaysOfTheWeek>()" class="form-control"></select></td>
-                    <td><input asp-for="@Model[i].StartTime" type="time" class="form-control" /></td>
-                    <td><input asp-for="@Model[i].EndTime" type="time" class="form-control" /></td>
-                    <td>
-                        @Html.DropDownListFor(x => x[i].GroupId, ViewData[$"[{i}].GroupId"] as List<SelectListItem>, "Не выбрано", new { @class = "form-control", id = "groupDropdown" + i })
-                        @Html.ValidationMessageFor(x => x[i].GroupId, "", new { @class = "text-danger" })
-                    </td>
-                    <td>
-                        @Html.DropDownListFor(x => x[i].SubjectId, ViewData[$"[{i}].SubjectId"] as List<SelectListItem>, "Не выбрано", new { @class = "form-control", id = "subjectDropdown" + i })
-                        @Html.ValidationMessageFor(x => x[i].SubjectId, "", new { @class = "text-danger" })
-                    </td>
-                    <td>
-                        @Html.DropDownListFor(x => x[i].EmployeeId, ViewData[$"[{i}].EmployeeId"] as List<SelectListItem>, "Не выбрано", new { @class = "form-control", id = "employeeDropdown" + i })
-                        @Html.ValidationMessageFor(x => x[i].EmployeeId, "", new { @class = "text-danger" })
-                    </td>
-                </tr>
-            }
+        @for (var i = 0; i < Model.Count; i++)
+        {
+            @Html.HiddenFor(x => x[0].AcademicYearId, new { @class = "academicYearField" })
+            <tr>
+
+                <td>
+                    <select asp-for="@Model[i].Days" asp-items="Html.GetEnumSelectList<DaysOfTheWeek>()" class="form-control"></select>
+                </td>
+                <td>
+                    <input asp-for="@Model[i].StartTime" type="time" class="form-control"/>
+                </td>
+                <td>
+                    <input asp-for="@Model[i].EndTime" type="time" class="form-control"/>
+                </td>
+                <td>
+                    @Html.DropDownListFor(x => x[i].GroupId, ViewData[$"[{i}].GroupId"] as List<SelectListItem>, "Не выбрано", new { @class = "form-control", id = "groupDropdown" + i })
+                    @Html.ValidationMessageFor(x => x[i].GroupId, "", new { @class = "text-danger" })
+                </td>
+                <td>
+                    @Html.DropDownListFor(x => x[i].SubjectId, ViewData[$"[{i}].SubjectId"] as List<SelectListItem>, "Не выбрано", new { @class = "form-control", id = "subjectDropdown" + i })
+                    @Html.ValidationMessageFor(x => x[i].SubjectId, "", new { @class = "text-danger" })
+                </td>
+                <td>
+                    @Html.DropDownListFor(x => x[i].EmployeeId, ViewData[$"[{i}].EmployeeId"] as List<SelectListItem>, "Не выбрано", new { @class = "form-control", id = "employeeDropdown" + i })
+                    @Html.ValidationMessageFor(x => x[i].EmployeeId, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
     <button type="button" class="btn btn-primary" id="addRow">Добавить строку</button>
-    <input type="submit" value="Создать" class="btn btn-success" />
+    <input type="submit" value="Создать" class="btn btn-success"/>
 </form>
 
 @section Scripts {
@@ -55,8 +69,11 @@
 
 
         $('#addRow').click(function () {
+            var selectedAcademicYear = $('#academicYearDropdown').val(); // Получить выбранное значение академического года
+
             var newRow = '<tr>' +
-                '<td><select name="[' + index + '].Days" class="form-control">' +
+                '<td><input type="hidden" name="[' + index + '].AcademicYearId" value="' + selectedAcademicYear + '" />' +
+                '<select name="[' + index + '].Days" class="form-control">' +
                 '<option value="0">Понедельник</option>' +
                 '<option value="1">Вторник</option>' +
                 '<option value="2">Среда</option>' +
@@ -73,6 +90,7 @@
                 '<td><select name="[' + index + '].EmployeeId" class="form-control">' + employeeSelectOptions + '</select></td>' +
                 '<td><button type="button" class="btn btn-danger removeRow">Удалить</button></td>' +
                 '</tr>';
+
             $('#scheduleTable tbody').append(newRow);
 
             $(document).on('click', '.removeRow', function () {
@@ -81,6 +99,7 @@
 
             index++;
         });
+
 
         var groupSelectList = @Html.Raw(Json.Serialize(Model.First().GroupSelectList));
 
@@ -170,6 +189,26 @@
                 }
             });
         });
+
+        $(document).ready(function () {
+            // Получить выбранное значение академического года
+            var selectedAcademicYear = $('#academicYearDropdown').val();
+
+            // Применить выбранное значение к каждому скрытому полю AcademicYearId
+            $('.academicYearField').val(selectedAcademicYear);
+        });
+
+// Обработчик изменения значения академического года
+        $('#academicYearDropdown').change(function () {
+            // Получить новое выбранное значение академического года
+            var selectedAcademicYear = $(this).val();
+
+            // Применить новое выбранное значение к каждому скрытому полю AcademicYearId
+            $('.academicYearField').val(selectedAcademicYear);
+        });
+
+
+
     </script>
     
     <style>

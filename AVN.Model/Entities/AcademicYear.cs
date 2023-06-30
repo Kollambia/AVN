@@ -10,6 +10,7 @@
         public virtual ICollection<StudentMovement>? StudentMovements { get; set; }
         public virtual ICollection<StudentPayment>? StudentPayments { get; set; }
         public virtual ICollection<Order>? Orders { get; set; }
+        public virtual ICollection<Schedule>? Schedules { get; set; }
 
         public AcademicYear()
         {
@@ -17,6 +18,7 @@
             StudentMovements = new List<StudentMovement>();
             StudentPayments = new List<StudentPayment>();
             Orders = new List<Order>();
+            Schedules = new List<Schedule>();
         }
     }
 }

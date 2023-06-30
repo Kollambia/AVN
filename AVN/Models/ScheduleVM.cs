@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using AVN.Common.Enums;
 using AVN.Model.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -31,9 +32,15 @@ namespace AVN.Models
 
         public Employee Employee { get; set; }
 
+        [Required(ErrorMessage = "Выберите уч. год")]
+        [DisplayName("Уч. год")]
+        public int? AcademicYearId { get; set; }
+        public AcademicYear? AcademicYear { get; set; }
+
         public IEnumerable<SelectListItem> SubjectSelectList { get; set; }
         public IEnumerable<SelectListItem> EmployeeSelectList { get; set; }
         public IEnumerable<SelectListItem> GroupSelectList { get; set; }
+        public List<SelectListItem> AcademicYears { get; set; }
 
         public List<Schedule> Schedules { get; set; }
     }
