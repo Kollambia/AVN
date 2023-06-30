@@ -222,5 +222,16 @@ namespace AVN.Controllers
             var employeeList = employees.Select(f => new SelectListItem { Value = f.Id, Text = f.GetFullName() }).ToList();
             return employeeList;
         }
+
+        public async Task<SelectListItem> GetEmployeeBySubject(int subjectId)
+        {
+            var subject = await unitOfWork.SubjectRepository.GetByIdAsync(subjectId);
+            if (subject != null && subject.Employee != null)
+            {
+                return new SelectListItem { Value = subject.Employee.Id, Text = subject.Employee.FullName };
+            }
+            return null;
+        }
+
     }
 }
