@@ -42,6 +42,12 @@
 
                                 <thead>
                                     <tr>
+                                        @if (User.IsInRole(RoleConst.AdminRole))
+                                        {
+                                            <th>
+                                                Действие
+                                            </th>
+                                        }
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="SName">
                                             @Html.DisplayNameFor(x => x.SName)
                                         </th>
@@ -72,18 +78,19 @@
                                         <th scope="col" data-sortable="true" data-filter-control="input" data-field="DepartmentId">
                                             @Html.DisplayNameFor(x => x.DepartmentId)
                                         </th>
-                                        @if (User.IsInRole(RoleConst.AdminRole))
-                                        {
-                                            <th>
-                                                Действие
-                                            </th>
-                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in Model)
                                     {
                                         <tr>
+                                            @if (User.IsInRole(RoleConst.AdminRole))
+                                            {
+                                                <td>
+                                                    <span> @Html.ActionLink("", "Edit", "Employee", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
+                                                    <span> @Html.ActionLink("", "Delete", "Employee", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
+                                                </td>
+                                            }
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.SName)
                                             </td>
@@ -94,7 +101,7 @@
                                                 @Html.DisplayFor(modelItem => item.PName)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.DateOfBirth)
+                                                @item.DateOfBirth.Date.ToShortDateString()
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.Email)
@@ -114,13 +121,6 @@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.Department.DepartmentName)
                                             </td>
-                                            @if (User.IsInRole(RoleConst.AdminRole))
-                                            {
-                                                <td>
-                                                    <span> @Html.ActionLink("", "Edit", "Employee", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
-                                                    <span> @Html.ActionLink("", "Delete", "Employee", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
-                                                </td>
-                                            }
                                         </tr>
                                     }
                                 </tbody>
