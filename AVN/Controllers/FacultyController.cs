@@ -149,7 +149,6 @@ namespace AVN.Web.Controllers
                     TempData["error"] = "Не удалось удалить запись. Удалите кафедры связанные с факультетом";
                     return RedirectToAction("Index", "Faculty");
                 }
-                TempData["success"] = "Запись успешно удалена";
 
                 await unitOfWork.FacultyRepository.DeleteAsync(faculty);
                 await unitOfWork.SaveChangesAsync();
