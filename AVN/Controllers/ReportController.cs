@@ -34,7 +34,7 @@ namespace AVN.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetStudentsInGroup(int facultyId, int departmentId, int directionId, string groupId)
+        public IActionResult GetStudentsInGroup(int directionId, string groupId)
         {
             try
             {
@@ -43,10 +43,6 @@ namespace AVN.Controllers
                     students = students.Where(x => x.GroupId == groupId);
                 else if (directionId > 0)
                     students = students.Where(x => x?.Group?.DirectionId == directionId);
-                else if (departmentId > 0)
-                    students = students.Where(x => x?.Group?.Direction?.DepartmentId == departmentId);
-                else if (facultyId > 0)
-                    students = students.Where(x => x?.Group?.Direction?.Department?.FacultyId == facultyId);
 
                 List<StudentsInGroup> studentsList = new List<StudentsInGroup>();
                 foreach (var student in students)
@@ -77,7 +73,7 @@ namespace AVN.Controllers
                 var fileBytes = System.IO.File.ReadAllBytes(pdfInvoice);
 
                 var fileStreamResult = new FileStreamResult(new MemoryStream(fileBytes), "application/pdf");
-                fileStreamResult.FileDownloadName = $"Суденты группы {studentsList.FirstOrDefault().Group}.pdf";
+                fileStreamResult.FileDownloadName = $"Студенты в группах.pdf";
 
                 TempData["success"] = "Отчет успешно сформирован.";
                 return PdfViewer(fileStreamResult);

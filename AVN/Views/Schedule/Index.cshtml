@@ -88,6 +88,20 @@
                     console.error(xhr.responseText);
                 }
             });
+            $.ajax({
+                url: '@Url.Action("GetAcademicYears", "Option")',
+                type: 'GET',
+                success: function (data) {
+                    $.each(data, function (i, academYear) {
+                        $('#academYearDropdown').append($('<option></option>').val(academYear.value).text(academYear.text));
+                    });
+                    GetList()
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
 
             // Обработчик изменения выбранного факультета
             facultyDropdown.change(function () {
