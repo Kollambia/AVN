@@ -144,7 +144,7 @@
                     console.error(xhr.responseText);
                 }
             }).done(function () {
-                GetList();
+                //GetList();
             });
         }
 
@@ -186,13 +186,14 @@
                     });
                     //populateDropdown(data, 'employeeDropdown');
                     loadSelectedValue('employeeDropdown');
-                    GetList();
+
                 },
                 error: function (xhr, status, error) {
                     // Handle error if any
                     console.error(xhr.responseText);
                 }
             });
+            GetList();
         }
 
        

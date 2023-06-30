@@ -1,4 +1,5 @@
 ﻿using AVN.Automapper;
+using AVN.Business;
 using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
@@ -30,21 +31,21 @@ namespace AVN.Controllers
         {
             var list = await unitOfWork.AcademicYearRepository.GetAllAsync();
             var mappedList = mapper.Map<AcademicYear, AcademicYearVM>(list).ToList();
-            return PartialView(mappedList);
+            return PartialView(mappedList ?? new List<AcademicYearVM>());
         }
 
         public async Task<ActionResult> MovementTypeList()
         {
             var list = await unitOfWork.MovementTypeRepository.GetAllAsync();
             var mappedList = mapper.Map<MovementType, MovementTypeVM>(list).ToList();
-            return PartialView(mappedList);
+            return PartialView(mappedList ?? new List<MovementTypeVM>());
         }
 
         public async Task<ActionResult> OrderTypeList()
         {
             var list = await unitOfWork.OrderTypeRepository.GetAllAsync();
             var mappedList = mapper.Map<OrderType, OrderTypeVM>(list).ToList();
-            return PartialView(mappedList);
+            return PartialView(mappedList ?? new List<OrderTypeVM>());
         }
 
         public IActionResult CreateAcademicYear()
@@ -66,43 +67,83 @@ namespace AVN.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAcademicYear(AcademicYearVM entityVM)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var mappedEntity = mapper.Map<AcademicYearVM, AcademicYear>(entityVM);
-                mappedEntity.Name = mappedEntity.YearFrom.ToString() + "-" + mappedEntity.YearTo.ToString();
-                await unitOfWork.AcademicYearRepository.CreateAsync(mappedEntity);
-                await unitOfWork.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    var mappedEntity = mapper.Map<AcademicYearVM, AcademicYear>(entityVM);
+                    var isYearRangeExistInDB = unitOfWork.AcademicYearRepository.GetAll().Any(x => x.YearFrom == mappedEntity.YearFrom);
+                    if (isYearRangeExistInDB)
+                    {
+                        TempData["error"] = "Текущий учебный год уже существует";
+                        return View(entityVM);
+                    }
+
+                    mappedEntity.Name = mappedEntity.YearFrom.ToString() + "-" + mappedEntity.YearTo.ToString();
+                    await unitOfWork.AcademicYearRepository.CreateAsync(mappedEntity);
+                    await unitOfWork.SaveChangesAsync();
+
+                    TempData["success"] = "Запись успешно добавлена";
+                    return RedirectToAction(nameof(Index));
+                }
+                
+                return View(entityVM);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
                 return RedirectToAction(nameof(Index));
             }
-            return View(entityVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateMovementType(MovementTypeVM entityVM)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var mappedEntity = mapper.Map<MovementTypeVM, MovementType>(entityVM);
-                await unitOfWork.MovementTypeRepository.CreateAsync(mappedEntity);
-                await unitOfWork.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    var mappedEntity = mapper.Map<MovementTypeVM, MovementType>(entityVM);
+                    await unitOfWork.MovementTypeRepository.CreateAsync(mappedEntity);
+                    await unitOfWork.SaveChangesAsync();
+
+                    TempData["success"] = "Запись успешно добавлена";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View(entityVM);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
                 return RedirectToAction(nameof(Index));
             }
-            return View(entityVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateOrderType(OrderTypeVM entityVM)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var mappedEntity = mapper.Map<OrderTypeVM, OrderType>(entityVM);
-                await unitOfWork.OrderTypeRepository.CreateAsync(mappedEntity);
-                await unitOfWork.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    var mappedEntity = mapper.Map<OrderTypeVM, OrderType>(entityVM);
+                    await unitOfWork.OrderTypeRepository.CreateAsync(mappedEntity);
+                    await unitOfWork.SaveChangesAsync();
+
+                    TempData["success"] = "Запись успешно добавлена";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View(entityVM);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
                 return RedirectToAction(nameof(Index));
             }
-            return View(entityVM);
         }
 
         public async Task<IActionResult> EditAcademicYear(int id)
@@ -110,7 +151,8 @@ namespace AVN.Controllers
             var entity = await unitOfWork.AcademicYearRepository.GetByIdAsync(id);
             if (entity == null)
             {
-                return NotFound();
+                TempData["error"] = "Не удалось найти текущую запись";
+                return RedirectToAction(nameof(Index));
             }
             var mappedEntity = mapper.Map<AcademicYear, AcademicYearVM>(entity);
             return View(mappedEntity);
@@ -121,7 +163,8 @@ namespace AVN.Controllers
             var entity = await unitOfWork.MovementTypeRepository.GetByIdAsync(id);
             if (entity == null)
             {
-                return NotFound();
+                TempData["error"] = "Не удалось найти текущую запись";
+                return RedirectToAction(nameof(Index));
             }
             var mappedEntity = mapper.Map<MovementType, MovementTypeVM>(entity);
             return View(mappedEntity);
@@ -132,7 +175,8 @@ namespace AVN.Controllers
             var entity = await unitOfWork.OrderTypeRepository.GetByIdAsync(id);
             if (entity == null)
             {
-                return NotFound();
+                TempData["error"] = "Не удалось найти текущую запись";
+                return RedirectToAction(nameof(Index));
             }
             var mappedEntity = mapper.Map<OrderType, OrderTypeVM>(entity);
             return View(mappedEntity);
@@ -143,20 +187,41 @@ namespace AVN.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditAcademicYear(int id, AcademicYearVM entityVM)
         {
-            if (id != entityVM.Id)
+            var currentEntity = unitOfWork.AcademicYearRepository.GetById(id);
+            if (currentEntity == null)
             {
-                return NotFound();
+                TempData["error"] = "Не удалось найти текущую запись";
+                return View(entityVM);
             }
-
-            if (ModelState.IsValid)
+            try
             {
-                var mappedEntity = mapper.Map<AcademicYearVM, AcademicYear>(entityVM);
-                mappedEntity.Name = mappedEntity.YearFrom.ToString() + "-" + mappedEntity.YearTo.ToString();
-                await unitOfWork.AcademicYearRepository.UpdateAsync(mappedEntity);
-                await unitOfWork.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    currentEntity.YearFrom = entityVM.YearFrom ?? 0;
+                    currentEntity.YearTo = entityVM.YearTo ?? 0;
+                    currentEntity.Name = entityVM.YearFrom.ToString() + "-" + entityVM.YearTo.ToString();
+
+                    var isYearRangeExistInDB = unitOfWork.AcademicYearRepository.GetAll()
+                        .Any(x => x.YearFrom == currentEntity.YearFrom && x.Id != currentEntity.Id);
+
+                    if (isYearRangeExistInDB)
+                    {
+                        TempData["error"] = "Текущий учебный год уже существует";
+                        return View(entityVM);
+                    }
+
+                    await unitOfWork.SaveChangesAsync();
+
+                    TempData["success"] = "Запись успешно изменена";
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(entityVM);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
                 return RedirectToAction(nameof(Index));
             }
-            return View(entityVM);
         }
 
         [HttpPost]
@@ -165,17 +230,28 @@ namespace AVN.Controllers
         {
             if (id != entityVM.Id)
             {
-                return NotFound();
+                TempData["error"] = "Не удалось найти текущую запись";
+                return View(entityVM);
             }
-
-            if (ModelState.IsValid)
+            try
             {
-                var mappedEntity = mapper.Map<MovementTypeVM, MovementType>(entityVM);
-                await unitOfWork.MovementTypeRepository.UpdateAsync(mappedEntity);
-                await unitOfWork.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    var mappedEntity = mapper.Map<MovementTypeVM, MovementType>(entityVM);
+                    await unitOfWork.MovementTypeRepository.UpdateAsync(mappedEntity);
+                    await unitOfWork.SaveChangesAsync();
+
+                    TempData["success"] = "Запись успешно изменена";
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(entityVM);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
                 return RedirectToAction(nameof(Index));
             }
-            return View(entityVM);
+
         }
 
         [HttpPost]
@@ -184,17 +260,27 @@ namespace AVN.Controllers
         {
             if (id != entityVM.Id)
             {
-                return NotFound();
+                TempData["error"] = "Не удалось найти текущую запись";
+                return View(entityVM);
             }
-
-            if (ModelState.IsValid)
+            try
             {
-                var mappedEntity = mapper.Map<OrderTypeVM, OrderType>(entityVM);
-                await unitOfWork.OrderTypeRepository.UpdateAsync(mappedEntity);
-                await unitOfWork.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    var mappedEntity = mapper.Map<OrderTypeVM, OrderType>(entityVM);
+                    await unitOfWork.OrderTypeRepository.UpdateAsync(mappedEntity);
+                    await unitOfWork.SaveChangesAsync();
+
+                    TempData["success"] = "Запись успешно изменена";
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(entityVM);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
                 return RedirectToAction(nameof(Index));
             }
-            return View(entityVM);
         }
 
         public async Task<IActionResult> DeleteAcademicYear(int id)
@@ -232,9 +318,30 @@ namespace AVN.Controllers
 
         public async Task<IActionResult> DeleteAcademicYearConfirmed(int id)
         {
-            var entity = await unitOfWork.AcademicYearRepository.GetByIdAsync(id);
+            var entity = await context.AcademicYears
+                .Include(o => o.Groups)
+                .Include(s => s.StudentMovements)
+                .Include(s => s.StudentPayments)
+                .Include(o => o.Orders)
+                .FirstOrDefaultAsync(i => i.Id == id);
+
+            if (entity == null)
+            {
+                TempData["error"] = "Не удалось найти учебный год. Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Option");
+            }
+
+            if (entity.Groups != null || entity.StudentMovements != null || entity.StudentPayments != null || entity.Orders != null)
+            {
+                await unitOfWork.GroupRepository.DeleteRangeAsync(entity.Groups);
+                await unitOfWork.StudentMovementRepository.DeleteRangeAsync(entity.StudentMovements);
+                await unitOfWork.StudentPaymentRepository.DeleteRangeAsync(entity.StudentPayments);
+                await unitOfWork.OrderRepository.DeleteRangeAsync(entity.Orders);
+            }
             await unitOfWork.AcademicYearRepository.DeleteAsync(entity);
             await unitOfWork.SaveChangesAsync();
+
+            TempData["success"] = "Запись успешно удалена";
             return RedirectToAction(nameof(Index));
         }
 
@@ -260,6 +367,8 @@ namespace AVN.Controllers
             }
             await unitOfWork.MovementTypeRepository.DeleteAsync(entity);
             await unitOfWork.SaveChangesAsync();
+
+            TempData["success"] = "Запись успешно удалена";
             return RedirectToAction(nameof(Index));
         }
 

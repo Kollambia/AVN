@@ -26,9 +26,14 @@ namespace AVN.Models
             var yearTo = value as int?;
             var yearFrom = (int?)validationContext.ObjectType.GetProperty("YearFrom")?.GetValue(validationContext.ObjectInstance);
 
-            if (yearFrom.HasValue && yearTo.HasValue && yearTo < yearFrom)
+            if (yearFrom.HasValue && yearTo.HasValue && yearTo <= yearFrom)
             {
                 return new ValidationResult(ErrorMessage);
+            }
+
+            if (yearFrom.HasValue && yearTo.HasValue && (yearTo - yearFrom) > 1)
+            {
+                return new ValidationResult("Значение 'До' должно быть больше значения 'С' на один год");
             }
 
             return ValidationResult.Success;

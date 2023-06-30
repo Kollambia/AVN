@@ -57,20 +57,29 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in Model)
+                                    @if (Model == null || Model.Count() == 0)
                                     {
                                         <tr>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Name)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.MoveType)
-                                            </td>
-                                            <td>
-                                                <span> @Html.ActionLink("", "EditMovementType", "Option", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
-                                                <span> @Html.ActionLink("", "DeleteMovementType", "Option", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
-                                            </td>
+                                            <td colspan="5" class="text-center">Нет данных</td>
                                         </tr>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.MoveType)
+                                                </td>
+                                                <td>
+                                                    <span> @Html.ActionLink("", "EditMovementType", "Option", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
+                                                    <span> @Html.ActionLink("", "DeleteMovementType", "Option", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
+                                                </td>
+                                            </tr>
+                                        }
                                     }
                                 </tbody>
                             </table>

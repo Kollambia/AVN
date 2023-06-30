@@ -81,22 +81,25 @@
         }
 
         $(document).ready(function () {
-            var lastTab = localStorage.getItem('lastTab');
+            var lastTabOption = localStorage.getItem('lastTabOption');
 
-            if (lastTab) {
-                $('a[href="' + lastTab + '"]').tab('show');
+            if (lastTabOption) {
+                $('a[href="' + lastTabOption + '"]').tab('show');
             } else {
                 $('a[href="#academicYear"]').tab('show');
-                lastTab = "#academicYear";
+                lastTabOption = "#academicYear";
             }
-
-            loadTabContent(lastTab);
 
             $('.nav-link').on('shown.bs.tab', function (e) {
                 var target = $(e.target).attr("href");
-                localStorage.setItem('lastTab', target);
-                loadTabContent(target);
+                localStorage.setItem('lastTabOption', target);
+                if (target !== lastTabOption) {
+                    loadTabContent(target);
+                    lastTabOption = target;
+                }
             });
+
+            loadTabContent(lastTabOption); // Initial load
         });
     </script>
 }

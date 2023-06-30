@@ -13,7 +13,7 @@
         </tr>
     </thead>
     <tbody>
-        @if (Model.Count() == 0)
+        @if (Model == null || Model.Count() == 0)
         {
             <tr>
                 <td colspan="5" class="text-center">Нет данных об оплатах</td>
