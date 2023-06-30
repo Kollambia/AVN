@@ -1,0 +1,133 @@
+﻿@model GroupVM
+@using AVN.Utility;
+
+
+<style>
+    .datatable-dashv1-list table {
+        width: 100%;
+    }
+
+    .datatable-dashv1-list th,
+    .datatable-dashv1-list td {
+        width: 50%;
+        padding: 10px;
+    }
+
+    .datatable-dashv1-list .narrow-cell {
+        width: 20%;
+    }
+
+    .datatable-dashv1-list th {
+        background-color: #d6eaf8;
+    }
+</style>
+
+<div class="mb-3">
+    <a href="@Url.Action("Index", "Group")" class="btn btn-primary fas fa-arrow-alt-circle-left" type="button"> назад</a>
+</div>
+
+<div class="data-table-area mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="sparkline13-list">
+                    <div class="sparkline13-graph">
+                        <div class="datatable-dashv1-list custom-datatable-overright">
+                            <table class="table-bordered">
+                                <tbody>
+
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.GroupName)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.GroupName)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.Course)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.Course)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.DateCreate)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.DateCreate)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.StudingForm)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.StudingForm)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.AcademicDegree)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.AcademicDegree)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.TrainingPeriod)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => Model.TrainingPeriod)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.GroupType)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => Model.GroupType)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.AcademicYearId)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => Model.AcademicYear.Name)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="narrow-cell">
+                                            @Html.DisplayNameFor(model => model.DirectionId)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(model => Model.Direction.DirectionName)
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="text-right">
+    @if (User.IsInRole(RoleConst.AdminRole))
+    {
+        <p class="text-danger">
+            Внимание! Если удалить текущую запись, то удалятся также связанные с ним данные!
+        </p>
+        <form action="/Group/DeleteConfirmed/@Model?.Id" method="post">
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-delete"></i> Удалить запись безвозвратно
+            </button>
+        </form>
+    }
+</div>

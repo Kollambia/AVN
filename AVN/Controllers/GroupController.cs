@@ -45,14 +45,15 @@ namespace AVN.Web.Controllers
         // GET: Group/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            var group = await unitOfWork.GroupRepository.GetByIdAsync(id);
-
+            var group = await context.Groups
+                .Include(d => d.AcademicYear)
+                .FirstOrDefaultAsync(e => e.Id == id);
             if (group == null)
             {
                 return NotFound();
             }
-
-            return View(group);
+            var mappedGroup = mapper.Map<Group, GroupVM>(group);
+            return View(mappedGroup);
         }
 
         // GET: Group/Create
@@ -203,11 +204,10 @@ namespace AVN.Web.Controllers
                     return RedirectToAction("Index", "Group");
                 }
 
-                TempData["success"] = "Запись успешно удалена";
-;
-
                 await unitOfWork.GroupRepository.DeleteAsync(group);
                 await unitOfWork.SaveChangesAsync();
+
+                TempData["success"] = "Запись успешно удалена";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

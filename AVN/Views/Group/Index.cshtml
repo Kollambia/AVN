@@ -298,9 +298,6 @@
 
                 if (selectedValue && dropdown.find('option[value="' + selectedValue + '"]').length > 0) {
                     dropdown.val(selectedValue);
-                } else {
-                    dropdown.val(''); // Set the dropdown value to empty
-                    localStorage.setItem(dropdownId, ''); // Save the empty value in localStorage
                 }
             }
 
