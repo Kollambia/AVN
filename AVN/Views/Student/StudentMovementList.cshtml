@@ -39,7 +39,7 @@
                     <td>@item.AcademicYear.Name</td>
                     <td>
                         <span> @Html.ActionLink("", "StudentMovementEdit", "Student", new { id = @item.Id }, new { @class = "fa fa-edit" })</span> &emsp;
-                        <span> @Html.ActionLink("", "StudentMovementDelete", "Student", new { id = @item.Id }, new { @class = "fa fa-trash" })</span> &emsp;
+                        <span> @Html.ActionLink("", "StudentMovementDetails", "Student", new { id = @item.Id }, new { @class = "fa fa-trash" })</span> &emsp;
                     </td>
                 </tr>
             }

@@ -132,6 +132,16 @@
                     </div>
                     <div class="col-sm-12 form-group">
                         <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Password)</label>
+                        @Html.EditorFor(x => x.Password, new { htmlAttributes = new { @class = "form-control"}})
+                        @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label class="font-weight-bold">@Html.DisplayNameFor(x => x.ConfirmPassword)</label>
+                        @Html.EditorFor(x => x.ConfirmPassword, new { htmlAttributes = new { @class = "form-control"}})
+                        @Html.ValidationMessageFor(x => x.ConfirmPassword, "", new { @class = "text-danger" })
+                    </div>
+                   @* <div class="col-sm-12 form-group">
+                        <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Password)</label>
                         @Html.PasswordFor(x => x.Password, new { @class = "form-control", placeholder="Введите пароль." })
                         @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
                     </div>
@@ -139,7 +149,7 @@
                         <label class="font-weight-bold">@Html.DisplayNameFor(x => x.ConfirmPassword)</label>
                         @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control", placeholder="Повторите пароль." })
                         @Html.ValidationMessageFor(x => x.ConfirmPassword, "", new { @class = "text-danger" })
-                    </div>
+                    </div>*@
                 </div>
                 
                 @*end-last-row*@

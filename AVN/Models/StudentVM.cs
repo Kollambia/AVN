@@ -93,12 +93,12 @@ namespace AVN.Models
         public string? Login { get; set; }
 
         [Required(ErrorMessage = "Введите пароль")]
-        [DataType(DataType.Password)]
+        //[DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string? Password { get; set; }
 
         [Required(ErrorMessage = "Введите подтверждение пароля")]
-        [DataType(DataType.Password)]
+        //[DataType(DataType.Password)]
         [Display(Name = "Подтвердите пароль")]
         [Compare("Password", ErrorMessage = "Пароль и подтверждения пароля не совпадают.")]
         public string? ConfirmPassword { get; set; }

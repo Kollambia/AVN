@@ -110,7 +110,7 @@ namespace AVN.Web.Controllers
 
                 if (groupType > 0)
                 {
-                    students = students.Where(x => (int)x.Group.GroupType == groupType);
+                    students = students.Where(x => (int)x?.Group?.GroupType == groupType);
                 }
 
                 var mappedStudents = students.Select(s => mapper.Map<Student, StudentVM>(s)).ToList();
@@ -300,6 +300,18 @@ namespace AVN.Web.Controllers
             return View(studentAndPaymentVM);
         }
 
+        public async Task<IActionResult> StudentMovementDetails(int id)
+        {
+            var entity = await unitOfWork.StudentMovementRepository.GetByIdAsync(id);
+
+            if (entity == null)
+            {
+                return NotFound();
+            }
+            var mappedEntity = mapper.Map<StudentMovement, StudentMovementVM>(entity);
+            return View(mappedEntity);
+        }
+
         [HttpGet]
         public IActionResult Create()
         {
@@ -309,13 +321,22 @@ namespace AVN.Web.Controllers
                 var studentOrderService = new OrderService(context);
                 var updatedStudent = studentOrderService.SetStudentStatusAndGradeBookNumber();
                 var mappedStudent = mapper.Map<Student, StudentVM>(updatedStudent);
-                mappedStudent.Login = mappedStudent.GradeBookNumber;
+                mappedStudent.Login = mappedStudent.Password = mappedStudent.ConfirmPassword = mappedStudent.GradeBookNumber;
                 return View(mappedStudent);
             }
             catch (Exception ex)
             {
                 TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
                 return RedirectToAction("Index", "Student");
+            }
+        }
+
+        public class CustomPasswordValidator<TUser> : IPasswordValidator<TUser> where TUser : class
+        {
+            public Task<IdentityResult> ValidateAsync(UserManager<TUser> manager, TUser user, string password)
+            {
+                // Bypass password validation by returning a successful result without performing any validation
+                return Task.FromResult(IdentityResult.Success);
             }
         }
 
@@ -331,6 +352,9 @@ namespace AVN.Web.Controllers
                 mappedStudent.Id = newId;
                 
                 var user = new AppUser() { UserName = student.GradeBookNumber, Id = newId, FullName = student.FullName};
+
+                userManager.PasswordValidators.Clear();
+                userManager.PasswordValidators.Add(new CustomPasswordValidator<AppUser>());
 
                 try
                 {
@@ -521,6 +545,8 @@ namespace AVN.Web.Controllers
                     var mapped = mapper.Map<StudentMovementVM, StudentMovement>(studentMovement);
                     await unitOfWork.StudentMovementRepository.UpdateAsync(mapped);
                     await unitOfWork.SaveChangesAsync();
+
+                    TempData["success"] = "Запись успешно изменена";
                     return RedirectToAction("Edit", "Student", new { id = mapped.StudentId });
                 }
                 return View(studentMovement);
@@ -543,13 +569,20 @@ namespace AVN.Web.Controllers
             return View(mapped);
         }
 
-        public async Task<IActionResult> DeleteStudentMovementConfirmed(string id)
+        public async Task<IActionResult> DeleteStudentMovementConfirmed(int id)
         {
             try
             {
                 var student = await unitOfWork.StudentMovementRepository.GetByIdAsync(id);
+                if (student == null)
+                {
+                    TempData["error"] = "Не найдена текущая запись";
+                    return RedirectToAction("Index", "Student");
+                }
                 await unitOfWork.StudentMovementRepository.DeleteAsync(student);
                 await unitOfWork.SaveChangesAsync();
+
+                TempData["success"] = "Запись успешно удалена";
                 return RedirectToAction("Edit", "Student", new { id = student.StudentId });
             }
             catch (Exception ex)
