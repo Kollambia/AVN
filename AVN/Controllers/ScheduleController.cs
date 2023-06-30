@@ -146,23 +146,24 @@ namespace AVN.Controllers
         }
 
         // POST: Subject/Delete/5
-        public async Task<IActionResult> DeleteConfirmed(int id)
+
+        public IActionResult DeleteConfirmed(string groupId)
         {
-            try
-            {
-                var schedule = await unitOfWork.ScheduleRepository.GetByIdAsync(id);
-                await unitOfWork.ScheduleRepository.DeleteAsync(schedule);
-                await unitOfWork.SaveChangesAsync();
+            // Найти все записи в расписании для данной группы
+            var schedulesForGroup = context.Schedules.Where(s => s.Group.Id == groupId).ToList();
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
+            if (!schedulesForGroup.Any())
             {
-                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
-                return RedirectToAction("Index", "Schedule");
+                return NotFound();
             }
 
+            // Удалить все найденные записи
+            context.Schedules.RemoveRange(schedulesForGroup);
+            context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
         }
+
 
         public async Task<ActionResult> ScheduleList(int facultyId, int departmentId, int directionId, string groupId, int groupType, int academYearId)
         {
