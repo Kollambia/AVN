@@ -80,39 +80,49 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in Model)
+                                    @if (Model != null && Model?.Count() > 0)
+                                    {
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.DirectionName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.DirectionShortName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => /*item.Department.DepartmentName ??*/ "")
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.DirectionNumber)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.CreditCost)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.AcademicDegree)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.TrainingPeriod)
+                                                </td>
+                                                @if (User.IsInRole(RoleConst.AdminRole))
+                                                {
+                                                    <td>
+                                                        <span> @Html.ActionLink("", "Edit", "Direction", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
+                                                        <span> @Html.ActionLink("", "Details", "Direction", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    }
+                                    else
                                     {
                                         <tr>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.DirectionName)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.DirectionShortName)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Department.DepartmentName)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.DirectionNumber)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.CreditCost)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.AcademicDegree)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.TrainingPeriod)
-                                            </td>
-                                            @if (User.IsInRole(RoleConst.AdminRole))
-                                            {
-                                                <td>
-                                                    <span> @Html.ActionLink("", "Edit", "Direction", new { id = @item.Id.ToString() }, new { @class = "fa fa-edit" })</span> &emsp;
-                                                    <span> @Html.ActionLink("", "Details", "Direction", new { id = @item.Id.ToString() }, new { @class = "fa fa-trash" })</span> &emsp;
-                                                </td>
-                                            }
+                                            <td colspan="5" class="text-center">Нет данных</td>
                                         </tr>
                                     }
+                                   
                                 </tbody>
                             </table>
                         </div>

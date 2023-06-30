@@ -7,7 +7,6 @@
     @if (SignInManager.IsSignedIn(User))
     {
         var applicationUser = (AppUser)await UserManager.GetUserAsync(User);
-        string fullname = applicationUser.FullName;
 
         <li class="nav-item">
             <a id="manage" class="nav-link" asp-area="Identity" asp-page="/Account/Manage/ChangePassword" title="Manage"><i class="fas fa-address-card"></i> Профиль</a>

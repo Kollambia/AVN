@@ -34,7 +34,7 @@ namespace AVN.Web.Controllers
                 directions = directions.Where(x => x.Department.FacultyId == facultyId);
 
             var mappedDirections = mapper.Map<Direction, DirectionVM>(directions).ToList();
-            return PartialView(mappedDirections);
+            return PartialView(mappedDirections ?? new List<DirectionVM>());
         }
 
         // GET: Direction/Details/5

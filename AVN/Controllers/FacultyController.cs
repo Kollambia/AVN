@@ -54,14 +54,24 @@ namespace AVN.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FacultyName,FacultyShortName,DeanName")] FacultyVM faculty)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var mappedFaculty = mapper.Map<FacultyVM, Faculty>(faculty);
-                await unitOfWork.FacultyRepository.CreateAsync(mappedFaculty);
-                await unitOfWork.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    var mappedFaculty = mapper.Map<FacultyVM, Faculty>(faculty);
+                    await unitOfWork.FacultyRepository.CreateAsync(mappedFaculty);
+                    await unitOfWork.SaveChangesAsync();
+
+                    TempData["success"] = "Запись успешно добавлена";
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(faculty);
             }
-            return View(faculty);
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Faculty");
+            }
         }
 
         // GET: Faculty/Edit/5
@@ -85,15 +95,25 @@ namespace AVN.Web.Controllers
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            try
             {
-                var mappedFaculty = mapper.Map<FacultyVM, Faculty>(faculty);
-                await unitOfWork.FacultyRepository.UpdateAsync(mappedFaculty);
-                await unitOfWork.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    var mappedFaculty = mapper.Map<FacultyVM, Faculty>(faculty);
+                    await unitOfWork.FacultyRepository.UpdateAsync(mappedFaculty);
+                    await unitOfWork.SaveChangesAsync();
+
+                    TempData["success"] = "Запись успешно изменена";
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(faculty);
             }
-            return View(faculty);
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Faculty");
+            }
+            
         }
 
         // GET: Faculty/Delete/5
@@ -120,12 +140,16 @@ namespace AVN.Web.Controllers
                         "Не удалось найти факультеты. Пожалуйста попробуйте позже, либо обратитесь к администратору.";
                     return RedirectToAction("Index", "Faculty");
                 }
-
-                TempData["success"] = "Запись успешно удалена";
-                await unitOfWork.DepartmentRepository.DeleteRangeAsync(faculty.Departments);
+                if (faculty?.Departments.Count > 0)
+                {
+                    TempData["error"] = "Не удалось удалить запись т.к. имеется ссылка в кафедрах. Необходимо удалить все ссылки текущей записи.";
+                    return RedirectToAction("Index", "Faculty");
+                }
 
                 await unitOfWork.FacultyRepository.DeleteAsync(faculty);
                 await unitOfWork.SaveChangesAsync();
+
+                TempData["success"] = "Запись успешно удалена";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

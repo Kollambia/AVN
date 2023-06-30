@@ -58,12 +58,12 @@ namespace AVN.Models
         public virtual Department Department { get; set; }
 
         [Required(ErrorMessage = "Введите пароль")]
-        [DataType(DataType.Password)]
+        //[DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }
 
         [Required]
-        [DataType(DataType.Password)]
+        //[DataType(DataType.Password)]
         [Display(Name = "Подтвердите пароль")]
         [Compare("Password", ErrorMessage = "Пароли должны совпадать")]
         public string ConfirmPassword { get; set; }

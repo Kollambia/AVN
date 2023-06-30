@@ -75,6 +75,8 @@ namespace AVN.Web.Controllers
                     mappedGroup.Id = newId;
                     await unitOfWork.GroupRepository.CreateAsync(mappedGroup);
                     await unitOfWork.SaveChangesAsync();
+
+                    TempData["success"] = "Запись успешно добавлена";
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -118,16 +120,24 @@ namespace AVN.Web.Controllers
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            try
             {
-                var mappedGroup = mapper.Map<GroupVM, Group>(group);
-                await unitOfWork.GroupRepository.UpdateAsync(mappedGroup);
-                await unitOfWork.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(group);
+                if (ModelState.IsValid)
+                {
+                    var mappedGroup = mapper.Map<GroupVM, Group>(group);
+                    await unitOfWork.GroupRepository.UpdateAsync(mappedGroup);
+                    await unitOfWork.SaveChangesAsync();
 
+                    TempData["success"] = "Запись успешно изменена";
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(group);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Group");
+            }
         }
 
         // GET: Group/Delete/5
