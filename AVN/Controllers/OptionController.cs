@@ -331,13 +331,30 @@ namespace AVN.Controllers
                 return RedirectToAction("Index", "Option");
             }
 
-            if (entity.Groups != null || entity.StudentMovements != null || entity.StudentPayments != null || entity.Orders != null)
+            if (entity.Groups.Any())
             {
-                await unitOfWork.GroupRepository.DeleteRangeAsync(entity.Groups);
-                await unitOfWork.StudentMovementRepository.DeleteRangeAsync(entity.StudentMovements);
-                await unitOfWork.StudentPaymentRepository.DeleteRangeAsync(entity.StudentPayments);
-                await unitOfWork.OrderRepository.DeleteRangeAsync(entity.Orders);
+                TempData["error"] = "Не удалось удалить запись. Удалите группы связанные с академическим годом";
+                return RedirectToAction("Index", "Option");
             }
+
+            if (entity.StudentMovements.Any())
+            {
+                TempData["error"] = "Не удалось удалить запись. Удалите переводы связанные с академическим годом";
+                return RedirectToAction("Index", "Option");
+            }
+
+            if (entity.StudentPayments.Any())
+            {
+                TempData["error"] = "Не удалось удалить запись. Удалите платежи связанные с академическим годом";
+                return RedirectToAction("Index", "Option");
+            }
+
+            if (entity.Orders.Any())
+            {
+                TempData["error"] = "Не удалось удалить запись. Удалите приказы связанные с академическим годом";
+                return RedirectToAction("Index", "Option");
+            }
+
             await unitOfWork.AcademicYearRepository.DeleteAsync(entity);
             await unitOfWork.SaveChangesAsync();
 

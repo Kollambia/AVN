@@ -156,11 +156,22 @@ namespace AVN.Web.Controllers
                     return RedirectToAction("Index", "Department");
                 }
 
-                if (department.Employees != null || department.Subjects != null || department.Directions != null)
+                if (department.Employees.Any())
                 {
-                    await unitOfWork.EmployeeRepository.DeleteRangeAsync(department.Employees);
-                    await unitOfWork.SubjectRepository.DeleteRangeAsync(department.Subjects);
-                    await unitOfWork.DirectionRepository.DeleteRangeAsync(department.Directions);
+                    TempData["error"] = "Не удалось удалить запись. Удалите работников связанные с кафедрой";
+                    return RedirectToAction("Index", "Department");
+                }
+
+                if (department.Subjects.Any())
+                {
+                    TempData["error"] = "Не удалось удалить запись. Удалите предметы связанные с кафедрой";
+                    return RedirectToAction("Index", "Department");
+                }
+
+                if (department.Directions.Any())
+                {
+                    TempData["error"] = "Не удалось удалить запись. Удалите направления связанные с кафедрой";
+                    return RedirectToAction("Index", "Department");
                 }
 
                 TempData["success"] = "Запись успешно удалена";

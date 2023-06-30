@@ -161,13 +161,39 @@ namespace AVN.Web.Controllers
                     return RedirectToAction("Index", "Group");
                 }
 
-                TempData["success"] = "Запись успешно удалена";
-                await unitOfWork.StudentRepository.DeleteRangeAsync(group.Students);
-                await unitOfWork.OrderRepository.DeleteRangeAsync(group.Orders);
-                context.GroupEmployees.RemoveRange(group.GroupEmployees);
-                await unitOfWork.ScheduleRepository.DeleteRangeAsync(group.Schedule);
-                await unitOfWork.GradeBookRepository.DeleteRangeAsync(group.GradeBook);
+                if (group.Students.Any())
+                {
+                    TempData["error"] = "Не удалось удалить запись. Удалите студентов связанные с группой";
+                    return RedirectToAction("Index", "Group");
+                }
 
+                if (group.Orders.Any())
+                {
+                    TempData["error"] = "Не удалось удалить запись. Удалите приказы связанные с группой";
+                    return RedirectToAction("Index", "Group");
+                }
+
+                if (group.GroupEmployees.Any())
+                {
+                    TempData["error"] = "Не удалось удалить запись.";
+                    return RedirectToAction("Index", "Group");
+                }
+
+                if (group.Schedule.Any())
+                {
+                    TempData["error"] = "Не удалось удалить запись. Удалите расписания связанные с группой";
+                    return RedirectToAction("Index", "Group");
+                }
+
+                if (group.GradeBook.Any())
+                {
+                    //await unitOfWork.GradeBookRepository.DeleteRangeAsync(group.GradeBook);
+                    TempData["error"] = "Не удалось удалить запись. Удалите ведомость связанную с группой";
+                    return RedirectToAction("Index", "Group");
+                }
+
+                TempData["success"] = "Запись успешно удалена";
+;
 
                 await unitOfWork.GroupRepository.DeleteAsync(group);
                 await unitOfWork.SaveChangesAsync();

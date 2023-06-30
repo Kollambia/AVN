@@ -113,7 +113,10 @@ namespace AVN.Web.Controllers
         {
             try
             {
-                var faculty = await context.Faculties.Include(d => d.Departments).FirstOrDefaultAsync(i => i.Id == id);
+                var faculty = await context.Faculties
+                    .Include(d => d.Departments)
+                    .FirstOrDefaultAsync(i => i.Id == id);
+
                 if (faculty == null)
                 {
                     TempData["error"] =
@@ -121,8 +124,12 @@ namespace AVN.Web.Controllers
                     return RedirectToAction("Index", "Faculty");
                 }
 
+                if (faculty.Departments.Any())
+                {
+                    TempData["error"] = "Не удалось удалить запись. Удалите кафедры связанные с факультетом";
+                    return RedirectToAction("Index", "Faculty");
+                }
                 TempData["success"] = "Запись успешно удалена";
-                await unitOfWork.DepartmentRepository.DeleteRangeAsync(faculty.Departments);
 
                 await unitOfWork.FacultyRepository.DeleteAsync(faculty);
                 await unitOfWork.SaveChangesAsync();

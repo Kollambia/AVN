@@ -151,9 +151,13 @@ namespace AVN.Web.Controllers
                     return RedirectToAction("Index", "Direction");
                 }
 
+                if (direction.Groups.Any())
+                {
+                    TempData["error"] = "Не удалось удалить запись. Удалите группы связанные с направлением";
+                    return RedirectToAction("Index", "Direction");
+                }
                 TempData["success"] = "Запись успешно удалена";
-                await unitOfWork.GroupRepository.DeleteRangeAsync(direction.Groups);
-
+                
                 await unitOfWork.DirectionRepository.DeleteAsync(direction);
                 await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

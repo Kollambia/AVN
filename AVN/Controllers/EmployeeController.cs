@@ -152,11 +152,26 @@ namespace AVN.Controllers
                     .Include(s => s.Schedules)
                     .FirstOrDefaultAsync(i => i.Id == id);
 
-                TempData["success"] = "Запись успешно удалена";
-                await unitOfWork.SubjectRepository.DeleteRangeAsync(employee.Subjects);
-                context.GroupEmployees.RemoveRange(employee.GroupEmployees);
-                await unitOfWork.ScheduleRepository.DeleteRangeAsync(employee.Schedules);
+                if (employee.GroupEmployees.Any())
+                {
+                    TempData["error"] = "Не удалось удалить запись.";
+                    return RedirectToAction("Index", "Employee");
+                }
 
+                if (employee.Subjects.Any())
+                {
+                    TempData["error"] = "Не удалось удалить запись. Удалите предметы связанные с работником";
+                    return RedirectToAction("Index", "Employee");
+                }
+
+                if (employee.Schedules.Any())
+                {
+                    TempData["error"] = "Не удалось удалить запись. Удалите расписание связанные с работником";
+                    return RedirectToAction("Index", "Employee");
+                }
+
+                TempData["success"] = "Запись успешно удалена";
+                
                 await unitOfWork.EmployeeRepository.DeleteAsync(employee);
                 var user = await userManager.FindByIdAsync(id);
                 if (user != null)

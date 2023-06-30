@@ -9,6 +9,7 @@ using AVN.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static iText.IO.Util.IntHashtable;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace AVN.Web.Controllers
@@ -457,15 +458,23 @@ namespace AVN.Web.Controllers
                     return RedirectToAction("Index", "Student");
                 }
 
-                if (student.StudentMovements != null || student.StudentPayments != null || student.Orders != null || student.GradeBook != null)
+                if (student.StudentMovements.Any())
                 {
-                    await unitOfWork.StudentMovementRepository.DeleteRangeAsync(student.StudentMovements);
-                    await unitOfWork.StudentPaymentRepository.DeleteRangeAsync(student.StudentPayments);
-                    await unitOfWork.OrderRepository.DeleteRangeAsync(student.Orders);
-                    await unitOfWork.GradeBookRepository.DeleteRangeAsync(student.GradeBook);
+                    TempData["error"] = "Не удалось удалить запись. Удалите переводы студентов связанные со студентом";
+                    return RedirectToAction("Index", "Student");
+                }
+                if (student.Orders.Any())
+                {
+                    TempData["error"] = "Не удалось удалить запись. Удалите приказы связанные со студентом";
+                    return RedirectToAction("Index", "Student");
                 }
 
-                // Удаляем студента
+                if (student.StudentPayments.Any())
+                {
+                    TempData["error"] = "Не удалось удалить запись. Удалите платежи связанные со студентом";
+                    return RedirectToAction("Index", "Student");
+                }
+                
                 await unitOfWork.StudentRepository.DeleteAsync(student);
 
                 // Удаляем пользователя

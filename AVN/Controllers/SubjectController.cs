@@ -165,7 +165,8 @@ namespace AVN.Web.Controllers
         {
             try
             {
-                var subject = await context.Subjects.Include(s => s.Schedule)
+                var subject = await context.Subjects
+                    .Include(s => s.Schedule)
                     .Include(g => g.GradeBook)
                     .FirstOrDefaultAsync(i => i.Id == id);
 
@@ -176,8 +177,19 @@ namespace AVN.Web.Controllers
                     return RedirectToAction("Index", "Subject");
                 }
 
-                await unitOfWork.ScheduleRepository.DeleteRangeAsync(subject.Schedule);
-                await unitOfWork.GradeBookRepository.DeleteRangeAsync(subject.GradeBook);
+                if (subject.Schedule.Any())
+                {
+                    TempData["error"] = "Не удалось удалить запись. Удалите расписания связанные с предметом";
+                    return RedirectToAction("Index", "Department");
+                }
+                if (subject.GradeBook.Any())
+                {
+                    TempData["error"] = "Не удалось удалить запись. Удалите ведомость связанная с предметом";
+                    return RedirectToAction("Index", "Department");
+                }
+
+                //await unitOfWork.ScheduleRepository.DeleteRangeAsync(subject.Schedule);
+                //await unitOfWork.GradeBookRepository.DeleteRangeAsync(subject.GradeBook);
 
                 await unitOfWork.SubjectRepository.DeleteAsync(subject);
                 await unitOfWork.SaveChangesAsync();
