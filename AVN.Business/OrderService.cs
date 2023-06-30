@@ -43,11 +43,31 @@ public class OrderService
         catch (Exception ex)
         {
             throw new Exception();
-            return null;
         }
 
     }
+    public List<Employee> GetEmployeesByFullName(string fullName)
+    {
+        try
+        {
+            string[] nameParts = fullName.Split(' ');
+            var validNameParts = nameParts.Where(part => !string.IsNullOrEmpty(part) && part.Length >= 3);
+            var employees = _dbContext.Employees.ToList().Where(s =>
+                validNameParts.Any(part =>
+                    s.SName.Contains(part, StringComparison.OrdinalIgnoreCase) ||
+                    s.Name.Contains(part, StringComparison.OrdinalIgnoreCase) ||
+                    s.PName.Contains(part, StringComparison.OrdinalIgnoreCase)
+                )
+            ).ToList();
 
+            return employees;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception();
+        }
+
+    }
     public OperationResult CreateStudentOrder(Order order, List<string> studentIds)
     {
         var result = new OperationResult();

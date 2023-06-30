@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AVN.Business;
 using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
@@ -30,19 +31,56 @@ namespace AVN.Controllers
         // GET: Employee
         public  IActionResult Index()
         {
-            var employees = unitOfWork.EmployeeRepository.GetAll();
-            return View(employees);
+            return View();
+        }
+
+        public async Task<ActionResult> EmployeeList(int facultyId, int departmentId, string fullname)
+        {
+            try
+            {
+                var employees = await unitOfWork.EmployeeRepository.GetAllAsync();
+                if (!string.IsNullOrEmpty(fullname))
+                {
+                    var studentOrderService = new OrderService(context);
+                    employees = studentOrderService.GetEmployeesByFullName(fullname);
+                    return PartialView(employees.Select(s => mapper.Map<Employee, EmployeeVM>(s)) ?? new List<EmployeeVM>());
+                }
+                else if (departmentId > 0)
+                {
+                    employees = employees.Where(x => x.DepartmentId == departmentId);
+                }
+                else if (facultyId > 0)
+                {
+                    employees = employees.Where(x => x.Department?.FacultyId == facultyId);
+                }
+                else
+                {
+                    return PartialView(new List<EmployeeVM>());
+                }
+
+                var mappedEmployees = employees.Select(s => mapper.Map<Employee, EmployeeVM>(s)).ToList();
+                return PartialView(mappedEmployees ?? new List<EmployeeVM>());
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Employee");
+            }
+
         }
 
         // GET: Employee/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            var employee = await unitOfWork.EmployeeRepository.GetByIdAsync(id);
+            var employee = await context.Employees
+                .Include(d => d.Department)
+                .FirstOrDefaultAsync(e => e.Id == id);
             if (employee == null)
             {
                 return NotFound();
             }
-            return View(employee);
+            var mappedEmployee = mapper.Map<Employee, EmployeeVM>(employee);
+            return View(mappedEmployee);
         }
 
         // GET: Employee/Create
@@ -56,7 +94,7 @@ namespace AVN.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(EmployeeVM employee)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var newId = Guid.NewGuid().ToString();
                 employee.Id = newId;
@@ -93,7 +131,7 @@ namespace AVN.Controllers
                     await unitOfWork.EmployeeRepository.CreateAsync(mappedEmployee);
                     await unitOfWork.SaveChangesAsync();
 
-
+                    TempData["success"] = "Запись успешно добавлена";
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
@@ -112,7 +150,7 @@ namespace AVN.Controllers
             var employee = await context.Employees
                 .Include(d => d.Department)
                 .FirstOrDefaultAsync(e => e.Id == id);
-            var mappedEmployee = mapper.Map<Employee, EmployeeVM>(employee);
+            var mappedEmployee = mapper.Map<Employee, EmployeeEditVM>(employee);
             if (employee == null)
             {
                 return NotFound();
@@ -123,21 +161,31 @@ namespace AVN.Controllers
         // POST: Employee/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, EmployeeVM employeeVM)
+        public async Task<IActionResult> Edit(string id, EmployeeEditVM employeeVM)
         {
             if (id != employeeVM.Id)
             {
                 return NotFound();
             }
-
-            if (!ModelState.IsValid)
+            try
             {
-                var mappedEmployee = mapper.Map<EmployeeVM, Employee>(employeeVM);
-                await unitOfWork.EmployeeRepository.UpdateAsync(mappedEmployee);
-                await unitOfWork.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    var mappedEmployee = mapper.Map<EmployeeEditVM, Employee>(employeeVM);
+                    await unitOfWork.EmployeeRepository.UpdateAsync(mappedEmployee);
+                    await unitOfWork.SaveChangesAsync();
+
+                    TempData["success"] = "Запись успешно изменена";
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(employeeVM);
             }
-            return View(employeeVM);
+            catch (Exception ex)
+            {
+                TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
+                return RedirectToAction("Index", "Employee");
+            }
+           
         }
 
         // GET: Employee/Delete/5

@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace AVN.Models
 {
-    public class EmployeeVM : BasicVM<string>
+    public class EmployeeEditVM : BasicVM<string>
     {
         [Required(ErrorMessage = "Введите фамилию")]
         [DisplayName("Фамилия")]
@@ -57,15 +57,5 @@ namespace AVN.Models
         public int? DepartmentId { get; set; }
         public Department? Department { get; set; }
 
-        [Required(ErrorMessage = "Введите пароль")]
-        //[DataType(DataType.Password)]
-        [Display(Name = "Пароль")]
-        public string? Password { get; set; }
-
-        [Required]
-        //[DataType(DataType.Password)]
-        [Display(Name = "Подтвердите пароль")]
-        [Compare("Password", ErrorMessage = "Пароли должны совпадать")]
-        public string? ConfirmPassword { get; set; }
     }
 }

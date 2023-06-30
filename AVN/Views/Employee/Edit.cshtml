@@ -1,5 +1,8 @@
-﻿@model EmployeeVM
+﻿@model EmployeeEditVM
 
+<div class="mb-3">
+    <a href="@Url.Action("Index", "Employee")" class="btn btn-primary fas fa-arrow-alt-circle-left" type="button"> назад</a>
+</div>
 
 @using (Html.BeginForm())
 {
@@ -29,16 +32,16 @@
                 </div>
                 <div class="col-sm-4 form-group">
                     <label class="font-weight-bold">@Html.DisplayNameFor(x => x.DateOfBirth)</label>
-                    @Html.EditorFor(x => x.DateOfBirth, new { htmlAttributes = new { @class = "form-control datetimepicker" }})
+                    @Html.TextBoxFor(x => x.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control",@type = "date"})
                     @Html.ValidationMessageFor(x => x.DateOfBirth, "", new { @class = "text-danger" })
                 </div>
                 @*end-first-row*@
 
                 @*start-second-row*@
                 <div class="col-sm-4 form-group">
-                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Email)*</label>
-                    @Html.EditorFor(x => x.Email, new { htmlAttributes = new { @class = "form-control", placeholder="Введите почту." }})
-                    @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Address)*</label>
+                    @Html.EditorFor(x => x.Address, new { htmlAttributes = new { @class = "form-control", placeholder="Введите адрес." }})
+                    @Html.ValidationMessageFor(x => x.Address, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-sm-3 form-group">
                     <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Gender):</label>
@@ -73,12 +76,12 @@
                     @Html.ValidationMessageFor(x => x.PhoneNumber, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="col-sm-4 form-group">
-                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Address)*</label>
-                    @Html.EditorFor(x => x.Address, new { htmlAttributes = new { @class = "form-control", placeholder="Введите адрес." }})
-                    @Html.ValidationMessageFor(x => x.Address, "", new { @class = "text-danger" })
-                </div>
 
+                <div class="col-sm-4 form-group">
+                    <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Email)*</label>
+                    @Html.EditorFor(x => x.Email, new { htmlAttributes = new { @class = "form-control", placeholder="Введите почту." }})
+                    @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+                </div>
 
                 @*end-third-row*@
 
@@ -94,7 +97,7 @@
                     @Html.ValidationMessageFor(x => x.DepartmentId, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-sm-4 form-group"></div>
-
+@*
                 <div class="col-sm-4 form-group">
                     <label class="font-weight-bold">@Html.DisplayNameFor(x => x.Password)*</label>
                     @Html.EditorFor(x => x.Password, new { htmlAttributes = new { @class = "form-control", placeholder="Введите пароль" }})
@@ -106,7 +109,7 @@
                     <label class="font-weight-bold">@Html.DisplayNameFor(x => x.ConfirmPassword)*</label>
                     @Html.EditorFor(x => x.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", placeholder="Повторите пароль." }})
                     @Html.ValidationMessageFor(x => x.ConfirmPassword, "", new { @class = "text-danger" })
-                </div>
+                </div>*@
 
                 @*end-last-row*@
 
@@ -137,6 +140,8 @@
                     $.each(data, function (i, department) {
                         $('#departmentDropdown').append($('<option></option>').val(department.value).text(department.text));
                     });
+                    var departmentId = '@Model.DepartmentId';
+                    $('#departmentDropdown').val(departmentId);
                 },
                 error: function (xhr, status, error) {
                     // Handle error if any
