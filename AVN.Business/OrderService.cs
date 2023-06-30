@@ -409,8 +409,9 @@ public class OrderService
             return result;
         }
 
-        var invoiceGenerator = new InvoiceGenerator();
-        var pdfInvoice = invoiceGenerator.GenerateStudentPaymentPdf(model);
+        var reportGenerator = new ReportGenerator();
+        var pdfInvoice = reportGenerator.GenerateStudentPaymentPdf(model);
+
         result.Success = true;
         result.Message = "Счет успешно создан!";
         result.Data = pdfInvoice;

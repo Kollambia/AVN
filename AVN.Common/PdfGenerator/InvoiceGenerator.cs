@@ -8,7 +8,7 @@ using AVN.Common.Customs;
 
 namespace AVN.Common.PdfGenerator
 {
-    public class InvoiceGenerator
+    public class ReportGenerator
     {
         public string GenerateStudentPaymentPdf(PaymentInvoice model)
         {

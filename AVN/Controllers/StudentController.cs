@@ -617,10 +617,11 @@ namespace AVN.Web.Controllers
                 {
                     var fileBytes = System.IO.File.ReadAllBytes(result.Data);
 
-                    // Return the PDF file as a FileStreamResult for preview
                     var fileStreamResult = new FileStreamResult(new MemoryStream(fileBytes), "application/pdf");
                     fileStreamResult.FileDownloadName = $"Платежный счёт {student.FullName}.pdf";
-                    return fileStreamResult;
+
+                    TempData["success"] = result.Message;
+                    return PdfViewer(fileStreamResult);
                 }
                 else
                 {
@@ -634,6 +635,20 @@ namespace AVN.Web.Controllers
                 TempData["error"] = $"Произошла внутренняя ошибка: {ex.Message}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
                 return RedirectToAction("Index", "Student");
             }
+        }
+
+        public IActionResult PdfViewer(FileStreamResult fileStreamResult)
+        {
+            var fileName = fileStreamResult.FileDownloadName;
+            var encodedFileName = Uri.EscapeDataString(fileName);
+
+            var contentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("inline");
+            contentDisposition.FileName = encodedFileName;
+
+            Response.Headers["Content-Disposition"] = contentDisposition.ToString();
+
+            // Return the file stream with the appropriate content type
+            return File(fileStreamResult.FileStream, fileStreamResult.ContentType);
         }
 
     }
