@@ -86,6 +86,7 @@ namespace AVN.Web.Controllers
                 {
                     var studentOrderService = new OrderService(context);
                     students = studentOrderService.GetStudentsByFullName(fullname);
+                    return PartialView(students.Select(s => mapper.Map<Student, StudentVM>(s)) ?? new List<StudentVM>());
                 }
                 else if (!string.IsNullOrEmpty(groupId))
                 {
