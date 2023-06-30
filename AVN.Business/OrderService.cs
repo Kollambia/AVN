@@ -341,9 +341,10 @@ public class OrderService
         Student student = new Student();
         int count = _dbContext.Students.Count();
         int studentsCount = count % 1000;
-        string lastThreeNumbers = studentsCount.ToString("D3");
+        string lastThreeNumbers = studentsCount.ToString("D5");
 
-        student.GradeBookNumber = $"{DateTime.Now.Year}{lastThreeNumbers}";
+        int lastTwoNumbers = DateTime.Now.Year % 100;
+        student.GradeBookNumber = $"{lastTwoNumbers.ToString("D2")}{lastThreeNumbers}";
         student.Status = StudentStatus.Enrollee;
         student.RecruitmentYear = DateTime.Now.Year;
 

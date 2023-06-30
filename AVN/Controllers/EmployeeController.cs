@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using static AVN.Web.Controllers.StudentController;
 
 namespace AVN.Controllers
 {
@@ -68,15 +69,25 @@ namespace AVN.Controllers
                     Email = employee.Email
                 };
 
+                userManager.PasswordValidators.Clear();
+                userManager.PasswordValidators.Add(new CustomPasswordValidator<AppUser>());
+
                 try
                 {
                     var mappedEmployee = mapper.Map<EmployeeVM, Employee>(employee);
+
                     var result = await userManager.CreateAsync(user, employee.Password);
                     if (!result.Succeeded)
                     {
                         TempData["error"] = $"Произошла ошибка создания пользователя: {result.Errors}.  Пожалуйста попробуйте позже, либо обратитесь к администратору.";
                         return RedirectToAction("Create", "Employee");
                     }
+                    else if (!result.Succeeded)
+                    {
+                        TempData["error"] = $"Ошибка при создании учетной записи работника: {result.Errors.First().Description}";
+                        return View(employee);
+                    }
+
                     await userManager.AddToRoleAsync(user, RoleConst.Employee);
 
                     await unitOfWork.EmployeeRepository.CreateAsync(mappedEmployee);

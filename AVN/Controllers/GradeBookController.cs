@@ -58,6 +58,8 @@ namespace AVN.Controllers
         [HttpPost]
         public async Task<ActionResult> GradeBookList(List<GradeBookVM> gradeBooks)
         {
+            if (gradeBooks == null || gradeBooks.Count == 0)
+                return RedirectToAction("Index", "GradeBook");
             try
             {
                 var mappedEntities = mapper.Map<GradeBookVM, GradeBook>(gradeBooks);
