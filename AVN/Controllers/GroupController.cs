@@ -191,8 +191,9 @@ namespace AVN.Web.Controllers
 
                 if (group.Schedule.Any())
                 {
-                    TempData["error"] = "Не удалось удалить запись. Удалите расписания связанные с группой";
-                    return RedirectToAction("Index", "Group");
+                    await unitOfWork.ScheduleRepository.DeleteRangeAsync(group.Schedule);
+                    //TempData["error"] = "Не удалось удалить запись. Удалите расписания связанные с группой";
+                    //return RedirectToAction("Index", "Group");
                 }
 
                 if (group.GradeBook.Any())
