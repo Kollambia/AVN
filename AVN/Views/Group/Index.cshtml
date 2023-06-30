@@ -47,7 +47,7 @@
 
 
 
-@section Scripts {
+@*@section Scripts {
     <script>
         $(document).ready(function () {
             $.ajax({
@@ -173,5 +173,142 @@
             })
 
         }
+    </script>
+}*@
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var facultyDropdown = $('#facultyDropdown');
+            var departmentDropdown = $('#departmentDropdown');
+            var academYearDropdown = $('#academYearDropdown');
+
+
+            // Заполнение выпадающего списка факультетов при загрузке страницы
+            $.ajax({
+                url: '@Url.Action("GetFaculties", "Faculty")',
+                type: 'GET',
+                success: function (data) {
+                    clearDropdown(facultyDropdown);
+                    populateDropdown(facultyDropdown, data);
+                    loadSelectedValue('facultyDropdown');
+                    FillDepartmentsDropdown();
+                    //GetList();
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+            $.ajax({
+                url: '@Url.Action("GetAcademicYears", "Option")',
+                type: 'GET',
+                success: function (data) {
+                    populateDropdown(academYearDropdown, data);
+                    loadSelectedValue('academYearDropdown');
+                    GetList()
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if any
+                    console.error(xhr.responseText);
+                }
+            });
+            // Обработчик изменения выбранного факультета
+            facultyDropdown.change(function () {
+                saveSelectedValue('facultyDropdown')
+                FillDepartmentsDropdown();
+                GetList();
+            });
+
+            // Обработчик изменения выбранного отделения
+            departmentDropdown.change(function () {
+                saveSelectedValue('departmentDropdown')
+                GetList();
+            });
+
+            academYearDropdown.change(function () {
+                saveSelectedValue('academYearDropdown')
+                GetList();
+            });
+
+            // Заполнение выпадающего списка отделений
+            function FillDepartmentsDropdown() {
+                var facultyId = facultyDropdown.val();
+                if (!facultyId) {
+                    facultyId = facultyDropdown.find('option:first').val();
+                    facultyDropdown.val(facultyId);
+                }
+                $.ajax({
+                    url: '@Url.Action("GetDepartmentsByFaculty", "Department")',
+                    type: 'GET',
+                    data: { facultyId: facultyId },
+                    success: function (data) {
+                        clearDropdown(departmentDropdown);
+                        populateDropdown(departmentDropdown, data);
+                        loadSelectedValue('departmentDropdown');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+
+            // Получение списка студентов
+            function GetList() {
+                var facultyId = facultyDropdown.val();
+                var departmentId = departmentDropdown.val();
+                var academYearId = academYearDropdown.val();
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GroupList", "Group")',
+                    contentType: 'application/json',
+                    data: {
+                        'facultyId': facultyId,
+                        'departmentId': departmentId,
+                        'academYearId': academYearId
+                    },
+                    success: function (response) {
+                        $('#dataContainer').html(response);
+                        $('#table').DataTable()
+                        console.log(result)
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error if any
+                        console.error(xhr.responseText);
+                    }
+                })
+
+            }
+
+            // Очистка выпадающего списка
+            function clearDropdown(dropdown) {
+                dropdown.empty();
+                dropdown.append($('<option>').text('Все').val(''));
+            }
+
+            // Заполнение выпадающего списка данными
+            function populateDropdown(dropdown, data) {
+                $.each(data, function (i, item) {
+                    dropdown.append($('<option>').val(item.value).text(item.text));
+                });
+            }
+
+            function loadSelectedValue(dropdownId) {
+                var selectedValue = localStorage.getItem(dropdownId);
+                var dropdown = $('#' + dropdownId);
+
+                if (selectedValue && dropdown.find('option[value="' + selectedValue + '"]').length > 0) {
+                    dropdown.val(selectedValue);
+                } else {
+                    dropdown.val(''); // Set the dropdown value to empty
+                    localStorage.setItem(dropdownId, ''); // Save the empty value in localStorage
+                }
+            }
+
+            function saveSelectedValue(dropdownId) {
+                var selectedValue = $('#' + dropdownId).val();
+                localStorage.setItem(dropdownId, selectedValue);
+            }
+
+        });
     </script>
 }
