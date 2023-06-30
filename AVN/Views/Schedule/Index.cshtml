@@ -30,6 +30,16 @@
 
                 </div>
             </div>
+            <div class="form-group row mb-1">
+
+                <div class="col-md-2">
+                    <label class="font-weight-bold">Учебный год</label>
+                </div>
+                <div class="col-md-10">
+                    <select id="academYearDropdown" name="academYearDropdown" class="form-control"></select>
+
+                </div>
+            </div>
         </div>
         <div class="col-md-5">
             <div class="form-group row mb-1">
@@ -64,6 +74,7 @@
             var departmentDropdown = $('#departmentDropdown');
             var directionDropdown = $('#directionDropdown');
             var groupDropdown = $('#groupDropdown');
+            var academYearDropdown = $('#academYearDropdown');
 
             // Заполнение выпадающего списка факультетов при загрузке страницы
             $.ajax({
@@ -98,6 +109,10 @@
 
             // Обработчик изменения выбранной группы
             groupDropdown.change(function () {
+                GetList();
+            });
+
+            academYearDropdown.change(function () {
                 GetList();
             });
 
@@ -165,6 +180,7 @@
                 var departmentId = departmentDropdown.val();
                 var directionId = directionDropdown.val();
                 var groupId = groupDropdown.val();
+                var academYearId = academYearDropdown.val();
 
                 $.ajax({
                     type: 'GET',
@@ -175,6 +191,7 @@
                         'departmentId': departmentId,
                         'directionId': directionId,
                         'groupId': groupId,
+                        'academYearId': academYearId
                     },
                     success: function (response) {
                         $('#dataContainer').html(response);
@@ -204,4 +221,6 @@
             //GetList();
         });
     </script>
+
+    
 }
