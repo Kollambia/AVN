@@ -3,7 +3,7 @@
 <h2>Расписание</h2>
 
 @{
-    ViewData["Title"] = "Студенты";
+    ViewData["Title"] = "Расписание";
 }
 
 @using (Html.BeginForm())
@@ -92,6 +92,7 @@
                 url: '@Url.Action("GetAcademicYears", "Option")',
                 type: 'GET',
                 success: function (data) {
+                    $('#academYearDropdown').append($('<option selected disabled></option>').val("").text("Выберите учебный год"));
                     $.each(data, function (i, academYear) {
                         $('#academYearDropdown').append($('<option></option>').val(academYear.value).text(academYear.text));
                     });
