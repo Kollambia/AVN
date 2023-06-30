@@ -9,8 +9,6 @@ using AVN.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using static iText.IO.Util.IntHashtable;
-using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace AVN.Web.Controllers
 {

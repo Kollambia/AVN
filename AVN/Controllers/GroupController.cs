@@ -223,9 +223,12 @@ namespace AVN.Web.Controllers
             return groupList;
         }
 
-        public async Task<List<SelectListItem>> GetGroupsByDirection(int directionId, int groupType)
+        public async Task<List<SelectListItem>> GetGroupsByDirection(int directionId, int groupType = 0)
         {
-            var groups = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x => x.DirectionId == directionId && (int)x.GroupType == groupType);
+            var groups = (await unitOfWork.GroupRepository.GetAllAsync()).Where(x => x.DirectionId == directionId);
+            if (groupType > 0)
+                groups = groups.Where(x => (int)x.GroupType == groupType);
+
             var groupList = groups.Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.GroupName }).ToList();
             return groupList;
         }
