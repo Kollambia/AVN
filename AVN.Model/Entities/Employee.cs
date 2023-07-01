@@ -1,7 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AVN.Common.Enums;
+﻿using AVN.Common.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.Principal;
 
 namespace AVN.Model.Entities
 {

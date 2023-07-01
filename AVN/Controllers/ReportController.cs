@@ -1,15 +1,12 @@
-﻿using AVN.Data.UnitOfWorks;
+﻿using AVN.Automapper;
+using AVN.Common;
+using AVN.Common.InheritedClasses;
+using AVN.Common.PdfGenerator;
 using AVN.Data;
+using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
-using AVN.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using AVN.Automapper;
-using AVN.Business;
-using AVN.Common.PdfGenerator;
-using AVN.Common.Customs;
-using AVN.Common.InheritedClasses;
-using AVN.Common;
 
 namespace AVN.Controllers
 {

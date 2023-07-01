@@ -1,6 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Threading.Tasks.Sources;
-using AVN.Common.Enums;
+﻿using AVN.Common.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AVN.Model.Entities;
 

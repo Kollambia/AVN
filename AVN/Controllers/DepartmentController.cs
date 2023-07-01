@@ -1,5 +1,4 @@
-﻿using AutoMapper.Execution;
-using AVN.Automapper;
+﻿using AVN.Automapper;
 using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;

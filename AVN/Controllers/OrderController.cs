@@ -1,15 +1,13 @@
 ﻿using AutoMapper;
 using AVN.Business;
+using AVN.Common.Customs;
+using AVN.Common.Enums;
 using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
 using AVN.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using AVN.Controllers;
-using AVN.Common.Customs;
-using Microsoft.EntityFrameworkCore;
-using AVN.Common.Enums;
 
 namespace AVN.Web.Controllers
 {

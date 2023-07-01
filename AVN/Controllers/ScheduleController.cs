@@ -5,7 +5,6 @@ using AVN.Model.Entities;
 using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Text.RegularExpressions;
 
 namespace AVN.Controllers
 {
