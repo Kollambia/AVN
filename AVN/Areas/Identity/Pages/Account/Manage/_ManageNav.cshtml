@@ -6,7 +6,7 @@
 }
 <ul class="nav nav-pills flex-column">
     
-    @if (User.IsInRole(RoleConst.AdminRole) || User.IsInRole(RoleConst.Employee))
+    @if (User.IsInRole(RoleConst.AdminRole) || User.IsInRole(RoleConst.Employee) || User.IsInRole(RoleConst.AccountantRole))
     {
         <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
     }

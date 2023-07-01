@@ -7,7 +7,7 @@
 
 
 <ul class="navbar-nav flex-grow-1">
-    @if (User.IsInRole(RoleConst.AdminRole) || User.IsInRole(RoleConst.Employee))
+    @if (User.IsInRole(RoleConst.AdminRole) || User.IsInRole(RoleConst.Employee) || User.IsInRole(RoleConst.AccountantRole))
     {
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -16,7 +16,7 @@
             </a>
             
             <div class="dropdown-menu">
-                @if (User.IsInRole(RoleConst.AdminRole))
+                @if (User.IsInRole(RoleConst.AdminRole) || User.IsInRole(RoleConst.AccountantRole))
                 {
                     <a class="dropdown-item d-flex align-items-center" asp-controller="Order" asp-action="Index">
                         <i class="fas fa-people-arrows mr-2" style="width: 20px;"></i>
@@ -125,7 +125,7 @@
                 <i class="fas fa-users mr-2" style="width: 20px;"></i>
                 <span>Список групп</span>
             </a>
-            @if (User.IsInRole(RoleConst.AdminRole) || User.IsInRole(RoleConst.Employee))
+            @if (User.IsInRole(RoleConst.AdminRole) || User.IsInRole(RoleConst.Employee) || User.IsInRole(RoleConst.AccountantRole))
             {
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Enrolled">

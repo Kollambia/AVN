@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AVN.Business;
+using AVN.Common.Enums;
 using AVN.Data;
 using AVN.Data.UnitOfWorks;
 using AVN.Model.Entities;
@@ -126,7 +127,14 @@ namespace AVN.Controllers
                         return View(employee);
                     }
 
-                    await userManager.AddToRoleAsync(user, RoleConst.Employee);
+                    if (mappedEmployee.Position == EmployeePosition.Accountant)
+                    {
+                        await userManager.AddToRoleAsync(user, RoleConst.AccountantRole);
+                    }
+                    else
+                    {
+                        await userManager.AddToRoleAsync(user, RoleConst.Employee);
+                    }
 
                     await unitOfWork.EmployeeRepository.CreateAsync(mappedEmployee);
                     await unitOfWork.SaveChangesAsync();

@@ -42,6 +42,11 @@ namespace AVN.Model.Initializer
                 _roleManager.CreateAsync(new IdentityRole(RoleConst.AdminRole)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(RoleConst.Employee)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(RoleConst.StudentRole)).GetAwaiter().GetResult();
+                
+            }
+            else if (!_roleManager.RoleExistsAsync(RoleConst.AccountantRole).GetAwaiter().GetResult())
+            {
+                _roleManager.CreateAsync(new IdentityRole(RoleConst.AccountantRole)).GetAwaiter().GetResult();
             }
             else
             {

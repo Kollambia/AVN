@@ -5,5 +5,6 @@
         public const string AdminRole = "Admin";
         public const string Employee = "Employee";
         public const string StudentRole = "Student";
+        public const string AccountantRole = "Accountant";
     }
 }
