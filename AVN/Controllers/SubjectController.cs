@@ -179,17 +179,13 @@ namespace AVN.Web.Controllers
 
                 if (subject.Schedule.Any())
                 {
-                    TempData["error"] = "Не удалось удалить запись. Удалите расписания связанные с предметом";
-                    return RedirectToAction("Index", "Department");
-                }
-                if (subject.GradeBook.Any())
-                {
-                    TempData["error"] = "Не удалось удалить запись. Удалите ведомость связанная с предметом";
-                    return RedirectToAction("Index", "Department");
+                    await unitOfWork.ScheduleRepository.DeleteRangeAsync(subject.Schedule);
                 }
 
-                //await unitOfWork.ScheduleRepository.DeleteRangeAsync(subject.Schedule);
-                //await unitOfWork.GradeBookRepository.DeleteRangeAsync(subject.GradeBook);
+                if (subject.GradeBook.Any())
+                {
+                    await unitOfWork.GradeBookRepository.DeleteRangeAsync(subject.GradeBook);
+                }
 
                 await unitOfWork.SubjectRepository.DeleteAsync(subject);
                 await unitOfWork.SaveChangesAsync();

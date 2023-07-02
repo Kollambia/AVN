@@ -199,9 +199,9 @@ namespace AVN.Web.Controllers
 
                 if (group.GradeBook.Any())
                 {
-                    //await unitOfWork.GradeBookRepository.DeleteRangeAsync(group.GradeBook);
-                    TempData["error"] = "Не удалось удалить запись. Удалите ведомость связанную с группой";
-                    return RedirectToAction("Index", "Group");
+                    await unitOfWork.GradeBookRepository.DeleteRangeAsync(group.GradeBook);
+                    //TempData["error"] = "Не удалось удалить запись. Удалите ведомость связанную с группой";
+                    //return RedirectToAction("Index", "Group");
                 }
 
                 await unitOfWork.GroupRepository.DeleteAsync(group);

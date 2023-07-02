@@ -122,7 +122,7 @@
     @if (User.IsInRole(RoleConst.AdminRole))
     {
         <p class="text-danger">
-            Внимание! Если удалить текущую запись, то удалятся также связанные с ним данные!
+            Внимание! Если удалить текущую запись, то удалятся также данные о группе в расписании и ведомости!
         </p>
         <form action="/Group/DeleteConfirmed/@Model?.Id" method="post">
             <button type="submit" class="btn btn-danger">
