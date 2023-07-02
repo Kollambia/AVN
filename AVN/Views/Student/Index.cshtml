@@ -112,7 +112,6 @@
                 success: function (data) {
                     populateDropdown(facultyDropdown, data);
                     loadSelectedValue('facultyDropdown');
-                    GetList();
                     FillDepartmentsDropdown();
                 },
                 error: function (xhr, status, error) {
@@ -161,6 +160,7 @@
                         clearDropdown(departmentDropdown);
                         populateDropdown(departmentDropdown, data);
                         loadSelectedValue('departmentDropdown');
+                        GetList();
                         FillDirectionsDropdown();
                     },
                     error: function (xhr, status, error) {

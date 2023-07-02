@@ -122,7 +122,7 @@ public class OrderService
             if (!CanSetNextCourse(currentTrainingPeriod, currentCourse))
             {
                 result.Success = false;
-                result.Message = $"Срок обучения: {currentTrainingPeriod.GetDisplayName()}. Текущий курс группы {currentCourse}.";
+                result.Message = $"Срок обучения: {currentTrainingPeriod.GetDisplayName()}. Текущий курс у группы: {currentCourse.GetCourseInWriting()}.";
                 return result;
             }
             else
@@ -299,24 +299,29 @@ public class OrderService
 
     }
 
-    private bool CanSetNextCourse(TrainingPeriod trainingPeriod, Course currentCourse)
+    private bool CanSetNextCourse(TrainingPeriod currentTrainingPeriod, Course currentCourse)
     {
-        var courseMapping = new Dictionary<TrainingPeriod, Course>
-        {
-            { TrainingPeriod.OneYear, Course.Second },
-            { TrainingPeriod.TwoYear, Course.Third },
-            { TrainingPeriod.ThreeYear, Course.Fourth },
-            { TrainingPeriod.FourYear, Course.Fifth },
-            { TrainingPeriod.FifthYear, Course.Sixth },
-            { TrainingPeriod.SixYear, Course.Sixth }
-        };
+        //var courseMapping = new Dictionary<TrainingPeriod, Course>
+        //{
+        //    { TrainingPeriod.OneYear, Course.First },
+        //    { TrainingPeriod.TwoYear, Course.Second },
+        //    { TrainingPeriod.ThreeYear, Course.Third },
+        //    { TrainingPeriod.FourYear, Course.Fourth },
+        //    { TrainingPeriod.FifthYear, Course.Fifth },
+        //    { TrainingPeriod.SixYear, Course.Sixth }
+        //};
 
-        // Check if the current course is the last course in the mapping
-        if (currentCourse != courseMapping.Last().Value)
-            return true;   
+        //// Check if the current course is the last course in the mapping
+        //if (currentCourse != courseMapping.Last().Value)
+        //    return true;   
 
-        // Return false if there is no next course
-        return false;
+        //// Return false if there is no next course
+        //return false;
+
+        if (currentCourse >= (Course)currentTrainingPeriod)
+            return false;
+
+        return true;
     }
 
     private Course SetNextCourseForGroup(Course currentCourse)

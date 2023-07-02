@@ -62,6 +62,10 @@
                         <i class="fas fa-cog mr-2" style="width: 20px;"></i>
                         <span>Параметры программы</span>
                     </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" asp-controller="Report" asp-action="GetStudentsInGroup">
+                        <i class="fas fa-chart-line" style="width: 20px;"></i> Отчет по студентам
+                    </a>
                 </div>
             </li>
         }
@@ -111,14 +115,23 @@
     }
 
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-user-graduate mr-2"></i>
-            <span>Студенты</span>
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-pen"></i> Учебный процесс
         </a>
         <div class="dropdown-menu">
             <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Index">
                 <i class="fas fa-search mr-2" style="width: 20px;"></i>
                 <span>Поиск студента</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item d-flex align-items-center" asp-controller="Employee" asp-action="Index">
+                <i class="fas fa-chalkboard-teacher mr-2" style="width: 20px;"></i>
+                <span>Коллектив</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item d-flex align-items-center" asp-controller="Schedule" asp-action="Index">
+                <i class="fas fa-table mr-2" style="width: 20px;"></i>
+                <span>Расписание</span>
             </a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item d-flex align-items-center" asp-controller="Group" asp-action="Index">
@@ -132,10 +145,6 @@
                     <i class="fas fa-user-clock mr-2" style="width: 20px;"></i>
                     <span>Абитуриент</span>
                 </a>
-@*                <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Archived">
-                    <i class="fas fa-archive mr-2" style="width: 20px;"></i>
-                    <span>Архив</span>
-                </a>*@
                 <a class="dropdown-item d-flex align-items-center" asp-controller="Student" asp-action="Graduated">
                     <i class="fas fa-graduation-cap mr-2" style="width: 20px;"></i>
                     <span>Окончившие</span>
@@ -151,30 +160,7 @@
             }
         </div>
     </li>
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-pen"></i> Учебный процесс
-        </a>
-        <div class="dropdown-menu"><a class="dropdown-item d-flex align-items-center" asp-controller="Employee" asp-action="Index">
-                <i class="fas fa-chalkboard-teacher mr-2" style="width: 20px;"></i>
-                <span>Коллектив</span>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item d-flex align-items-center" asp-controller="Schedule" asp-action="Index">
-                <i class="fas fa-table mr-2" style="width: 20px;"></i>
-                <span>Расписание</span>
-            </a>
-        </div>
-    </li>
     
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-chart-line"></i> Отчёты
-        </a>
-        <div class="dropdown-menu">
-            <a class="dropdown-item" asp-controller="Report" asp-action="GetStudentsInGroup"><i class="fas fa-users"></i> Отчет по студентам</a>
-        </div>
-    </li>
 
 
 </ul>

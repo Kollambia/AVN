@@ -61,6 +61,8 @@ namespace AVN.Web.Controllers
                     var mappedDepartment = mapper.Map<DepartmentVM, Department>(department);
                     await unitOfWork.DepartmentRepository.CreateAsync(mappedDepartment);
                     await unitOfWork.SaveChangesAsync();
+
+                    TempData["success"] = "Запись успешно добавлена";
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -113,6 +115,8 @@ namespace AVN.Web.Controllers
                     var mappedDepartment = mapper.Map<DepartmentVM, Department>(department);
                     await unitOfWork.DepartmentRepository.UpdateAsync(mappedDepartment);
                     await unitOfWork.SaveChangesAsync();
+
+                    TempData["success"] = "Запись успешно изменена";
                     return RedirectToAction(nameof(Index));
                 }
                 return View(department);
