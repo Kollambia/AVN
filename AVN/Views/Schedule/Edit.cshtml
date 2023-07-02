@@ -1,0 +1,81 @@
+﻿@model ScheduleVM
+@{
+    ViewData["Title"] = "Edit Schedule";
+}
+
+<h2 class="text-center mb-2">Редактирование расписания</h2>
+<br />
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+    <div class="col-md-3">
+        <label for="academicYearDropdown">Учебный год</label>
+        @Html.DropDownList("academicYearDropdown", ViewData["AcademicYears"] as SelectList, new { @class = "form-control", data_val = "true", data_val_required = "Выберите учебный год" })
+        @Html.ValidationMessage("academicYearDropdown", "", new { @class = "text-danger" })
+    </div>
+    <br />
+    <table class="table" id="scheduleTable">
+        <thead>
+            <tr>
+                <th>Дни</th>
+                <th>Начало</th>
+                <th>Конец</th>
+                <th>Группа</th>
+                <th>Предмет</th>
+                <th>Преподаватель</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @Html.HiddenFor(x => x.AcademicYearId, new { @class = "academicYearField" })
+            <tr>
+                <td>
+                    <select asp-for="Days" asp-items="Html.GetEnumSelectList<DaysOfTheWeek>()" class="form-control"></select>
+                </td>
+                <td>
+                    <input asp-for="StartTime" type="time" class="form-control" />
+                </td>
+                <td>
+                    <input asp-for="EndTime" type="time" class="form-control" />
+                </td>
+                <td>
+                    @Html.DropDownListFor(x => x.GroupId, ViewData["GroupId"] as List<SelectListItem>, "Не выбрано", new { @class = "form-control", id = "groupDropdown" })
+                    @Html.ValidationMessageFor(x => x.GroupId, "", new { @class = "text-danger" })
+                </td>
+                <td>
+                    @Html.DropDownListFor(x => x.SubjectId, ViewData["SubjectId"] as List<SelectListItem>, "Не выбрано", new { @class = "form-control", id = "subjectDropdown" })
+                    @Html.ValidationMessageFor(x => x.SubjectId, "", new { @class = "text-danger" })
+                </td>
+                <td>
+                    @Html.DropDownListFor(x => x.EmployeeId, ViewData["EmployeeId"] as List<SelectListItem>, "Не выбрано", new { @class = "form-control", id = "employeeDropdown" })
+                    @Html.ValidationMessageFor(x => x.EmployeeId, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <input type="submit" value="Сохранить" class="btn btn-success" />
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            // Получить выбранное значение академического года
+            var selectedAcademicYear = $('#academicYearDropdown').val();
+
+            // Применить выбранное значение к каждому скрытому полю AcademicYearId
+            $('.academicYearField').val(selectedAcademicYear);
+        });
+
+        // Обработчик изменения значения академического года
+        $('#academicYearDropdown').change(function () {
+            // Получить новое выбранное значение академического года
+            var selectedAcademicYear = $(this).val();
+
+            // Применить новое выбранное значение к каждому скрытому полю AcademicYearId
+            $('.academicYearField').val(selectedAcademicYear);
+        });
+    </script>
+}

@@ -10,10 +10,7 @@
         .Distinct()
         .OrderBy(t => t.StartTime)
         .ToList();
-
-
 }
-
 
 @if (User.IsInRole(RoleConst.AdminRole))
 {
@@ -23,7 +20,6 @@
         </a>
     </div>
 }
-
 
 <div class="table-responsive">
     <table class="table-striped"
@@ -58,26 +54,35 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var dayOfWeek in daysOfWeek)
-            {
-                <tr>
-                    <td>@dayOfWeek.GetDisplayName()</td>
-                    @foreach (var group in Model.Select(s => s.Group).Distinct())
-                    {
-                        var schedulesForGroupAndDay = Model.Where(s => s.Group == group && s.Days == dayOfWeek);
-                        <td>
-                            @foreach (var schedule in schedulesForGroupAndDay)
+        @foreach (var dayOfWeek in daysOfWeek)
+        {
+            <tr>
+                <td>@dayOfWeek.GetDisplayName()</td>
+                @foreach (var group in Model.Select(s => s.Group).Distinct())
+                {
+                    var schedulesForGroupAndDay = Model.Where(s => s.Group == group && s.Days == dayOfWeek);
+                    <td style="position: relative;">
+                        @foreach (var schedule in schedulesForGroupAndDay)
+                        {
+                            <div>@schedule.StartTime.ToString("HH:mm") - @schedule.EndTime.ToString("HH:mm")</div>
+                            <div>@schedule.Subject.Title</div>
+                            <div>@schedule.Employee.FullName</div>
+                            if (User.IsInRole(RoleConst.AdminRole))
                             {
-                                <div>@schedule.StartTime.ToString("HH:mm") - @schedule.EndTime.ToString("HH:mm")</div>
-                                <div>@schedule.Subject.Title</div>
-                                <div>@schedule.Employee.FullName</div>
-                                <hr />
+                                <div style="position: absolute; right: 0; top: 0;">
+                                    <a asp-controller="Schedule" asp-action="Edit" asp-route-id="@schedule.Id">
+                                        <i class="fas fa fa-edit mr-2" style="width: 20px;"></i>
+                                    </a>
+                                </div>
                             }
-                        </td>
-                    }
-                </tr>
-            }
+                            <hr />
+                        }
+                    </td>
+                }
+            </tr>
+        }
         </tbody>
+
     </table>
 </div>
 

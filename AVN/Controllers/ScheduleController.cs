@@ -5,6 +5,7 @@ using AVN.Model.Entities;
 using AVN.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace AVN.Controllers
 {
@@ -29,10 +30,8 @@ namespace AVN.Controllers
         {
             ViewData["GroupId"] = new SelectList(context.Groups, "Id", "GroupName");
             ViewData["SubjectId"] = new SelectList(context.Subjects, "Id", "Title");
-            ViewData["EmployeeId"] = new SelectList(context.Employees, "Id", "Name");
+            ViewData["EmployeeId"] = new SelectList(context.Employees, "Id", "FullName");
             
-
-
             var model = new List<ScheduleVM>
             {
                 new ScheduleVM
@@ -131,6 +130,62 @@ namespace AVN.Controllers
             return View(schedules);
         }
 
+        // GET: Schedules/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var schedule = await context.Schedules.FindAsync(id);
+            var mappedSchedult = mapper.Map<Schedule, ScheduleVM>(schedule);
+            if (mappedSchedult == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["GroupId"] = new SelectList(context.Groups, "Id", "GroupName", mappedSchedult.GroupId);
+            ViewData["SubjectId"] = new SelectList(context.Subjects, "Id", "Title", mappedSchedult.SubjectId);
+            ViewData["EmployeeId"] = new SelectList(context.Employees, "Id", "FullName", mappedSchedult.EmployeeId);
+            ViewData["AcademicYears"] = new SelectList(context.AcademicYears, "Id", "Name", mappedSchedult.AcademicYearId);
+
+            return View(mappedSchedult);
+        }
+
+        // POST: Schedules/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, ScheduleVM schedule)
+        {
+            if (id != schedule.Id)
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                try
+                {
+                    var mappedSchedult = mapper.Map<ScheduleVM, Schedule>(schedule);
+                    await unitOfWork.ScheduleRepository.UpdateAsync(mappedSchedult);
+                    await unitOfWork.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewData["GroupId"] = new SelectList(context.Groups, "Id", "GroupName", schedule.GroupId);
+            ViewData["SubjectId"] = new SelectList(context.Subjects, "Id", "Title", schedule.SubjectId);
+            ViewData["EmployeeId"] = new SelectList(context.Employees, "Id", "Name", schedule.EmployeeId);
+            ViewData["AcademicYears"] = new SelectList(context.AcademicYears, "Id", "Name", schedule.AcademicYearId);
+
+            return View(schedule);
+        }
+
         // GET: Schedule/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
@@ -184,6 +239,11 @@ namespace AVN.Controllers
             {
                 schedule = schedule.Where(x => x.Group.Direction.Department.FacultyId == facultyId);
             }
+            else if (groupType > 0)
+            {
+                schedule = schedule.Where(x => (int)x.Group.GroupType == groupType);
+            }
+
             else
             {
                 return PartialView(new List<ScheduleVM>());
@@ -191,7 +251,7 @@ namespace AVN.Controllers
 
             if (groupType > 0)
             {
-                schedule = schedule.Where(x => (int)x.Group.GroupType == groupType);
+                
             }
 
             if (academYearId > 0)
